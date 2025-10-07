@@ -1,15 +1,16 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Briefcase, DollarSign, FileText, GraduationCap, Headset, MapPin, Target, Users, Library, LineChart, Cpu, Truck, CheckCircle } from "lucide-react";
+import { ArrowRight, Briefcase, DollarSign, FileText, GraduationCap, Headset, MapPin, Target, Users, Library, LineChart, Cpu, Truck, CheckCircle, Star, Quote, TrendingUp, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LandingHeader } from "@/components/landing/header";
 import { LandingFooter } from "@/components/landing/footer";
 import { placeholderImages } from "@/lib/placeholder-images.json";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { successStories } from "@/lib/data";
 
 const heroImage = placeholderImages.find(img => img.id === "hero-banner");
-const whyPartnerImage = placeholderImages.find(img => img.id === "why-partner");
 
 const features = [
   {
@@ -268,13 +269,58 @@ export default function Home() {
             </Card>
           </div>
         </section>
+
+        <section id="success-stories" className="py-4">
+            <div className="container mx-auto px-4">
+                 <div className="text-center mb-8">
+                    <h2 className="font-headline text-3xl font-bold">Success Stories</h2>
+                    <p className="text-muted-foreground">Hear from our franchisee partners</p>
+                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    {successStories.map((story) => (
+                        <Card key={story.name} className="relative">
+                            <CardHeader className="flex flex-row items-start gap-4">
+                                <Avatar className="w-12 h-12 border-2 border-primary">
+                                    <AvatarFallback className="bg-primary/20 text-primary font-bold">{story.initials}</AvatarFallback>
+                                </Avatar>
+                                <div>
+                                    <CardTitle className="text-lg">{story.name}</CardTitle>
+                                    <p className="text-sm text-muted-foreground">{story.location}</p>
+                                    <p className="text-sm text-muted-foreground">{story.store}</p>
+                                </div>
+                                <CheckCircle className="absolute top-4 right-4 h-6 w-6 text-green-500" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="flex items-center gap-1 mb-4">
+                                    {[...Array(5)].map((_, i) => (
+                                        <Star key={i} className={`h-5 w-5 ${i < story.rating ? 'text-yellow-400 fill-yellow-400' : 'text-muted-foreground'}`} />
+                                    ))}
+                                    <span className="text-sm text-muted-foreground ml-2">{story.duration}</span>
+                                </div>
+                                <blockquote className="relative border-l-4 border-primary pl-4 italic text-muted-foreground">
+                                    {story.quote}
+                                </blockquote>
+                            </CardContent>
+                            <CardFooter>
+                                <div className="flex items-center gap-2 text-sm font-semibold text-green-600">
+                                    <story.metricIcon className="h-5 w-5" />
+                                    <span>{story.metric}</span>
+                                </div>
+                            </CardFooter>
+                        </Card>
+                    ))}
+                </div>
+                 <div className="text-center mt-12">
+                    <p className="text-lg mb-4">Ready to write your own success story?</p>
+                    <Button asChild size="lg">
+                        <Link href="/signup">Start Your Journey Today</Link>
+                    </Button>
+                </div>
+            </div>
+        </section>
         
       </main>
       <LandingFooter />
     </div>
   );
 }
-
-    
-
-    

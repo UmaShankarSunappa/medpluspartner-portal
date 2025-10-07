@@ -1,3 +1,4 @@
+
 import {
   Activity,
   Banknote,
@@ -23,6 +24,11 @@ import {
   FileSliders,
   FileQuestion,
   MessageCircleQuestion,
+  TrendingUp,
+  Zap,
+  Star,
+  Quote,
+  CheckCircle,
 } from "lucide-react";
 
 export const user = {
@@ -181,3 +187,50 @@ export const navLinks = {
     ]
   }
 };
+
+export const successStories = [
+    {
+        initials: "DRK",
+        name: "Dr. Rajesh Kumar",
+        location: "Bangalore, Karnataka",
+        store: "Medplus Koramangala",
+        rating: 5,
+        duration: "1 year with Medplus",
+        quote: "Partnering with Medplus has been the best decision for my pharmacy business. The brand recognition and supply chain efficiency have helped me grow 40% year over year. The technology support and training programs are exceptional.",
+        metric: "10% MOM Growth",
+        metricIcon: TrendingUp,
+    },
+    {
+        initials: "MPS",
+        name: "Mrs. Priya Sharma",
+        location: "Hyderabad, Telangana",
+        store: "Medplus Banjara Hills",
+        rating: 5,
+        duration: "2 years with Medplus",
+        quote: "I converted my existing medical shop to a Medplus franchise three years ago, and it transformed my business completely. The operational support and marketing materials have made a huge difference. My customers trust the Medplus brand.",
+        metric: "3x Revenue Increase",
+        metricIcon: Zap,
+    },
+    {
+        initials: "MAP",
+        name: "Mr. Anil Patel",
+        location: "Mumbai, Maharashtra",
+        store: "Medplus Andheri West",
+        rating: 5,
+        duration: "1 year with Medplus",
+        quote: "As one of the early franchisees, I've witnessed Medplus's incredible growth journey. The continuous innovation in technology and the dedicated support team make operations seamless. Proud to be part of this healthcare revolution.",
+        metric: "Consistent Growth",
+        metricIcon: LineChart,
+    },
+    {
+        initials: "DMR",
+        name: "Dr. Meena Reddy",
+        location: "Chennai, Tamil Nadu",
+        store: "Medplus T Nagar",
+        rating: 5,
+        duration: "1 year with Medplus",
+        quote: "The comprehensive training and ongoing support from Medplus have been invaluable. From inventory management to customer service, every aspect is well structured. My store has become a trusted healthcare destination in the community.",
+        metric: "High Customer Satisfaction",
+        metricIcon: Star,
+    }
+];
