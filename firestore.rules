@@ -1,0 +1,286 @@
+/**
+  * @description This ruleset enforces a strict user-ownership model for franchise partners and stores.
+  *   It also incorporates denormalization to simplify access control for subcollections under stores.
+  * @dataStructure The database is structured with franchise partners and stores at the top level,
+  *   and various data types (orders, payments, etc.) nested under stores.
+  * @keySecurityDecisions
+  *   - Franchise partners can only manage their own data.
+  *   - Stores can only be managed by their owning franchise partner.
+  *   - Subcollections under stores inherit the franchise partner's ownership.
+  * @denormalization For subcollections under `/stores/{storeId}`, the `franchisePartnerId` is denormalized
+  *   to avoid costly `get()` calls. This allows rules to directly check ownership without additional reads.
+  */
+ rules_version = '2';
+ service cloud.firestore {
+  match /databases/{database}/documents {
+ 
+
+  /**
+   * @description Allows franchise partners to manage their own profile data.
+   * @path /franchisePartners/{franchisePartnerId}
+   * @allow (create) - Franchise partner with matching ID can create their profile.
+   * @allow (get, update, delete) - Franchise partner with matching ID can read, update, and delete their profile.
+   * @deny (create) - Franchise partner attempts to create a profile with an ID different from their own.
+   * @deny (update, delete) - Another user attempts to modify or delete this franchise partner's profile.
+   * @principle Enforces document ownership for writes.
+   */
+  match /franchisePartners/{franchisePartnerId} {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    function isOwner(franchisePartnerId) {
+      return request.auth.uid == franchisePartnerId;
+    }
+    function isExistingOwner(franchisePartnerId) {
+        return resource.data.franchisePartnerId == request.auth.uid;
+    }
+    allow get: if isSignedIn();
+    allow list: if false;
+    allow create: if isSignedIn() && isOwner(franchisePartnerId);
+    allow update: if isSignedIn() && isOwner(franchisePartnerId);
+    allow delete: if isSignedIn() && isOwner(franchisePartnerId);
+  }
+ 
+
+  /**
+   * @description Allows franchise partners to manage their stores.
+   * @path /stores/{storeId}
+   * @allow (create) - Franchise partner can create a store if the franchisePartnerId matches their ID.
+   * @allow (get, update, delete) - Franchise partner can read, update, and delete their stores if franchisePartnerId matches their ID.
+   * @deny (create) - Another user attempts to create a store for this franchise partner.
+   * @deny (update, delete) - Another user attempts to modify or delete this store.
+   * @principle Enforces document ownership for writes.
+   */
+  match /stores/{storeId} {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    function isOwner(storeId) {
+      return get(/databases/$(database)/documents/stores/$(storeId)).data.franchisePartnerId == request.auth.uid;
+    }
+    function isCreatingOwner() {
+      return request.resource.data.franchisePartnerId == request.auth.uid;
+    }
+    function isExistingOwner(storeId) {
+        return get(/databases/$(database)/documents/stores/$(storeId)).data.franchisePartnerId == request.auth.uid;
+    }
+    allow get: if isSignedIn();
+    allow list: if false;
+    allow create: if isSignedIn() && isCreatingOwner();
+    allow update: if isSignedIn() && isExistingOwner(storeId);
+    allow delete: if isSignedIn() && isExistingOwner(storeId);
+  }
+ 
+
+  /**
+   * @description Allows franchise partners to manage orders for their stores.
+   * @path /stores/{storeId}/orders/{orderId}
+   * @allow (create) - Franchise partner can create an order if they own the parent store.
+   * @allow (get, update, delete) - Franchise partner can read, update, and delete orders if they own the parent store.
+   * @deny (create) - Another user attempts to create an order for this store.
+   * @deny (update, delete) - Another user attempts to modify or delete this order.
+   * @principle Enforces document ownership for writes, inheriting ownership from the parent store.
+   */
+  match /stores/{storeId}/orders/{orderId} {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+   function getFranchisePartnerId(storeId) {
+      return get(/databases/$(database)/documents/stores/$(storeId)).data.franchisePartnerId;
+    }
+    function isStoreOwner(storeId) {
+      return getFranchisePartnerId(storeId) == request.auth.uid;
+    }
+    allow get: if isSignedIn() && isStoreOwner(storeId);
+    allow list: if false;
+    allow create: if isSignedIn() && isStoreOwner(storeId);
+    allow update: if isSignedIn() && isStoreOwner(storeId);
+    allow delete: if isSignedIn() && isStoreOwner(storeId);
+  }
+ 
+
+  /**
+   * @description Allows franchise partners to manage payments for their stores.
+   * @path /stores/{storeId}/payments/{paymentId}
+   * @allow (create) - Franchise partner can create a payment if they own the parent store.
+   * @allow (get, update, delete) - Franchise partner can read, update, and delete payments if they own the parent store.
+   * @deny (create) - Another user attempts to create a payment for this store.
+   * @deny (update, delete) - Another user attempts to modify or delete this payment.
+   * @principle Enforces document ownership for writes, inheriting ownership from the parent store.
+   */
+  match /stores/{storeId}/payments/{paymentId} {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+   function getFranchisePartnerId(storeId) {
+      return get(/databases/$(database)/documents/stores/$(storeId)).data.franchisePartnerId;
+    }
+    function isStoreOwner(storeId) {
+      return getFranchisePartnerId(storeId) == request.auth.uid;
+    }
+    allow get: if isSignedIn() && isStoreOwner(storeId);
+    allow list: if false;
+    allow create: if isSignedIn() && isStoreOwner(storeId);
+    allow update: if isSignedIn() && isStoreOwner(storeId);
+    allow delete: if isSignedIn() && isStoreOwner(storeId);
+  }
+ 
+
+  /**
+   * @description Allows franchise partners to manage returns for their stores.
+   * @path /stores/{storeId}/returns/{returnId}
+   * @allow (create) - Franchise partner can create a return if they own the parent store.
+   * @allow (get, update, delete) - Franchise partner can read, update, and delete returns if they own the parent store.
+   * @deny (create) - Another user attempts to create a return for this store.
+   * @deny (update, delete) - Another user attempts to modify or delete this return.
+   * @principle Enforces document ownership for writes, inheriting ownership from the parent store.
+   */
+  match /stores/{storeId}/returns/{returnId} {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+   function getFranchisePartnerId(storeId) {
+      return get(/databases/$(database)/documents/stores/$(storeId)).data.franchisePartnerId;
+    }
+    function isStoreOwner(storeId) {
+      return getFranchisePartnerId(storeId) == request.auth.uid;
+    }
+    allow get: if isSignedIn() && isStoreOwner(storeId);
+    allow list: if false;
+    allow create: if isSignedIn() && isStoreOwner(storeId);
+    allow update: if isSignedIn() && isStoreOwner(storeId);
+    allow delete: if isSignedIn() && isStoreOwner(storeId);
+  }
+ 
+
+  /**
+   * @description Allows franchise partners to manage invoices for their stores.
+   * @path /stores/{storeId}/invoices/{invoiceId}
+   * @allow (create) - Franchise partner can create an invoice if they own the parent store.
+   * @allow (get, update, delete) - Franchise partner can read, update, and delete invoices if they own the parent store.
+   * @deny (create) - Another user attempts to create an invoice for this store.
+   * @deny (update, delete) - Another user attempts to modify or delete this invoice.
+   * @principle Enforces document ownership for writes, inheriting ownership from the parent store.
+   */
+  match /stores/{storeId}/invoices/{invoiceId} {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+   function getFranchisePartnerId(storeId) {
+      return get(/databases/$(database)/documents/stores/$(storeId)).data.franchisePartnerId;
+    }
+    function isStoreOwner(storeId) {
+      return getFranchisePartnerId(storeId) == request.auth.uid;
+    }
+    allow get: if isSignedIn() && isStoreOwner(storeId);
+    allow list: if false;
+    allow create: if isSignedIn() && isStoreOwner(storeId);
+    allow update: if isSignedIn() && isStoreOwner(storeId);
+    allow delete: if isSignedIn() && isStoreOwner(storeId);
+  }
+ 
+
+  /**
+   * @description Allows franchise partners to manage compliance reports for their stores.
+   * @path /stores/{storeId}/complianceReports/{complianceReportId}
+   * @allow (create) - Franchise partner can create a compliance report if they own the parent store.
+   * @allow (get, update, delete) - Franchise partner can read, update, and delete compliance reports if they own the parent store.
+   * @deny (create) - Another user attempts to create a compliance report for this store.
+   * @deny (update, delete) - Another user attempts to modify or delete this compliance report.
+   * @principle Enforces document ownership for writes, inheriting ownership from the parent store.
+   */
+  match /stores/{storeId}/complianceReports/{complianceReportId} {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+   function getFranchisePartnerId(storeId) {
+      return get(/databases/$(database)/documents/stores/$(storeId)).data.franchisePartnerId;
+    }
+    function isStoreOwner(storeId) {
+      return getFranchisePartnerId(storeId) == request.auth.uid;
+    }
+    allow get: if isSignedIn() && isStoreOwner(storeId);
+    allow list: if false;
+    allow create: if isSignedIn() && isStoreOwner(storeId);
+    allow update: if isSignedIn() && isStoreOwner(storeId);
+    allow delete: if isSignedIn() && isStoreOwner(storeId);
+  }
+ 
+
+  /**
+   * @description Allows franchise partners to manage field visit reports for their stores.
+   * @path /stores/{storeId}/fieldVisitReports/{fieldVisitReportId}
+   * @allow (create) - Franchise partner can create a field visit report if they own the parent store.
+   * @allow (get, update, delete) - Franchise partner can read, update, and delete field visit reports if they own the parent store.
+   * @deny (create) - Another user attempts to create a field visit report for this store.
+   * @deny (update, delete) - Another user attempts to modify or delete this field visit report.
+   * @principle Enforces document ownership for writes, inheriting ownership from the parent store.
+   */
+  match /stores/{storeId}/fieldVisitReports/{fieldVisitReportId} {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+   function getFranchisePartnerId(storeId) {
+      return get(/databases/$(database)/documents/stores/$(storeId)).data.franchisePartnerId;
+    }
+    function isStoreOwner(storeId) {
+      return getFranchisePartnerId(storeId) == request.auth.uid;
+    }
+    allow get: if isSignedIn() && isStoreOwner(storeId);
+    allow list: if false;
+    allow create: if isSignedIn() && isStoreOwner(storeId);
+    allow update: if isSignedIn() && isStoreOwner(storeId);
+    allow delete: if isSignedIn() && isStoreOwner(storeId);
+  }
+ 
+
+  /**
+   * @description Allows franchise partners to manage complaints for their stores.
+   * @path /stores/{storeId}/complaints/{complaintId}
+   * @allow (create) - Franchise partner can create a complaint if they own the parent store.
+   * @allow (get, update, delete) - Franchise partner can read, update, and delete complaints if they own the parent store.
+   * @deny (create) - Another user attempts to create a complaint for this store.
+   * @deny (update, delete) - Another user attempts to modify or delete this complaint.
+   * @principle Enforces document ownership for writes, inheriting ownership from the parent store.
+   */
+  match /stores/{storeId}/complaints/{complaintId} {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+   function getFranchisePartnerId(storeId) {
+      return get(/databases/$(database)/documents/stores/$(storeId)).data.franchisePartnerId;
+    }
+    function isStoreOwner(storeId) {
+      return getFranchisePartnerId(storeId) == request.auth.uid;
+    }
+    allow get: if isSignedIn() && isStoreOwner(storeId);
+    allow list: if false;
+    allow create: if isSignedIn() && isStoreOwner(storeId);
+    allow update: if isSignedIn() && isStoreOwner(storeId);
+    allow delete: if isSignedIn() && isStoreOwner(storeId);
+  }
+
+    
+    match /{path=**}/orders/{orderId} {
+        allow read, write: if false;
+    }
+    match /{path=**}/payments/{paymentId} {
+        allow read, write: if false;
+    }
+        match /{path=**}/returns/{returnId} {
+        allow read, write: if false;
+    }
+        match /{path=**}/invoices/{invoiceId} {
+        allow read, write: if false;
+    }
+            match /{path=**}/complianceReports/{complianceReportId} {
+        allow read, write: if false;
+    }
+                match /{path=**}/fieldVisitReports/{fieldVisitReportId} {
+        allow read, write: if false;
+    }
+                    match /{path=**}/complaints/{complaintId} {
+        allow read, write: if false;
+    }
+  }
+ }

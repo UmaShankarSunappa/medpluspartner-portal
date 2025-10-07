@@ -1,0 +1,537 @@
+{
+  "entities": {
+    "FranchisePartner": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "FranchisePartner",
+      "type": "object",
+      "description": "Represents a franchise partner within the MedPlus portal.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the franchise partner."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the franchise partner.",
+          "format": "email"
+        },
+        "businessName": {
+          "type": "string",
+          "description": "The official business name of the franchise."
+        },
+        "contactName": {
+          "type": "string",
+          "description": "Full legal name of contact person for the franchise"
+        },
+        "phoneNumber": {
+          "type": "string",
+          "description": "Contact phone number for the franchise."
+        },
+        "storeIds": {
+          "type": "array",
+          "description": "References to Stores managed by this partner. (Relationship: FranchisePartner 1:N Store)",
+          "items": {
+            "type": "string"
+          }
+        },
+        "approved": {
+          "type": "boolean",
+          "description": "Indicates if this partner has been approved by an admin."
+        }
+      },
+      "required": [
+        "id",
+        "email",
+        "businessName",
+        "contactName",
+        "phoneNumber",
+        "approved"
+      ]
+    },
+    "Store": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Store",
+      "type": "object",
+      "description": "Represents a physical store location.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the store."
+        },
+        "franchisePartnerId": {
+          "type": "string",
+          "description": "Reference to FranchisePartner. (Relationship: FranchisePartner 1:N Store)"
+        },
+        "storeId": {
+          "type": "string",
+          "description": "The official store ID."
+        },
+        "gst": {
+          "type": "string",
+          "description": "Goods and Services Tax Identification Number."
+        },
+        "dl": {
+          "type": "string",
+          "description": "Drug License number."
+        },
+        "fssai": {
+          "type": "string",
+          "description": "Food Safety and Standards Authority of India license number."
+        },
+        "address": {
+          "type": "string",
+          "description": "Full physical address of the store."
+        }
+      },
+      "required": [
+        "id",
+        "franchisePartnerId",
+        "storeId",
+        "gst",
+        "dl",
+        "fssai",
+        "address"
+      ]
+    },
+    "Order": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Order",
+      "type": "object",
+      "description": "Represents an order placed by a franchise partner.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the order."
+        },
+        "storeId": {
+          "type": "string",
+          "description": "Reference to Store. (Relationship: Store 1:N Order)"
+        },
+        "orderDate": {
+          "type": "string",
+          "description": "Date the order was placed.",
+          "format": "date-time"
+        },
+        "totalAmount": {
+          "type": "number",
+          "description": "Total value of the order."
+        },
+        "status": {
+          "type": "string",
+          "description": "Current status of the order (e.g., Pending, Shipped, Delivered)."
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of order (e.g., Normal, Provisional Indent)."
+        }
+      },
+      "required": [
+        "id",
+        "storeId",
+        "orderDate",
+        "totalAmount",
+        "status",
+        "type"
+      ]
+    },
+    "Payment": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Payment",
+      "type": "object",
+      "description": "Represents a payment made by a franchise partner.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the payment."
+        },
+        "storeId": {
+          "type": "string",
+          "description": "Reference to Store. (Relationship: Store 1:N Payment)"
+        },
+        "paymentDate": {
+          "type": "string",
+          "description": "Date the payment was made.",
+          "format": "date-time"
+        },
+        "amount": {
+          "type": "number",
+          "description": "Amount of the payment."
+        },
+        "method": {
+          "type": "string",
+          "description": "Payment method used (e.g., Credit Card, Bank Transfer)."
+        }
+      },
+      "required": [
+        "id",
+        "storeId",
+        "paymentDate",
+        "amount",
+        "method"
+      ]
+    },
+    "Return": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Return",
+      "type": "object",
+      "description": "Represents a return request from a franchise partner.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the return."
+        },
+        "storeId": {
+          "type": "string",
+          "description": "Reference to Store. (Relationship: Store 1:N Return)"
+        },
+        "returnDate": {
+          "type": "string",
+          "description": "Date the return was requested.",
+          "format": "date-time"
+        },
+        "status": {
+          "type": "string",
+          "description": "Current status of the return (e.g., Pending, Approved, Rejected)."
+        },
+        "items": {
+          "type": "array",
+          "description": "List of items being returned. Could be an array of product IDs or a more detailed object.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "storeId",
+        "returnDate",
+        "status",
+        "items"
+      ]
+    },
+    "Invoice": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Invoice",
+      "type": "object",
+      "description": "Represents an invoice document.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the invoice."
+        },
+        "storeId": {
+          "type": "string",
+          "description": "Reference to Store. (Relationship: Store 1:N Invoice)"
+        },
+        "invoiceDate": {
+          "type": "string",
+          "description": "Date the invoice was issued.",
+          "format": "date-time"
+        },
+        "documentUrl": {
+          "type": "string",
+          "description": "URL where the invoice PDF is stored.",
+          "format": "uri"
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of invoice (e.g., Order Invoice, Membership Fee Invoice)."
+        }
+      },
+      "required": [
+        "id",
+        "storeId",
+        "invoiceDate",
+        "documentUrl",
+        "type"
+      ]
+    },
+    "ComplianceReport": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ComplianceReport",
+      "type": "object",
+      "description": "Represents a monthly compliance report for a franchise partner.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the compliance report."
+        },
+        "storeId": {
+          "type": "string",
+          "description": "Reference to Store. (Relationship: Store 1:N ComplianceReport)"
+        },
+        "reportDate": {
+          "type": "string",
+          "description": "Date of the report.",
+          "format": "date-time"
+        },
+        "documentUrl": {
+          "type": "string",
+          "description": "URL where the compliance report document is stored.",
+          "format": "uri"
+        },
+        "returnsConfirmed": {
+          "type": "boolean",
+          "description": "Indicates if the returns have been confirmed for this report."
+        }
+      },
+      "required": [
+        "id",
+        "storeId",
+        "reportDate",
+        "documentUrl",
+        "returnsConfirmed"
+      ]
+    },
+    "FieldVisitReport": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "FieldVisitReport",
+      "type": "object",
+      "description": "Represents a report generated after a field team visit to a store.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the field visit report."
+        },
+        "storeId": {
+          "type": "string",
+          "description": "Reference to Store. (Relationship: Store 1:N FieldVisitReport)"
+        },
+        "visitDate": {
+          "type": "string",
+          "description": "Date of the field visit.",
+          "format": "date-time"
+        },
+        "reportData": {
+          "type": "string",
+          "description": "Data collected during the field visit. This could be a serialized JSON or a link to a separate data store."
+        }
+      },
+      "required": [
+        "id",
+        "storeId",
+        "visitDate",
+        "reportData"
+      ]
+    },
+    "Complaint": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Complaint",
+      "type": "object",
+      "description": "Represents a complaint lodged by or about a franchise partner.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the complaint."
+        },
+        "storeId": {
+          "type": "string",
+          "description": "Reference to Store. (Relationship: Store 1:N Complaint)"
+        },
+        "complaintDate": {
+          "type": "string",
+          "description": "Date the complaint was lodged.",
+          "format": "date-time"
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description of the complaint."
+        },
+        "status": {
+          "type": "string",
+          "description": "Current status of the complaint (e.g., Open, In Progress, Resolved)."
+        }
+      },
+      "required": [
+        "id",
+        "storeId",
+        "complaintDate",
+        "description",
+        "status"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/franchisePartners/{franchisePartnerId}",
+        "definition": {
+          "entityName": "FranchisePartner",
+          "schema": {
+            "$ref": "#/backend/entities/FranchisePartner"
+          },
+          "description": "Stores franchise partner data. Includes storeIds for listing stores owned by the partner.",
+          "params": [
+            {
+              "name": "franchisePartnerId",
+              "description": "The unique identifier for the franchise partner."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/stores/{storeId}",
+        "definition": {
+          "entityName": "Store",
+          "schema": {
+            "$ref": "#/backend/entities/Store"
+          },
+          "description": "Stores store data. Includes franchisePartnerId for relationship management.",
+          "params": [
+            {
+              "name": "storeId",
+              "description": "The unique identifier for the store."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/stores/{storeId}/orders/{orderId}",
+        "definition": {
+          "entityName": "Order",
+          "schema": {
+            "$ref": "#/backend/entities/Order"
+          },
+          "description": "Stores order data for a specific store. Includes denormalized 'franchisePartnerId' from the parent 'store' document for authorization independence.",
+          "params": [
+            {
+              "name": "storeId",
+              "description": "The unique identifier for the store."
+            },
+            {
+              "name": "orderId",
+              "description": "The unique identifier for the order."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/stores/{storeId}/payments/{paymentId}",
+        "definition": {
+          "entityName": "Payment",
+          "schema": {
+            "$ref": "#/backend/entities/Payment"
+          },
+          "description": "Stores payment data for a specific store. Includes denormalized 'franchisePartnerId' from the parent 'store' document for authorization independence.",
+          "params": [
+            {
+              "name": "storeId",
+              "description": "The unique identifier for the store."
+            },
+            {
+              "name": "paymentId",
+              "description": "The unique identifier for the payment."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/stores/{storeId}/returns/{returnId}",
+        "definition": {
+          "entityName": "Return",
+          "schema": {
+            "$ref": "#/backend/entities/Return"
+          },
+          "description": "Stores return data for a specific store. Includes denormalized 'franchisePartnerId' from the parent 'store' document for authorization independence.",
+          "params": [
+            {
+              "name": "storeId",
+              "description": "The unique identifier for the store."
+            },
+            {
+              "name": "returnId",
+              "description": "The unique identifier for the return."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/stores/{storeId}/invoices/{invoiceId}",
+        "definition": {
+          "entityName": "Invoice",
+          "schema": {
+            "$ref": "#/backend/entities/Invoice"
+          },
+          "description": "Stores invoice data for a specific store. Includes denormalized 'franchisePartnerId' from the parent 'store' document for authorization independence.",
+          "params": [
+            {
+              "name": "storeId",
+              "description": "The unique identifier for the store."
+            },
+            {
+              "name": "invoiceId",
+              "description": "The unique identifier for the invoice."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/stores/{storeId}/complianceReports/{complianceReportId}",
+        "definition": {
+          "entityName": "ComplianceReport",
+          "schema": {
+            "$ref": "#/backend/entities/ComplianceReport"
+          },
+          "description": "Stores compliance report data for a specific store. Includes denormalized 'franchisePartnerId' from the parent 'store' document for authorization independence.",
+          "params": [
+            {
+              "name": "storeId",
+              "description": "The unique identifier for the store."
+            },
+            {
+              "name": "complianceReportId",
+              "description": "The unique identifier for the compliance report."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/stores/{storeId}/fieldVisitReports/{fieldVisitReportId}",
+        "definition": {
+          "entityName": "FieldVisitReport",
+          "schema": {
+            "$ref": "#/backend/entities/FieldVisitReport"
+          },
+          "description": "Stores field visit report data for a specific store. Includes denormalized 'franchisePartnerId' from the parent 'store' document for authorization independence.",
+          "params": [
+            {
+              "name": "storeId",
+              "description": "The unique identifier for the store."
+            },
+            {
+              "name": "fieldVisitReportId",
+              "description": "The unique identifier for the field visit report."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/stores/{storeId}/complaints/{complaintId}",
+        "definition": {
+          "entityName": "Complaint",
+          "schema": {
+            "$ref": "#/backend/entities/Complaint"
+          },
+          "description": "Stores complaint data for a specific store. Includes denormalized 'franchisePartnerId' from the parent 'store' document for authorization independence.",
+          "params": [
+            {
+              "name": "storeId",
+              "description": "The unique identifier for the store."
+            },
+            {
+              "name": "complaintId",
+              "description": "The unique identifier for the complaint."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure is designed to provide a secure and scalable solution for the MedPlus Partner Portal, adhering to the principles of Authorization Independence, Clarity of Intent, DBAC (Database-based Access Control), and QAPs (Rules are not Filters). The design employs structural segregation and consistent access modeling.\n\n**Authorization Independence:** FranchisePartner and Store data is stored at the root level to avoid complex `get()` calls in security rules.  The `store.franchisePartnerId` field enables direct association. Subcollections under `/stores/{storeId}` denormalize the `franchisePartnerId`, ensuring security rules can directly access the owning franchise.  FranchisePartner documents include storeIds for efficient listing.\n\n**Structural Segregation:** Each top-level collection (`franchisePartners`, `stores`) contains documents of the same type, simplifying security rules. Subcollections under `/stores/{storeId}` are similarly segregated.\n\n**Access Modeling:**  Franchise Partner data is stored at the root `/franchisePartners/{franchisePartnerId}` for direct ownership. Store data is also stored at the root `/stores/{storeId}` for quick access. Subcollections like `orders`, `payments`, `returns`, `invoices`, `complianceReports`, `fieldVisitReports`, and `complaints` are nested under `/stores/{storeId}`.\n\n**QAPs Support:**  The structure supports secure `list` operations.  Admin approval status is stored directly in the `franchisePartners` document, allowing rules to filter approved partners.  Store-level access is governed by the `franchisePartnerId` field, enabling secure listing of stores belonging to a specific franchise partner.\n\n**Justification of Specific Paths:**\n*   `/franchisePartners/{franchisePartnerId}`: Stores the core franchise partner data. Allows direct access and management of partner information.\n*   `/stores/{storeId}`: Stores store-specific data. The `franchisePartnerId` field enables relationship management.\n*   `/stores/{storeId}/orders/{orderId}`, `/stores/{storeId}/payments/{paymentId}`, `/stores/{storeId}/returns/{returnId}`, `/stores/{storeId}/invoices/{invoiceId}`, `/stores/{storeId}/complianceReports/{complianceReportId}`, `/stores/{storeId}/fieldVisitReports/{fieldVisitReportId}`, `/stores/{storeId}/complaints/{complaintId}`: These paths organize data related to a specific store, ensuring logical grouping and simplified security rules that rely on the store-franchise relationship.\n\nThis structure balances data accessibility with security and maintainability, aligning with Firebase best practices."
+  }
+}
