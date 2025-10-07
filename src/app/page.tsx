@@ -224,7 +224,7 @@ export default function Home() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
                     
                     <div>
-                        <h3 className="font-headline text-xl font-bold text-center mb-8">Converting Existing Pharmacy</h3>
+                        <h3 className="font-headline text-xl font-bold mb-8">Converting Existing Pharmacy</h3>
                         <div className="relative">
                         <div className="absolute left-6 top-0 h-full w-px -translate-x-1/2 bg-border" aria-hidden="true" />
                         <div className="space-y-12">
@@ -244,7 +244,7 @@ export default function Home() {
                     </div>
 
                     <div>
-                        <h3 className="font-headline text-xl font-bold text-center mb-8">Taking a New Franchisee</h3>
+                        <h3 className="font-headline text-xl font-bold mb-8">Taking a New Franchisee</h3>
                         <div className="relative">
                         <div className="absolute left-6 top-0 h-full w-px -translate-x-1/2 bg-border" aria-hidden="true" />
                         <div className="space-y-12">
@@ -274,5 +274,7 @@ export default function Home() {
     </div>
   );
 }
+
+    
 
     
