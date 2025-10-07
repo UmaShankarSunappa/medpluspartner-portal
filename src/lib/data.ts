@@ -174,14 +174,14 @@ export const navLinks = {
   ],
   footer: {
     company: [
-      { href: "#", label: "About Us" },
+      { href: "/about-us", label: "About Us" },
       { href: "#", label: "Careers" },
       { href: "#", label: "Press" },
       { href: "#", label: "Contact" },
     ],
     support: [
+      { href: "/faq", label: "FAQs" },
       { href: "#", label: "Help Center" },
-      { href: "#", label: "FAQs" },
       { href: "#", label: "Terms of Service" },
       { href: "#", label: "Privacy Policy" },
     ]
@@ -277,3 +277,4 @@ export const faqs = [
         answer: "A: MedPlus provides launch kits — including banners, posters, flyers, and digital campaigns — to help promote your store in the local area."
     }
 ]
+
