@@ -156,7 +156,7 @@ export const navLinks = {
     { href: "#", label: "News & Updates" },
     { href: "/faq", label: "FAQs" },
     { href: "#", label: "Resources & Training" },
-    { href: "#", label: "Contact Us" },
+    { href: "/contact-us", label: "Contact Us" },
   ],
   dashboard: [
     { href: "/dashboard", label: "Home", icon: Home },
@@ -177,7 +177,7 @@ export const navLinks = {
       { href: "/about-us", label: "About Us" },
       { href: "#", label: "Careers" },
       { href: "#", label: "Press" },
-      { href: "#", label: "Contact" },
+      { href: "/contact-us", label: "Contact" },
     ],
     support: [
       { href: "/faq", label: "FAQs" },
@@ -277,4 +277,5 @@ export const faqs = [
         answer: "A: MedPlus provides launch kits — including banners, posters, flyers, and digital campaigns — to help promote your store in the local area."
     }
 ]
+
 
