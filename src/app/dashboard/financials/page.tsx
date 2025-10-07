@@ -1,0 +1,99 @@
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { financialSummary, transactions } from "@/lib/data";
+import { Download, Calendar as CalendarIcon } from "lucide-react";
+
+export default function FinancialsPage() {
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="font-headline text-3xl font-bold">Account Balance</h1>
+        <p className="text-muted-foreground">
+          View your credit summary and transaction history.
+        </p>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-3">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardDescription>Credit Limit</CardDescription>
+            <CardTitle className="text-4xl">₹{financialSummary.creditLimit.toLocaleString('en-IN')}</CardTitle>
+          </CardHeader>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardDescription>Outstanding Balance</CardDescription>
+            <CardTitle className="text-4xl text-destructive">₹{financialSummary.outstanding.toLocaleString('en-IN')}</CardTitle>
+          </CardHeader>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardDescription>Credit Period</CardDescription>
+            <CardTitle className="text-4xl">{financialSummary.creditPeriod} Days</CardTitle>
+          </CardHeader>
+        </Card>
+      </div>
+
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle>Transaction Statement</CardTitle>
+            <CardDescription>
+              Showing transactions for the last 90 days.
+            </CardDescription>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                Select Date Range
+            </Button>
+            <Button>
+              <Download className="mr-2 h-4 w-4" />
+              Export
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Date</TableHead>
+                <TableHead>Description</TableHead>
+                <TableHead>Type</TableHead>
+                <TableHead className="text-right">Amount</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {transactions.map((tx) => (
+                <TableRow key={tx.date + tx.description}>
+                  <TableCell>{tx.date}</TableCell>
+                  <TableCell>{tx.description}</TableCell>
+                  <TableCell>
+                    <span className={tx.type === 'Credit' ? 'text-green-600' : 'text-red-600'}>
+                        {tx.type}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-right">₹{tx.amount.toLocaleString('en-IN')}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

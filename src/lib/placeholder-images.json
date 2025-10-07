@@ -1,3 +1,22 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-banner",
+      "description": "A modern, clean pharmacy interior.",
+      "imageUrl": "https://images.unsplash.com/photo-1671108503276-1d3d5ab23a3a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxtb2Rlcm4lMjBwaGFybWFjeXxlbnwwfHx8fDE3NTk3NjU4ODJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "modern pharmacy"
+    },
+    {
+      "id": "why-partner",
+      "description": "A pharmacist assisting a customer with a friendly smile.",
+      "imageUrl": "https://images.unsplash.com/photo-1594257838115-295084880746?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxwaGFybWFjaXN0JTIwY3VzdG9tZXJ8ZW58MHx8fHwxNzU5NzQxNDI3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "pharmacist customer"
+    },
+    {
+      "id": "leadership-message",
+      "description": "A confident and professional-looking CEO.",
+      "imageUrl": "https://picsum.photos/seed/103/600/800",
+      "imageHint": "professional portrait"
+    }
+  ]
 }
