@@ -1,66 +1,67 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Briefcase, DollarSign, FileText, GraduationCap, Headset, MapPin, Target, Users, Library } from "lucide-react";
+import { ArrowRight, Briefcase, DollarSign, FileText, GraduationCap, Headset, MapPin, Target, Users, Library, LineChart, Cpu, Truck, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LandingHeader } from "@/components/landing/header";
 import { LandingFooter } from "@/components/landing/footer";
 import { placeholderImages } from "@/lib/placeholder-images.json";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const heroImage = placeholderImages.find(img => img.id === "hero-banner");
 const whyPartnerImage = placeholderImages.find(img => img.id === "why-partner");
 
 const features = [
   {
-    icon: <Library className="size-6 text-primary" />,
+    icon: <Library className="size-8 text-primary" />,
     title: "Brand Recognition",
     description: "Leverage the trust of India's leading pharmacy chain with 4,230+ stores.",
   },
   {
-    icon: <Users className="size-6 text-primary" />,
+    icon: <LineChart className="size-8 text-primary" />,
+    title: "Supply Chain Efficiency",
+    description: "Access to centralized procurement and efficient distribution network.",
+  },
+  {
+    icon: <Cpu className="size-8 text-primary" />,
     title: "Technology Support",
     description: "Modern POS systems, inventory management, and digital tools.",
   },
   {
-    icon: <Headset className="size-6 text-primary" />,
+    icon: <Headset className="size-8 text-primary" />,
     title: "Ongoing Support",
     description: "Comprehensive training, marketing support, and dedicated assistance.",
-  },
-  {
-    icon: <DollarSign className="size-6 text-primary" />,
-    title: "Supply Chain Efficiency",
-    description: "Access to centralized procurement and efficient distribution network.",
   },
 ];
 
 const requirements = [
     {
-        icon: GraduationCap,
+        icon: CheckCircle,
         title: "Qualified Pharmacist",
         description: "Licensed pharmacist on premises during operating hours"
     },
     {
-        icon: DollarSign,
+        icon: CheckCircle,
         title: "Investment Capacity",
         description: "Initial investment of ₹15-25 lakhs including setup"
     },
     {
-        icon: FileText,
+        icon: CheckCircle,
         title: "Drug License",
         description: "Valid drug license for retail pharmacy operations"
     },
     {
-        icon: MapPin,
+        icon: CheckCircle,
         title: "Minimum Space",
         description: "300-500 sq ft retail space in prime location"
     },
     {
-        icon: Briefcase,
+        icon: CheckCircle,
         title: "Business Commitment",
-        description: "Full time dedication to store operations"
+        description: "Full-time dedication to store operations"
     },
     {
-        icon: Target,
+        icon: CheckCircle,
         title: "Local Market Knowledge",
         description: "Understanding of local healthcare needs and community"
     }
@@ -162,115 +163,109 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="why-partner" className="py-16 md:py-20 bg-card">
-          <div className="container mx-auto px-4">
-            <div className="grid gap-12 md:grid-cols-2 md:gap-16 items-center">
-              <div className="space-y-6">
-                <div className="text-center">
-                    <h2 className="font-headline text-3xl font-bold tracking-tight">
-                        Why Partner with Medplus?
-                    </h2>
-                    <p className="mt-4 text-lg text-muted-foreground">
-                        Key benefits of becoming a franchisee
-                    </p>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  {features.map((feature) => (
-                    <div key={feature.title} className="flex items-start gap-4">
-                      {feature.icon}
-                      <div>
-                        <h3 className="font-headline font-semibold">{feature.title}</h3>
-                        <p className="text-sm text-muted-foreground">{feature.description}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="aspect-video overflow-hidden rounded-xl shadow-lg">
-                {whyPartnerImage && <Image
-                  src={whyPartnerImage.imageUrl}
-                  alt={whyPartnerImage.description}
-                  width={600}
-                  height={400}
-                  className="h-full w-full object-cover"
-                  data-ai-hint={whyPartnerImage.imageHint}
-                />}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="requirements" className="py-16 md:py-20 bg-card">
+        <section id="why-partner" className="py-8 md:py-12">
             <div className="container mx-auto px-4">
-                <div className="mx-auto max-w-3xl text-center">
-                    <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">Franchisee Requirements</h2>
-                    <p className="mt-4 text-lg text-muted-foreground">Prerequisites for partnership</p>
-                </div>
-                <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {requirements.map((req) => (
-                        <div key={req.title} className="flex items-start gap-4">
-                             <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-                                <req.icon className="size-5" />
-                            </div>
-                            <div>
-                                <h3 className="font-headline font-semibold">{req.title}</h3>
-                                <p className="text-sm text-muted-foreground">{req.description}</p>
-                            </div>
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="text-2xl font-bold">Why Partner with Medplus?</CardTitle>
+                        <p className="text-muted-foreground">Key benefits of becoming a franchisee</p>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                            {features.map((feature) => (
+                                <div key={feature.title} className="flex flex-col items-center gap-4">
+                                    <div className="flex size-16 items-center justify-center rounded-full bg-primary/10">
+                                        {feature.icon}
+                                    </div>
+                                    <div>
+                                        <h3 className="font-headline font-semibold text-lg">{feature.title}</h3>
+                                        <p className="text-sm text-muted-foreground mt-1">{feature.description}</p>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
-                    ))}
-                </div>
+                    </CardContent>
+                </Card>
             </div>
         </section>
 
-        <section id="how-it-works" className="py-16 md:py-20 bg-card">
+        <section id="requirements" className="py-8 md:py-12">
+            <div className="container mx-auto px-4">
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="text-2xl font-bold">Franchisee Requirements</CardTitle>
+                        <p className="text-muted-foreground">Prerequisites for partnership</p>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                            {requirements.map((req) => (
+                                <div key={req.title} className="flex items-start gap-3">
+                                    <req.icon className="size-6 text-primary mt-1 shrink-0" />
+                                    <div>
+                                        <h3 className="font-headline font-semibold">{req.title}</h3>
+                                        <p className="text-sm text-muted-foreground">{req.description}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+        </section>
+
+        <section id="how-it-works" className="py-8 md:py-12">
           <div className="container mx-auto px-4">
-            <div className="mx-auto max-w-4xl text-center">
-              <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">How It Works</h2>
-              <p className="mt-4 text-lg text-muted-foreground">Your journey to becoming a Medplus franchisee</p>
-            </div>
-            <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
-              
-              <div>
-                <h3 className="font-headline text-2xl font-bold text-center mb-8">Converting Existing Pharmacy</h3>
-                <div className="relative">
-                  <div className="absolute left-6 top-0 h-full w-px -translate-x-1/2 bg-border" aria-hidden="true" />
-                  <div className="space-y-12">
-                    {convertingPharmacySteps.map((step) => (
-                      <div key={step.title} className="relative flex items-start gap-6">
-                        <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold">
-                          {step.step}
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-2xl font-bold">How It Works</CardTitle>
+                    <p className="text-muted-foreground">Your journey to becoming a Medplus franchisee</p>
+                </CardHeader>
+                <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
+                    
+                    <div>
+                        <h3 className="font-headline text-xl font-bold text-center mb-8">Converting Existing Pharmacy</h3>
+                        <div className="relative">
+                        <div className="absolute left-6 top-0 h-full w-px -translate-x-1/2 bg-border" aria-hidden="true" />
+                        <div className="space-y-12">
+                            {convertingPharmacySteps.map((step) => (
+                            <div key={step.title} className="relative flex items-start gap-6">
+                                <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold">
+                                {step.step}
+                                </div>
+                                <div>
+                                <h4 className="font-headline text-lg font-semibold">{step.title}</h4>
+                                <p className="mt-1 text-muted-foreground text-sm">{step.description}</p>
+                                </div>
+                            </div>
+                            ))}
                         </div>
-                        <div>
-                          <h4 className="font-headline text-xl font-semibold">{step.title}</h4>
-                          <p className="mt-1 text-muted-foreground">{step.description}</p>
                         </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+                    </div>
 
-              <div>
-                <h3 className="font-headline text-2xl font-bold text-center mb-8">Taking a New Franchisee</h3>
-                <div className="relative">
-                  <div className="absolute left-6 top-0 h-full w-px -translate-x-1/2 bg-border" aria-hidden="true" />
-                  <div className="space-y-12">
-                    {newFranchiseeSteps.map((step) => (
-                      <div key={step.title} className="relative flex items-start gap-6">
-                        <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold">
-                          {step.step}
+                    <div>
+                        <h3 className="font-headline text-xl font-bold text-center mb-8">Taking a New Franchisee</h3>
+                        <div className="relative">
+                        <div className="absolute left-6 top-0 h-full w-px -translate-x-1/2 bg-border" aria-hidden="true" />
+                        <div className="space-y-12">
+                            {newFranchiseeSteps.map((step) => (
+                            <div key={step.title} className="relative flex items-start gap-6">
+                                <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold">
+                                {step.step}
+                                </div>
+                                <div>
+                                <h4 className="font-headline text-lg font-semibold">{step.title}</h4>
+                                <p className="mt-1 text-muted-foreground text-sm">{step.description}</p>
+                                </div>
+                            </div>
+                            ))}
                         </div>
-                        <div>
-                          <h4 className="font-headline text-xl font-semibold">{step.title}</h4>
-                          <p className="mt-1 text-muted-foreground">{step.description}</p>
                         </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+                    </div>
 
-            </div>
+                    </div>
+                </CardContent>
+            </Card>
           </div>
         </section>
         
