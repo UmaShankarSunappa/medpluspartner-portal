@@ -1,15 +1,14 @@
+
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, CheckCircle, MessageSquare, Newspaper, Users, Zap, Briefcase, DollarSign, FileText, MapPin, Target, GraduationCap } from "lucide-react";
+import { ArrowRight, Zap, Users, Newspaper, MessageSquare, GraduationCap, DollarSign, FileText, MapPin, Briefcase, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LandingHeader } from "@/components/landing/header";
 import { LandingFooter } from "@/components/landing/footer";
 import { placeholderImages } from "@/lib/placeholder-images.json";
 
 const heroImage = placeholderImages.find(img => img.id === "hero-banner");
 const whyPartnerImage = placeholderImages.find(img => img.id === "why-partner");
-const leadershipImage = placeholderImages.find(img => img.id === "leadership-message");
 
 const features = [
   {
@@ -32,13 +31,6 @@ const features = [
     title: "Direct Communication",
     description: "Effortlessly communicate with the franchisor and manage invoices.",
   },
-];
-
-const missionPoints = [
-  "To empower our partners with robust tools and unwavering support.",
-  "To ensure seamless operations for collective growth and success.",
-  "To foster a transparent and collaborative business environment.",
-  "To uphold the highest standards of quality and reliability in healthcare.",
 ];
 
 const requirements = [
@@ -227,54 +219,7 @@ export default function Home() {
                 </div>
             </div>
         </section>
-        
-        <section id="mission" className="py-16 md:py-24">
-          <div className="container mx-auto px-4">
-            <div className="mx-auto max-w-3xl text-center">
-               <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">
-                Our Mission
-              </h2>
-              <p className="mt-4 text-lg text-muted-foreground">
-                We are committed to building a strong, successful network of partners by providing state-of-the-art technology and dedicated support systems.
-              </p>
-            </div>
-            <div className="mt-12 grid gap-8 md:grid-cols-2">
-              {missionPoints.map((point, index) => (
-                <Card key={index} className="flex items-center p-6 transition-transform hover:scale-105 hover:shadow-xl">
-                  <CheckCircle className="size-8 text-accent mr-4 shrink-0" />
-                  <p className="font-medium">{point}</p>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
 
-        <section id="leadership" className="bg-card py-16 md:py-24">
-          <div className="container mx-auto px-4">
-            <Card className="overflow-hidden md:grid md:grid-cols-2">
-              <div className="p-8 md:p-12 lg:p-16 flex flex-col justify-center">
-                 <blockquote className="space-y-4">
-                  <p className="text-xl font-medium text-foreground">
-                    “Our partners are the backbone of MedPlus. We've designed this portal to be more than just a tool; it's a testament to our commitment to your success. Together, we will redefine pharmacy retail.”
-                  </p>
-                  <footer>
-                    <div className="font-bold font-headline">Jane Doe</div>
-                    <div className="text-muted-foreground">CEO, MedPlus</div>
-                  </footer>
-                 </blockquote>
-              </div>
-              <div className="relative h-64 md:h-full">
-                {leadershipImage && <Image
-                  src={leadershipImage.imageUrl}
-                  alt={leadershipImage.description}
-                  fill
-                  className="object-cover"
-                  data-ai-hint={leadershipImage.imageHint}
-                />}
-              </div>
-            </Card>
-          </div>
-        </section>
       </main>
       <LandingFooter />
     </div>
