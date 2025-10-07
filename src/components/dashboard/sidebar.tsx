@@ -7,87 +7,53 @@ import {
   Sidebar,
   SidebarHeader,
   SidebarContent,
-  SidebarGroup,
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  SidebarFooter,
-  SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Button } from "@/components/ui/button";
 import { navLinks } from "@/lib/data";
 
 export function DashboardSidebar() {
   const pathname = usePathname();
 
   const isActive = (href: string, isExact = true) => {
-    return isExact ? pathname === href : pathname.startsWith(href);
+    if (!isExact) {
+      return pathname.startsWith(href);
+    }
+    return pathname === href;
   };
 
   return (
     <Sidebar>
-      <SidebarHeader>
+      <SidebarHeader className="p-4">
         <div className="flex items-center gap-2">
-          <Mountain className="size-6 text-primary" />
-          <h2 className="font-headline text-lg font-semibold text-primary-foreground">
-            <span className="text-foreground">MedPlus</span>
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="32" height="32" rx="4" fill="#D92D20"/>
+            <path d="M16.9423 15.3462H15.0577V11.5769H16.9423V15.3462ZM16.9423 18.2308H15.0577V16.9231H16.9423V18.2308ZM21.9904 11.5769V21.0385H20.5481V12.8462L18.8269 13.5V12.3365L21.8077 11.0192V11.5769H21.9904ZM13.0192 11.0192V21.0385H10V11.0192H13.0192ZM11.4615 19.7692H11.5769V12.2885H11.4615V19.7692Z" fill="white"/>
+          </svg>
+          <h2 className="font-headline text-lg font-bold text-foreground">
+            MedPlus
           </h2>
-          <div className="grow" />
-          <SidebarTrigger className="text-foreground" />
         </div>
       </SidebarHeader>
       <SidebarContent>
         <SidebarMenu>
-          {navLinks.dashboard.map((item) =>
-            item.subItems ? (
-              <Collapsible key={item.label} defaultOpen={isActive(item.subItems[0].href, false)}>
-                <SidebarMenuItem>
-                  <CollapsibleTrigger asChild>
-                    <SidebarMenuButton
-                      tooltip={item.label}
-                      isActive={item.subItems.some(sub => isActive(sub.href))}
-                      className="w-full justify-start"
-                    >
-                      <item.icon />
-                      <span>{item.label}</span>
-                    </SidebarMenuButton>
-                  </CollapsibleTrigger>
-                </SidebarMenuItem>
-                <CollapsibleContent>
-                    <div className="flex flex-col gap-1 py-1 pl-12">
-                        {item.subItems.map((subItem) => (
-                            <Link href={subItem.href} key={subItem.label}>
-                                <Button
-                                variant="ghost"
-                                size="sm"
-                                className={`w-full justify-start ${isActive(subItem.href) ? "bg-accent text-accent-foreground" : ""}`}
-                                >
-                                {subItem.label}
-                                </Button>
-                            </Link>
-                        ))}
-                    </div>
-                </CollapsibleContent>
-              </Collapsible>
-            ) : (
-              <SidebarMenuItem key={item.label}>
-                <Link href={item.href}>
-                  <SidebarMenuButton tooltip={item.label} isActive={isActive(item.href)}>
-                    <item.icon />
-                    <span>{item.label}</span>
-                  </SidebarMenuButton>
-                </Link>
-              </SidebarMenuItem>
-            )
-          )}
+          {navLinks.dashboard.map((item) => (
+            <SidebarMenuItem key={item.label}>
+              <Link href={item.href} className="w-full">
+                <SidebarMenuButton 
+                  tooltip={item.label}
+                  isActive={isActive(item.href, item.href === '/dashboard')}
+                  className="w-full justify-start gap-3"
+                >
+                  <item.icon />
+                  <span>{item.label}</span>
+                </SidebarMenuButton>
+              </Link>
+            </SidebarMenuItem>
+          ))}
         </SidebarMenu>
       </SidebarContent>
-      <SidebarFooter>
-        <SidebarGroup>
-          {/* Footer content can go here */}
-        </SidebarGroup>
-      </SidebarFooter>
     </Sidebar>
   );
 }

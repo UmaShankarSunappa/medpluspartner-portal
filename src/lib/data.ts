@@ -6,6 +6,7 @@ import {
   CreditCard,
   FileText,
   HelpCircle,
+  Home,
   LayoutDashboard,
   MessageSquareWarning,
   Newspaper,
@@ -15,6 +16,13 @@ import {
   Undo2,
   User,
   Users,
+  Wallet,
+  FileWarning,
+  LineChart,
+  MapPin,
+  FileSliders,
+  FileQuestion,
+  MessageCircleQuestion,
 } from "lucide-react";
 
 export const user = {
@@ -60,9 +68,9 @@ export const salesData = [
 ];
 
 export const ordersData = [
-  { orderId: "ORD75638", date: "2023-10-26", total: 7540.0, status: "Delivered", type: "Standard" },
-  { orderId: "ORD75639", date: "2023-10-24", total: 12450.0, status: "Shipped", type: "Provisional" },
-  { orderId: "ORD75640", date: "2023-10-23", total: 3200.0, status: "Delivered", type: "Standard" },
+  { orderId: "ORD-2024-001", date: "1/15/2024", total: 45000.0, status: "Delivered", type: "Auto" },
+  { orderId: "ORD-2024-002", date: "1/18/2024", total: 32000.0, status: "In Transit", type: "Manual" },
+  { orderId: "ORD-2024-003", date: "1/20/2024", total: 58000.0, status: "Processing", type: "Auto" },
   { orderId: "ORD75641", date: "2023-10-21", total: 8990.0, status: "Processing", type: "Emergency" },
   { orderId: "ORD75642", date: "2023-10-20", total: 21350.0, status: "Delivered", type: "Provisional" },
   { orderId: "ORD75643", date: "2023-10-18", total: 5400.0, status: "Cancelled", type: "Standard" },
@@ -145,35 +153,18 @@ export const navLinks = {
     { href: "#", label: "Contact Us" },
   ],
   dashboard: [
-    { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/dashboard", label: "Home", icon: Home },
     { href: "/dashboard/account", label: "Account Profile", icon: User },
-    {
-      label: "Orders",
-      icon: ShoppingCart,
-      subItems: [
-        { href: "/dashboard/orders", label: "Order History", icon: Activity },
-        { href: "/dashboard/orders/provisional", label: "Provisional Indent", icon: FileText },
-      ],
-    },
-    {
-      label: "Financials",
-      icon: Banknote,
-      subItems: [
-        { href: "/dashboard/financials", label: "Account Balance", icon: CreditCard },
-        { href: "/dashboard/financials/payments", label: "Payments", icon: Banknote },
-      ],
-    },
-    { href: "/dashboard/returns", label: "Returns", icon: Undo2 },
-    { href: "/dashboard/reports", label: "Reports", icon: BarChart },
-    {
-      label: "Invoices",
-      icon: FileText,
-      subItems: [
-        { href: "/dashboard/invoices", label: "Order Invoices", icon: Package },
-        { href: "/dashboard/invoices/membership", label: "Fee Invoices", icon: Users },
-      ]
-    },
-    { href: "/dashboard/complaints", label: "Complaints", icon: MessageSquareWarning },
+    { href: "/dashboard/orders", label: "Order History", icon: ShoppingCart },
+    { href: "/dashboard/financials", label: "Account Balance", icon: Wallet },
+    { href: "/dashboard/returns", label: "Return Details", icon: Undo2 },
+    { href: "/dashboard/financials/payments", label: "Payments", icon: CreditCard },
+    { href: "/dashboard/orders/provisional", label: "Provisional Indent", icon: FileWarning },
+    { href: "/dashboard/reports", label: "Performance Reports", icon: LineChart },
+    { href: "/dashboard/reports/field-visit", label: "Field Visit Reports", icon: MapPin },
+    { href: "/dashboard/invoices", label: "Monthly Reports", icon: FileSliders },
+    { href: "/dashboard/invoices/membership", label: "Invoices", icon: FileQuestion },
+    { href: "/dashboard/complaints", label: "Complaints", icon: MessageCircleQuestion },
   ],
   footer: {
     company: [
