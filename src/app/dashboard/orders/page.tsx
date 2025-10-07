@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { ordersData } from "@/lib/data";
-import { CalendarIcon, Eye, MoreHorizontal, RefreshCw, Search, Track } from "lucide-react";
+import { CalendarIcon, Eye, MoreHorizontal, RefreshCw, Search, Truck } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { DatePicker } from "@/components/ui/date-picker";
@@ -110,7 +110,7 @@ export default function OrdersPage() {
                         <RefreshCw className="h-4 w-4" />
                       </Button>
                       <Button variant="ghost" size="icon">
-                        <Track className="h-4 w-4" />
+                        <Truck className="h-4 w-4" />
                       </Button>
                     </div>
                   </TableCell>
