@@ -154,7 +154,7 @@ export const navLinks = {
   public: [
     { href: "/about-us", label: "About Us" },
     { href: "#", label: "News & Updates" },
-    { href: "#", label: "FAQs" },
+    { href: "/faq", label: "FAQs" },
     { href: "#", label: "Resources & Training" },
     { href: "#", label: "Contact Us" },
   ],
@@ -234,3 +234,46 @@ export const successStories = [
         metricIcon: Star,
     }
 ];
+
+export const faqs = [
+    {
+        question: "Q1. What documents are required before signing the franchise agreement?",
+        answer: "A: You will need to submit KYC documents (PAN, Aadhaar, GST Registration, Shop & Establishment License, and Drug License for pharmacy operations)."
+    },
+    {
+        question: "Q2. What is the minimum investment required to start a MedPlus franchise?",
+        answer: "A: Approx. ₹15–20 Lakhs depending on store size, location, and inventory requirements (figures vary regionally; confirm with Franchisee Business Development team)."
+    },
+    {
+        question: "Q3. How much space is required to open a MedPlus store?",
+        answer: "A: Minimum 300–400 sq. ft. with proper storage area, air conditioning, and accessibility for customers."
+    },
+    {
+        question: "Q4. Who is responsible for interior design and branding setup of the store?",
+        answer: "A: MedPlus provides standard branding guidelines and approved vendors. Franchisees must ensure the setup matches company specifications before launch."
+    },
+    {
+        question: "Q5. Is pharmacy staff recruitment handled by the company or franchisee?",
+        answer: "A: Franchisees are responsible for hiring qualified staff (at least one registered pharmacist). MedPlus may assist with training and certification."
+    },
+    {
+        question: "Q6. Is training provided for me and my staff before store launch?",
+        answer: "A: Yes, MedPlus conducts mandatory training sessions covering POS usage, billing, inventory management, customer service, and compliance."
+    },
+    {
+        question: "Q7. What IT infrastructure is required in my store?",
+        answer: "A: A computer system compatible with MedPlus POS, a barcode scanner, receipt printer, internet connectivity, and backup power supply."
+    },
+    {
+        question: "Q8. Does MedPlus help in obtaining the necessary drug licenses?",
+        answer: "A: Franchisees must apply for licenses, but MedPlus provides guidance and required documentation support."
+    },
+    {
+        question: "Q9. How soon after store setup will I start receiving inventory?",
+        answer: "A: Once store readiness and compliance checks are completed, the first stock dispatch happens within 7–10 working days."
+    },
+    {
+        question: "Q10. What initial marketing support will I receive for my store launch?",
+        answer: "A: MedPlus provides launch kits — including banners, posters, flyers, and digital campaigns — to help promote your store in the local area."
+    }
+]
