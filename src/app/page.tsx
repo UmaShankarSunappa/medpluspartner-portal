@@ -148,7 +148,7 @@ export default function Home() {
               Partnering for a Healthier Tomorrow
             </h1>
             <p className="mx-auto mt-6 max-w-3xl text-lg">
-              Join the MedPlus network and leverage our comprehensive partner portal to streamline your operations, enhance growth, and serve your community better.
+              Join India's leading pharmacy retail chain and be part of a trusted healthcare network serving millions of customers across the nation.
             </p>
             <div className="mt-10 flex justify-center gap-4">
               <Button asChild size="lg" className="font-bold">
