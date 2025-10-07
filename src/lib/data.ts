@@ -152,7 +152,7 @@ export const complaints = [
 
 export const navLinks = {
   public: [
-    { href: "#why-partner", label: "About Us" },
+    { href: "/about-us", label: "About Us" },
     { href: "#", label: "News & Updates" },
     { href: "#", label: "FAQs" },
     { href: "#", label: "Resources & Training" },
