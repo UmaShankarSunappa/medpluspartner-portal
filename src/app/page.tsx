@@ -1,7 +1,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Zap, Users, Newspaper, MessageSquare, GraduationCap, DollarSign, FileText, MapPin, Briefcase, Target } from "lucide-react";
+import { ArrowRight, Briefcase, DollarSign, FileText, GraduationCap, Headset, MapPin, Target, TrendingUp, Users, Library } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LandingHeader } from "@/components/landing/header";
 import { LandingFooter } from "@/components/landing/footer";
@@ -12,24 +12,24 @@ const whyPartnerImage = placeholderImages.find(img => img.id === "why-partner");
 
 const features = [
   {
-    icon: <Zap className="size-6 text-primary" />,
-    title: "Streamlined Operations",
-    description: "Manage orders, finances, and returns from a single, intuitive dashboard.",
+    icon: <Library className="size-6 text-primary" />,
+    title: "Brand Recognition",
+    description: "Leverage the trust of India's leading pharmacy chain with 4,230+ stores.",
+  },
+  {
+    icon: <TrendingUp className="size-6 text-primary" />,
+    title: "Supply Chain Efficiency",
+    description: "Access to centralized procurement and efficient distribution network.",
   },
   {
     icon: <Users className="size-6 text-primary" />,
-    title: "Dedicated Support",
-    description: "Access a dedicated field team and a robust complaint management system.",
+    title: "Technology Support",
+    description: "Modern POS systems, inventory management, and digital tools.",
   },
   {
-    icon: <Newspaper className="size-6 text-primary" />,
-    title: "Resources & Training",
-    description: "Stay updated with the latest news, resources, and training materials.",
-  },
-  {
-    icon: <MessageSquare className="size-6 text-primary" />,
-    title: "Direct Communication",
-    description: "Effortlessly communicate with the franchisor and manage invoices.",
+    icon: <Headset className="size-6 text-primary" />,
+    title: "Ongoing Support",
+    description: "Comprehensive training, marketing support, and dedicated assistance.",
   },
 ];
 
@@ -139,10 +139,10 @@ export default function Home() {
             <div className="grid gap-12 md:grid-cols-2 md:gap-16 items-center">
               <div className="space-y-6">
                 <div className="inline-block rounded-lg bg-secondary px-3 py-1 text-sm font-medium">
-                  Why Partner With Us?
+                    Why Partner with Medplus?
                 </div>
                 <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">
-                  A Partnership Built on Trust and Technology
+                  Key benefits of becoming a franchisee
                 </h2>
                 <p className="text-muted-foreground text-lg">
                   The MedPlus Partner Portal is your all-in-one solution for managing every aspect of your franchise. We provide the tools so you can focus on what matters most: your customers.
