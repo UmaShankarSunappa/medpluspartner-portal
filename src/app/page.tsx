@@ -166,12 +166,14 @@ export default function Home() {
           <div className="container mx-auto px-4">
             <div className="grid gap-12 md:grid-cols-2 md:gap-16 items-center">
               <div className="space-y-6">
-                <div className="inline-block rounded-lg bg-secondary px-3 py-1 text-sm font-medium">
-                    Why Partner with Medplus?
+                <div className="text-center">
+                    <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">
+                        Why Partner with Medplus?
+                    </h2>
+                    <p className="mt-4 text-lg text-muted-foreground">
+                        Key benefits of becoming a franchisee
+                    </p>
                 </div>
-                <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">
-                  Key benefits of becoming a franchisee
-                </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   {features.map((feature) => (
                     <div key={feature.title} className="flex items-start gap-4">
@@ -277,5 +279,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
