@@ -255,7 +255,7 @@ export default function Home() {
                   <div className="space-y-12">
                     {newFranchiseeSteps.map((step) => (
                       <div key={step.title} className="relative flex items-start gap-6">
-                        <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-secondary text-secondary-foreground font-bold">
+                        <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold">
                           {step.step}
                         </div>
                         <div>
