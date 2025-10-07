@@ -163,7 +163,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="why-partner" className="py-8 md:py-12">
+        <section id="why-partner" className="py-4">
             <div className="container mx-auto px-4">
                 <Card>
                     <CardHeader>
@@ -189,7 +189,7 @@ export default function Home() {
             </div>
         </section>
 
-        <section id="requirements" className="py-8 md:py-12">
+        <section id="requirements" className="py-4">
             <div className="container mx-auto px-4">
                 <Card>
                     <CardHeader>
@@ -213,7 +213,7 @@ export default function Home() {
             </div>
         </section>
 
-        <section id="how-it-works" className="py-8 md:py-12">
+        <section id="how-it-works" className="py-4">
           <div className="container mx-auto px-4">
             <Card>
                 <CardHeader>
@@ -274,3 +274,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
