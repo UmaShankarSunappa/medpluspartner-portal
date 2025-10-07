@@ -16,7 +16,7 @@ export default function FaqPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <LandingHeader />
-      <main className="flex-1 py-16 md:py-24">
+      <main className="flex-1 py-8 md:py-12">
         <div className="container mx-auto max-w-4xl px-4">
           <Card>
             <CardHeader>
