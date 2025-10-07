@@ -1,7 +1,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Briefcase, DollarSign, FileText, GraduationCap, Headset, MapPin, Target, TrendingUp, Users, Library } from "lucide-react";
+import { ArrowRight, Briefcase, DollarSign, FileText, GraduationCap, Headset, MapPin, Target, Users, Library } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LandingHeader } from "@/components/landing/header";
 import { LandingFooter } from "@/components/landing/footer";
@@ -17,11 +17,6 @@ const features = [
     description: "Leverage the trust of India's leading pharmacy chain with 4,230+ stores.",
   },
   {
-    icon: <TrendingUp className="size-6 text-primary" />,
-    title: "Supply Chain Efficiency",
-    description: "Access to centralized procurement and efficient distribution network.",
-  },
-  {
     icon: <Users className="size-6 text-primary" />,
     title: "Technology Support",
     description: "Modern POS systems, inventory management, and digital tools.",
@@ -30,6 +25,11 @@ const features = [
     icon: <Headset className="size-6 text-primary" />,
     title: "Ongoing Support",
     description: "Comprehensive training, marketing support, and dedicated assistance.",
+  },
+  {
+    icon: <DollarSign className="size-6 text-primary" />,
+    title: "Supply Chain Efficiency",
+    description: "Access to centralized procurement and efficient distribution network.",
   },
 ];
 
@@ -66,7 +66,7 @@ const requirements = [
     }
 ];
 
-const howItWorksSteps = [
+const convertingPharmacySteps = [
     {
         step: 1,
         title: "Submit Application",
@@ -96,6 +96,34 @@ const howItWorksSteps = [
         step: 6,
         title: "Grand Opening",
         description: "Launch your Medplus store with marketing support and ongoing assistance"
+    }
+];
+
+const newFranchiseeSteps = [
+    {
+        step: 1,
+        title: "Submit Application",
+        description: "Fill out the franchise application with your details."
+    },
+    {
+        step: 2,
+        title: "Initial Screening",
+        description: "Our team reviews your application for suitability."
+    },
+    {
+        step: 3,
+        title: "Available Store Allocation",
+        description: "We'll match you with an available store location."
+    },
+    {
+        step: 4,
+        title: "Agreement and Training",
+        description: "Sign the franchise agreement and undergo training."
+    },
+    {
+        step: 5,
+        title: "Grand Opening",
+        description: "Launch your new MedPlus store with our full support."
     }
 ];
 
@@ -193,30 +221,57 @@ export default function Home() {
         </section>
 
         <section id="how-it-works" className="py-16 md:py-24 bg-card">
-            <div className="container mx-auto px-4">
-                <div className="mx-auto max-w-3xl text-center">
-                    <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">How It Works</h2>
-                    <p className="mt-4 text-lg text-muted-foreground">Your journey to becoming a Medplus franchisee</p>
-                </div>
-                <div className="relative mt-12">
-                    <div className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-border" aria-hidden="true" />
-                    <div className="space-y-12">
-                        {howItWorksSteps.map((step, index) => (
-                            <div key={step.title} className="relative flex items-start gap-6 lg:gap-8">
-                                <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold">
-                                    {step.step}
-                                </div>
-                                <div>
-                                    <h3 className="font-headline text-xl font-semibold">{step.title}</h3>
-                                    <p className="mt-1 text-muted-foreground">{step.description}</p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
+          <div className="container mx-auto px-4">
+            <div className="mx-auto max-w-4xl text-center">
+              <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">How It Works</h2>
+              <p className="mt-4 text-lg text-muted-foreground">Your journey to becoming a Medplus franchisee</p>
             </div>
-        </section>
+            <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
+              
+              <div>
+                <h3 className="font-headline text-2xl font-bold text-center mb-8">Converting Existing Pharmacy</h3>
+                <div className="relative">
+                  <div className="absolute left-6 top-0 h-full w-px -translate-x-1/2 bg-border" aria-hidden="true" />
+                  <div className="space-y-12">
+                    {convertingPharmacySteps.map((step) => (
+                      <div key={step.title} className="relative flex items-start gap-6">
+                        <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold">
+                          {step.step}
+                        </div>
+                        <div>
+                          <h4 className="font-headline text-xl font-semibold">{step.title}</h4>
+                          <p className="mt-1 text-muted-foreground">{step.description}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
 
+              <div>
+                <h3 className="font-headline text-2xl font-bold text-center mb-8">Taking a New Franchisee</h3>
+                <div className="relative">
+                  <div className="absolute left-6 top-0 h-full w-px -translate-x-1/2 bg-border" aria-hidden="true" />
+                  <div className="space-y-12">
+                    {newFranchiseeSteps.map((step) => (
+                      <div key={step.title} className="relative flex items-start gap-6">
+                        <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-secondary text-secondary-foreground font-bold">
+                          {step.step}
+                        </div>
+                        <div>
+                          <h4 className="font-headline text-xl font-semibold">{step.title}</h4>
+                          <p className="mt-1 text-muted-foreground">{step.description}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+        
       </main>
       <LandingFooter />
     </div>
