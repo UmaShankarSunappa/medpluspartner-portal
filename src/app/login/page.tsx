@@ -100,6 +100,11 @@ export default function LoginPage() {
                 Request Access
               </Link>
             </div>
+            <div className="mt-2 text-center text-sm">
+                <Link href="/" className="underline text-muted-foreground">
+                    Return to Homepage
+                </Link>
+            </div>
           </CardContent>
         </Card>
       </div>
