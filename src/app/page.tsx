@@ -132,7 +132,7 @@ export default function Home() {
     <div className="flex min-h-screen flex-col bg-background">
       <LandingHeader />
       <main className="flex-1">
-        <section className="relative w-full py-20 md:py-32 lg:py-40">
+        <section className="relative w-full py-20 md:py-32">
            {heroImage && <Image
               src={heroImage.imageUrl}
               alt={heroImage.description}
@@ -143,10 +143,10 @@ export default function Home() {
             />}
           <div className="absolute inset-0 bg-black/50" />
           <div className="container relative z-10 mx-auto px-4 text-center text-primary-foreground">
-            <h1 className="font-headline text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
+            <h1 className="font-headline text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
               Partnering for a Healthier Tomorrow
             </h1>
-            <p className="mx-auto mt-6 max-w-3xl text-lg md:text-xl">
+            <p className="mx-auto mt-6 max-w-3xl text-lg">
               Join the MedPlus network and leverage our comprehensive partner portal to streamline your operations, enhance growth, and serve your community better.
             </p>
             <div className="mt-10 flex justify-center gap-4">
@@ -162,7 +162,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="why-partner" className="py-16 md:py-24 bg-card">
+        <section id="why-partner" className="py-16 md:py-20 bg-card">
           <div className="container mx-auto px-4">
             <div className="grid gap-12 md:grid-cols-2 md:gap-16 items-center">
               <div className="space-y-6">
@@ -198,7 +198,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="requirements" className="py-16 md:py-24">
+        <section id="requirements" className="py-16 md:py-20 bg-card">
             <div className="container mx-auto px-4">
                 <div className="mx-auto max-w-3xl text-center">
                     <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">Franchisee Requirements</h2>
@@ -220,7 +220,7 @@ export default function Home() {
             </div>
         </section>
 
-        <section id="how-it-works" className="py-16 md:py-24 bg-card">
+        <section id="how-it-works" className="py-16 md:py-20 bg-card">
           <div className="container mx-auto px-4">
             <div className="mx-auto max-w-4xl text-center">
               <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">How It Works</h2>
@@ -277,3 +277,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
