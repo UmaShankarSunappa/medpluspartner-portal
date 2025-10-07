@@ -22,7 +22,7 @@ export function LandingHeader() {
 
   return (
     <header className={headerClasses}>
-      <Link href="/" className="flex items-center justify-center" prefetch={false}>
+      <Link href="/" className="flex items-center justify-center">
         <Mountain className="h-6 w-6" />
         <span className="sr-only">MedPlus</span>
         <span className="font-headline text-xl font-semibold ml-2">MedPlus</span>
@@ -33,7 +33,6 @@ export function LandingHeader() {
             key={link.label}
             href={link.href}
             className="text-sm font-medium hover:underline underline-offset-4"
-            prefetch={false}
           >
             {link.label}
           </Link>
@@ -60,7 +59,6 @@ export function LandingHeader() {
                   key={link.label}
                   href={link.href}
                   className="hover:text-primary"
-                  prefetch={false}
                 >
                   {link.label}
                 </Link>
