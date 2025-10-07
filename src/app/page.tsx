@@ -167,7 +167,7 @@ export default function Home() {
             <div className="grid gap-12 md:grid-cols-2 md:gap-16 items-center">
               <div className="space-y-6">
                 <div className="text-center">
-                    <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">
+                    <h2 className="font-headline text-3xl font-bold tracking-tight">
                         Why Partner with Medplus?
                     </h2>
                     <p className="mt-4 text-lg text-muted-foreground">
