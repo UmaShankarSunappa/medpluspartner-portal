@@ -144,9 +144,6 @@ export default function Home() {
                 <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">
                   Key benefits of becoming a franchisee
                 </h2>
-                <p className="text-muted-foreground text-lg">
-                  The MedPlus Partner Portal is your all-in-one solution for managing every aspect of your franchise. We provide the tools so you can focus on what matters most: your customers.
-                </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   {features.map((feature) => (
                     <div key={feature.title} className="flex items-start gap-4">
