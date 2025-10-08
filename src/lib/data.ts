@@ -260,7 +260,7 @@ export const navLinks = {
   dashboard: [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/dashboard/orders", label: "Orders", icon: History },
-    { href: "/dashboard/financials", label: "Financials", icon: Landmark },
+    { href: "/dashboard/financials", label: "Account Balance", icon: Landmark },
     { href: "/dashboard/returns", label: "Returns", icon: Undo2 },
     { href: "/dashboard/reports", label: "Reports", icon: FileSliders },
     { href: "/dashboard/invoices", label: "Invoices", icon: FileClock },
