@@ -86,7 +86,7 @@ export default function ReturnsPage() {
             A list of your recent return requests.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>

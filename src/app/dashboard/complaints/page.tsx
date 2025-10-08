@@ -2,7 +2,7 @@
 "use client";
 
 import { useState } from "react";
-import { MoreHorizontal, PlusCircle } from "lucide-react";
+import { MoreHorizontal, PlusCircle, MessageCircle, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -41,6 +41,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { complaintsData, type Complaint } from "@/lib/data";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 
 const statusVariant: { [key: string]: "default" | "secondary" | "destructive" | "outline" } = {
     "Resolved": "default",
@@ -58,7 +59,7 @@ export default function ComplaintsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <h1 className="font-headline text-3xl font-bold">Complaints</h1>
           <p className="text-muted-foreground">
@@ -87,9 +88,7 @@ export default function ComplaintsPage() {
                                 <SelectValue placeholder="Select a department" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="logistics">Logistics</SelectItem>
                                 <SelectItem value="warehouse">Warehouse</SelectItem>
-                                <SelectItem value="accounts">Accounts</SelectItem>
                                 <SelectItem value="support">Technical Support</SelectItem>
                             </SelectContent>
                         </Select>
@@ -117,11 +116,12 @@ export default function ComplaintsPage() {
             A list of your recent complaints and their status.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Complaint ID</TableHead>
+                <TableHead>Department</TableHead>
                 <TableHead>Date</TableHead>
                 <TableHead>Subject</TableHead>
                 <TableHead>Status</TableHead>
@@ -134,6 +134,7 @@ export default function ComplaintsPage() {
               {complaintsData.map((complaint) => (
                 <TableRow key={complaint.complaintId}>
                   <TableCell className="font-medium">{complaint.complaintId}</TableCell>
+                   <TableCell>{complaint.department}</TableCell>
                   <TableCell>{complaint.dateTime}</TableCell>
                   <TableCell>{complaint.subject}</TableCell>
                   <TableCell>
@@ -164,22 +165,54 @@ export default function ComplaintsPage() {
 
       {/* View Complaint Modal */}
         <Dialog open={isViewModalOpen} onOpenChange={setIsViewModalOpen}>
-            <DialogContent className="sm:max-w-md">
+            <DialogContent className="sm:max-w-lg">
                 <DialogHeader>
-                <DialogTitle>Complaint Details</DialogTitle>
+                <DialogTitle>Complaint #{selectedComplaint?.complaintId}</DialogTitle>
                 <DialogDescription>
-                    Details for complaint #{selectedComplaint?.complaintId}
+                    Status: <Badge variant={statusVariant[selectedComplaint?.status || ''] || 'secondary'}>{selectedComplaint?.status}</Badge>
                 </DialogDescription>
                 </DialogHeader>
-                <div className="grid gap-4 py-4">
-                <div className="space-y-2">
-                    <p className="text-sm font-medium text-muted-foreground">Subject: {selectedComplaint?.subject}</p>
-                    <p className="text-sm">{selectedComplaint?.description}</p>
-                </div>
-                {/* Activity log could be added here */}
+                <div className="grid gap-6 py-4 max-h-[70vh] overflow-y-auto pr-4">
+                    <div className="space-y-4">
+                        <h3 className="font-semibold text-lg">Details</h3>
+                        <div className="space-y-2">
+                            <p className="text-sm font-medium text-muted-foreground">Subject</p>
+                            <p className="text-sm">{selectedComplaint?.subject}</p>
+                        </div>
+                        <div className="space-y-2">
+                             <p className="text-sm font-medium text-muted-foreground">Description</p>
+                            <p className="text-sm">{selectedComplaint?.description}</p>
+                        </div>
+                    </div>
+                    
+                    <Separator />
+
+                    <div className="space-y-4">
+                        <h3 className="font-semibold text-lg">Activity Log</h3>
+                        <div className="relative pl-6">
+                             <div className="absolute left-9 top-0 h-full w-0.5 bg-border -translate-x-1/2"></div>
+                            {selectedComplaint?.activityLog.map((log, index) => (
+                                <div key={index} className="relative flex items-start gap-4 mb-6">
+                                     <div className="z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                                        <MessageCircle className="h-4 w-4" />
+                                    </div>
+                                    <div className="flex-1">
+                                        <div className="flex items-center justify-between">
+                                            <p className="font-semibold text-sm">{log.user}</p>
+                                            <time className="text-xs text-muted-foreground flex items-center gap-1">
+                                                <Clock className="h-3 w-3" />
+                                                {log.date}
+                                            </time>
+                                        </div>
+                                        <p className="text-sm text-muted-foreground">{log.activity}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
                 <DialogFooter>
-                <Button onClick={() => setIsViewModalOpen(false)}>Close</Button>
+                    <Button variant="outline" onClick={() => setIsViewModalOpen(false)}>Close</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

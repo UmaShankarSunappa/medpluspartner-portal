@@ -85,7 +85,7 @@ export default function ReportsPage() {
             Download reports and complete required actions.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>

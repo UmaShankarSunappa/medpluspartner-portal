@@ -63,7 +63,7 @@ export default function FinancialsPage() {
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
          <Card>
           <CardHeader className="pb-2">
             <CardDescription>Account Name</CardDescription>
@@ -78,7 +78,7 @@ export default function FinancialsPage() {
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Available Credit Limit</CardDescription>
+            <CardDescription>Available Credit</CardDescription>
             <CardTitle className="text-2xl">₹{availableCredit.toLocaleString('en-IN')}</CardTitle>
           </CardHeader>
         </Card>
@@ -88,7 +88,7 @@ export default function FinancialsPage() {
             <CardTitle className="text-2xl text-destructive">₹{financialSummary.outstanding.toLocaleString('en-IN')}</CardTitle>
           </CardHeader>
         </Card>
-        <Card>
+        <Card className="lg:col-span-1 xl:col-auto">
           <CardHeader className="pb-2">
             <CardDescription>Credit Period</CardDescription>
             <CardTitle className="text-2xl">{financialSummary.creditPeriod} Days</CardTitle>
@@ -97,14 +97,14 @@ export default function FinancialsPage() {
       </div>
 
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
+        <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <CardTitle>Transaction Statement</CardTitle>
             <CardDescription>
               Showing transactions for the last 90 days.
             </CardDescription>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2">
             <DateRangePicker />
             <Button onClick={handleExport}>
               <Download className="mr-2 h-4 w-4" />
@@ -112,7 +112,7 @@ export default function FinancialsPage() {
             </Button>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>

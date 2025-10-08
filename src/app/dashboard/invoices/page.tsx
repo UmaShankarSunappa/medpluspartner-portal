@@ -62,7 +62,7 @@ export default function InvoicesPage() {
                 <Input placeholder="Search by Order ID or Invoice ID..." className="pl-8" />
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -105,7 +105,7 @@ export default function InvoicesPage() {
                 Review and accept your commission invoices.
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -130,11 +130,10 @@ export default function InvoicesPage() {
                       </TableCell>
                       <TableCell className="text-right">₹{invoice.amount.toLocaleString('en-IN')}</TableCell>
                       <TableCell className="text-right">
-                        {invoice.status === 'Generated' ? (
-                          <Button>Accept & Generate PDF</Button>
-                        ) : (
-                          <Badge variant="default">Accepted</Badge>
-                        )}
+                         <Button variant="outline" size="icon">
+                          <Download className="h-4 w-4" />
+                          <span className="sr-only">Download</span>
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}

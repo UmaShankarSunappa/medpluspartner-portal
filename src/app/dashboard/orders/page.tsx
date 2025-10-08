@@ -75,7 +75,7 @@ export default function OrdersPage() {
   return (
     <TooltipProvider>
         <div className="space-y-6">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div>
             <h1 className="text-2xl font-bold tracking-tight">Order History</h1>
             <p className="text-muted-foreground">View and track all your orders</p>
@@ -107,7 +107,7 @@ export default function OrdersPage() {
             <CardTitle>Orders</CardTitle>
             <CardDescription>Your order history and details (by default last 15 days orders will appear here)</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="overflow-x-auto">
             <Table>
                 <TableHeader>
                 <TableRow>

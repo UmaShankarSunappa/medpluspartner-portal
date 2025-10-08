@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -50,7 +51,7 @@ export default function PaymentsPage() {
     const [isCreatePaymentOpen, setIsCreatePaymentOpen] = useState(false);
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <h1 className="font-headline text-3xl font-bold">Payments</h1>
           <p className="text-muted-foreground">
@@ -153,7 +154,7 @@ export default function PaymentsPage() {
           <CardTitle>Payment History</CardTitle>
           <CardDescription>Last 30 days of payments</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>

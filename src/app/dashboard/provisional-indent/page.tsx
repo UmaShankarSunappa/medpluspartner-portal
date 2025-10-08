@@ -115,7 +115,7 @@ export default function ProvisionalIndentPage() {
             Review and confirm your provisional indents.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
@@ -187,7 +187,7 @@ export default function ProvisionalIndentPage() {
                         </TableBody>
                     </Table>
                 </div>
-                <DialogFooter className="gap-2">
+                <DialogFooter className="flex-col sm:flex-row gap-2">
                     <Button variant="destructive" onClick={() => setIsDeleteAlertOpen(true)}>
                         <Trash2 className="mr-2 h-4 w-4" /> Delete Indent
                     </Button>
