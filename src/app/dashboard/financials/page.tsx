@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,6 +19,9 @@ import { financialSummary, transactions } from "@/lib/data";
 import { Download, Calendar as CalendarIcon } from "lucide-react";
 
 export default function FinancialsPage() {
+
+    const availableCredit = financialSummary.creditLimit - financialSummary.outstanding;
+
   return (
     <div className="space-y-6">
       <div>
@@ -27,23 +31,35 @@ export default function FinancialsPage() {
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Credit Limit</CardDescription>
-            <CardTitle className="text-4xl">₹{financialSummary.creditLimit.toLocaleString('en-IN')}</CardTitle>
+            <CardDescription>Account Name</CardDescription>
+            <CardTitle className="text-2xl truncate">{financialSummary.storeName}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Outstanding Balance</CardDescription>
-            <CardTitle className="text-4xl text-destructive">₹{financialSummary.outstanding.toLocaleString('en-IN')}</CardTitle>
+            <CardDescription>Credit Limit</CardDescription>
+            <CardTitle className="text-2xl">₹{financialSummary.creditLimit.toLocaleString('en-IN')}</CardTitle>
+          </CardHeader>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardDescription>Available Credit Limit</CardDescription>
+            <CardTitle className="text-2xl">₹{availableCredit.toLocaleString('en-IN')}</CardTitle>
+          </CardHeader>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardDescription>Current Outstanding</CardDescription>
+            <CardTitle className="text-2xl text-destructive">₹{financialSummary.outstanding.toLocaleString('en-IN')}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
             <CardDescription>Credit Period</CardDescription>
-            <CardTitle className="text-4xl">{financialSummary.creditPeriod} Days</CardTitle>
+            <CardTitle className="text-2xl">{financialSummary.creditPeriod} Days</CardTitle>
           </CardHeader>
         </Card>
       </div>

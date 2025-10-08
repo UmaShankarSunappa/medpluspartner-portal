@@ -203,6 +203,7 @@ export const accountProfile = {
 };
 
 export const financialSummary = {
+  storeName: "Koramangala, Bangalore",
   creditLimit: 500000,
   outstanding: 125780,
   creditPeriod: 45,
