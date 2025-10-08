@@ -88,8 +88,6 @@ export default function ComplaintsPage() {
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="warehouse">Warehouse</SelectItem>
-                                <SelectItem value="accounts">Accounts</SelectItem>
-                                <SelectItem value="logistics">Logistics</SelectItem>
                                 <SelectItem value="support">Technical Support</SelectItem>
                             </SelectContent>
                         </Select>
