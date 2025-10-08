@@ -146,7 +146,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-black/50" />
           <div className="container relative z-10 mx-auto px-4 text-center text-primary-foreground">
             <h1 className="font-headline text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
-              Partnering for a Healthier Tomorrow
+              Partner with India’s Most Reliable Pharmacy Brand
             </h1>
             <p className="mx-auto mt-6 max-w-3xl text-lg">
               Join India's leading pharmacy retail chain and be part of a trusted healthcare network serving millions of customers across the nation.
