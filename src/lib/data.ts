@@ -1,3 +1,4 @@
+
 import {
   Activity,
   Banknote,
@@ -164,7 +165,6 @@ export const navLinks = {
   ],
   dashboard: [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/dashboard/account", label: "Account profile", icon: BookUser },
     { href: "/dashboard/orders", label: "Orders", icon: History },
     { href: "/dashboard/financials", label: "Financials", icon: Landmark },
     { href: "/dashboard/returns", label: "Returns", icon: Undo2 },
@@ -277,3 +277,5 @@ export const faqs = [
         answer: "A: MedPlus provides launch kits — including banners, posters, flyers, and digital campaigns — to help promote your store in the local area."
     }
 ]
+
+    
