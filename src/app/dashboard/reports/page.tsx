@@ -45,31 +45,31 @@ export default function ReportsPage() {
        <Card>
         <CardHeader>
           <CardTitle>Select Period</CardTitle>
-          <CardDescription>Filter reports by year and month.</CardDescription>
+          <CardDescription>
+            Filter reports by year and month (only current financial year will be available).
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col md:flex-row gap-4">
             <div className="grid gap-2 w-full md:w-48">
               <Label htmlFor="year">Year</Label>
-              <Select defaultValue={currentYear}>
+              <Select defaultValue="2025">
                 <SelectTrigger id="year">
                   <SelectValue placeholder="Select year" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={currentYear}>{currentYear}</SelectItem>
+                  <SelectItem value="2025">2025</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="grid gap-2 w-full md:w-48">
               <Label htmlFor="month">Month</Label>
-               <Select defaultValue="january">
+               <Select defaultValue="september">
                 <SelectTrigger id="month">
                   <SelectValue placeholder="Select month" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="january">January</SelectItem>
-                  <SelectItem value="february">February</SelectItem>
-                  <SelectItem value="march">March</SelectItem>
+                  <SelectItem value="september">September</SelectItem>
                 </SelectContent>
               </Select>
             </div>
