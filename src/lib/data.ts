@@ -446,6 +446,7 @@ export const navLinks = {
     { href: "/dashboard/provisional-indent", label: "Provisional Indent", icon: ClipboardList },
     { href: "/dashboard/performance", label: "Performance", icon: BarChart },
     { href: "/dashboard/reports", label: "Monthly Reports", icon: FileSliders },
+    { href: "/dashboard/gst-reports", label: "GST Reports", icon: FileText },
     { href: "/dashboard/invoices", label: "Invoices", icon: FileClock },
     { href: "/dashboard/complaints", label: "Complaints", icon: ShieldQuestion },
   ],
@@ -679,6 +680,7 @@ export const performanceData = {
 
 
     
+
 
 
 
