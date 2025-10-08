@@ -438,7 +438,6 @@ export const navLinks = {
   ],
   dashboard: [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/dashboard/account", label: "Account profile", icon: User },
     { href: "/dashboard/orders", label: "Orders", icon: History },
     { href: "/dashboard/financials", label: "Account Balance", icon: Landmark },
     { href: "/dashboard/payments", label: "Payments", icon: Banknote },
@@ -680,6 +679,7 @@ export const performanceData = {
 
 
     
+
 
 
 
