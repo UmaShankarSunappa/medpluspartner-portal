@@ -28,13 +28,49 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useState, useEffect } from "react";
 
 export default function ReportsPage() {
-  const years = ["2024", "2023"];
-  const months = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-  ];
+  const [currentYear, setCurrentYear] = useState('');
+  const [availableMonths, setAvailableMonths] = useState<string[]>([]);
+  const [selectedMonth, setSelectedMonth] = useState('');
+  
+  useEffect(() => {
+    const now = new Date();
+    const currentMonthIndex = now.getMonth(); // 0-11
+    const currentDay = now.getDate();
+    const year = now.getFullYear();
+
+    // Financial year in India starts from April
+    const financialYear = currentMonthIndex >= 3 ? year : year - 1;
+    setCurrentYear(financialYear.toString());
+
+    const allMonths = [
+      "April", "May", "June", "July", "August", "September",
+      "October", "November", "December", "January", "February", "March"
+    ];
+
+    let monthsInFinancialYear: string[];
+
+    if (financialYear < year) { // Case for Jan, Feb, March
+        monthsInFinancialYear = allMonths.slice(0, 9 + currentMonthIndex + 1);
+    } else { // Case for April to Dec
+        monthsInFinancialYear = allMonths.slice(0, currentMonthIndex - 3 + 1);
+    }
+    
+    setAvailableMonths(monthsInFinancialYear);
+    
+    // Set default selected month
+    if (monthsInFinancialYear.length > 0) {
+        const currentMonthName = now.toLocaleString('default', { month: 'long' });
+        if (monthsInFinancialYear.includes(currentMonthName)) {
+            setSelectedMonth(currentMonthName);
+        } else {
+            setSelectedMonth(monthsInFinancialYear[monthsInFinancialYear.length-1]);
+        }
+    }
+  }, []);
+  
 
   return (
     <div className="space-y-6">
@@ -54,25 +90,23 @@ export default function ReportsPage() {
           <div className="flex flex-col md:flex-row gap-4">
             <div className="grid gap-2 w-full md:w-48">
               <Label htmlFor="year">Year</Label>
-              <Select defaultValue="2024">
+              <Select value={currentYear} disabled>
                 <SelectTrigger id="year">
                   <SelectValue placeholder="Select year" />
                 </SelectTrigger>
                 <SelectContent>
-                  {years.map((year) => (
-                    <SelectItem key={year} value={year}>{year}</SelectItem>
-                  ))}
+                  {currentYear && <SelectItem value={currentYear}>{`${currentYear}-${(parseInt(currentYear, 10)+1).toString().slice(-2)}`}</SelectItem>}
                 </SelectContent>
               </Select>
             </div>
             <div className="grid gap-2 w-full md:w-48">
               <Label htmlFor="month">Month</Label>
-               <Select defaultValue="January">
+               <Select value={selectedMonth} onValueChange={setSelectedMonth}>
                 <SelectTrigger id="month">
                   <SelectValue placeholder="Select month" />
                 </SelectTrigger>
                 <SelectContent>
-                  {months.map((month) => (
+                  {availableMonths.map((month) => (
                     <SelectItem key={month} value={month}>{month}</SelectItem>
                   ))}
                 </SelectContent>
