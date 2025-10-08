@@ -40,7 +40,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Separator } from "@/components/ui/separator";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const statusVariant: { [key: string]: "default" | "secondary" | "destructive" | "outline" | "success" | "warning" | "info" } = {
     "Delivered": "success",
@@ -73,164 +73,187 @@ export default function OrdersPage() {
 
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Order History</h1>
-          <p className="text-muted-foreground">View and track all your orders</p>
-        </div>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Search Orders</CardTitle>
-          <CardDescription>Filter orders by date range (maximum 15 days)</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col md:flex-row gap-4 items-end">
-            <div className="grid gap-2">
-              <Label htmlFor="date-range">Date Range</Label>
-              <DateRangePicker />
+    <TooltipProvider>
+        <div className="space-y-6">
+        <div className="flex items-center justify-between">
+            <div>
+            <h1 className="text-2xl font-bold tracking-tight">Order History</h1>
+            <p className="text-muted-foreground">View and track all your orders</p>
             </div>
-            <Button>
-              <Search className="mr-2 h-4 w-4" />
-              Search
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+        </div>
+
+        <Card>
+            <CardHeader>
+            <CardTitle>Search Orders</CardTitle>
+            <CardDescription>Filter orders by date range (maximum 15 days)</CardDescription>
+            </CardHeader>
+            <CardContent>
+            <div className="flex flex-col md:flex-row gap-4 items-end">
+                <div className="grid gap-2">
+                <Label htmlFor="date-range">Date Range</Label>
+                <DateRangePicker />
+                </div>
+                <Button>
+                <Search className="mr-2 h-4 w-4" />
+                Search
+                </Button>
+            </div>
+            </CardContent>
+        </Card>
 
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Orders</CardTitle>
-          <CardDescription>Your order history and details (by default last 15 days orders will appear here)</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Order ID</TableHead>
-                <TableHead>Web Order ID</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Total</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {ordersData.map((order) => (
-                <TableRow key={order.orderId}>
-                  <TableCell className="font-medium">{order.orderId}</TableCell>
-                  <TableCell>WEB-{order.orderId.split('-')[1]}</TableCell>
-                  <TableCell>{order.date}</TableCell>
-                  <TableCell>₹{order.total.toLocaleString('en-IN')}</TableCell>
-                  <TableCell>
-                    <Badge variant={statusVariant[order.status] || 'secondary'}>{order.status}</Badge>
-                  </TableCell>
-                  <TableCell>{order.type}</TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex gap-2 justify-end">
-                      <Button variant="ghost" size="icon" onClick={() => handleViewClick(order)}>
-                        <Eye className="h-4 w-4" />
-                         <span className="sr-only">View Order</span>
-                      </Button>
-                      <Button variant="ghost" size="icon" onClick={() => handleReorderClick(order)}>
-                        <RefreshCw className="h-4 w-4" />
-                         <span className="sr-only">Re-order</span>
-                      </Button>
-                      <Button variant="ghost" size="icon" onClick={() => handleTrackClick(order)}>
-                        <Truck className="h-4 w-4" />
-                         <span className="sr-only">Track Order</span>
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-
-      {/* View Order Modal */}
-      <Dialog open={isViewModalOpen} onOpenChange={setIsViewModalOpen}>
-        <DialogContent className="sm:max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Order Details</DialogTitle>
-            <DialogDescription>
-              Products in order <span className="font-medium">{selectedOrder?.orderId}</span>
-            </DialogDescription>
-          </DialogHeader>
-          <div className="max-h-[60vh] overflow-y-auto">
+        <Card>
+            <CardHeader>
+            <CardTitle>Orders</CardTitle>
+            <CardDescription>Your order history and details (by default last 15 days orders will appear here)</CardDescription>
+            </CardHeader>
+            <CardContent>
             <Table>
                 <TableHeader>
-                    <TableRow>
-                        <TableHead>Product</TableHead>
-                        <TableHead>SKU</TableHead>
-                        <TableHead className="text-center">Quantity</TableHead>
-                        <TableHead className="text-right">Price</TableHead>
-                    </TableRow>
+                <TableRow>
+                    <TableHead>Order ID</TableHead>
+                    <TableHead>Web Order ID</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Total</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Type</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {selectedOrder?.products?.map(product => (
-                        <TableRow key={product.sku}>
-                            <TableCell className="font-medium">{product.name}</TableCell>
-                            <TableCell>{product.sku}</TableCell>
-                            <TableCell className="text-center">{product.quantity}</TableCell>
-                            <TableCell className="text-right">₹{product.price.toLocaleString('en-IN')}</TableCell>
-                        </TableRow>
-                    ))}
+                {ordersData.map((order) => (
+                    <TableRow key={order.orderId}>
+                    <TableCell className="font-medium">{order.orderId}</TableCell>
+                    <TableCell>WEB-{order.orderId.split('-')[1]}</TableCell>
+                    <TableCell>{order.date}</TableCell>
+                    <TableCell>₹{order.total.toLocaleString('en-IN')}</TableCell>
+                    <TableCell>
+                        <Badge variant={statusVariant[order.status] || 'secondary'}>{order.status}</Badge>
+                    </TableCell>
+                    <TableCell>{order.type}</TableCell>
+                    <TableCell className="text-right">
+                        <div className="flex gap-2 justify-end">
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button variant="ghost" size="icon" onClick={() => handleViewClick(order)}>
+                                        <Eye className="h-4 w-4" />
+                                        <span className="sr-only">View Order</span>
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>View Order</p>
+                                </TooltipContent>
+                            </Tooltip>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button variant="ghost" size="icon" onClick={() => handleReorderClick(order)}>
+                                        <RefreshCw className="h-4 w-4" />
+                                        <span className="sr-only">Re-order</span>
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>Re-order</p>
+                                </TooltipContent>
+                            </Tooltip>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button variant="ghost" size="icon" onClick={() => handleTrackClick(order)}>
+                                        <Truck className="h-4 w-4" />
+                                        <span className="sr-only">Track Order</span>
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>Track Order</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </div>
+                    </TableCell>
+                    </TableRow>
+                ))}
                 </TableBody>
             </Table>
-          </div>
-        </DialogContent>
-      </Dialog>
-      
-      {/* Track Order Modal */}
-      <Dialog open={isTrackModalOpen} onOpenChange={setIsTrackModalOpen}>
-        <DialogContent className="sm:max-w-md">
+            </CardContent>
+        </Card>
+
+        {/* View Order Modal */}
+        <Dialog open={isViewModalOpen} onOpenChange={setIsViewModalOpen}>
+            <DialogContent className="sm:max-w-2xl">
             <DialogHeader>
-                <DialogTitle>Track Order</DialogTitle>
+                <DialogTitle>Order Details</DialogTitle>
                 <DialogDescription>
-                Shipping status for order <span className="font-medium">{selectedOrder?.orderId}</span>
+                Products in order <span className="font-medium">{selectedOrder?.orderId}</span>
                 </DialogDescription>
             </DialogHeader>
-            <div className="relative pl-6 py-4">
-                <div className="absolute left-9 top-6 h-full w-0.5 bg-border -translate-x-1/2"></div>
-                 {selectedOrder?.trackingHistory?.map((event, index) => (
-                    <div key={index} className="relative flex items-start gap-4 mb-6">
-                        <div className="z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                            {event.status === 'Delivered' ? <CheckCircle className="h-5 w-5" /> : <Package className="h-5 w-5" />}
-                        </div>
-                        <div className="mt-1">
-                            <p className="font-semibold">{event.status}</p>
-                            <p className="text-sm text-muted-foreground">{event.location}</p>
-                            <time className="text-xs text-muted-foreground">{event.date}</time>
-                        </div>
-                    </div>
-                 ))}
+            <div className="max-h-[60vh] overflow-y-auto">
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Product</TableHead>
+                            <TableHead>SKU</TableHead>
+                            <TableHead className="text-center">Quantity</TableHead>
+                            <TableHead className="text-right">Price</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {selectedOrder?.products?.map(product => (
+                            <TableRow key={product.sku}>
+                                <TableCell className="font-medium">{product.name}</TableCell>
+                                <TableCell>{product.sku}</TableCell>
+                                <TableCell className="text-center">{product.quantity}</TableCell>
+                                <TableCell className="text-right">₹{product.price.toLocaleString('en-IN')}</TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
             </div>
-        </DialogContent>
-      </Dialog>
+            </DialogContent>
+        </Dialog>
+        
+        {/* Track Order Modal */}
+        <Dialog open={isTrackModalOpen} onOpenChange={setIsTrackModalOpen}>
+            <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                    <DialogTitle>Track Order</DialogTitle>
+                    <DialogDescription>
+                    Shipping status for order <span className="font-medium">{selectedOrder?.orderId}</span>
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="relative pl-6 py-4">
+                    <div className="absolute left-9 top-6 h-full w-0.5 bg-border -translate-x-1/2"></div>
+                    {selectedOrder?.trackingHistory?.map((event, index) => (
+                        <div key={index} className="relative flex items-start gap-4 mb-6">
+                            <div className="z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                                {event.status === 'Delivered' ? <CheckCircle className="h-5 w-5" /> : <Package className="h-5 w-5" />}
+                            </div>
+                            <div className="mt-1">
+                                <p className="font-semibold">{event.status}</p>
+                                <p className="text-sm text-muted-foreground">{event.location}</p>
+                                <time className="text-xs text-muted-foreground">{event.date}</time>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </DialogContent>
+        </Dialog>
 
 
-      {/* Re-order Alert */}
-      <AlertDialog open={isReorderAlertOpen} onOpenChange={setIsReorderAlertOpen}>
-        <AlertDialogContent>
-            <AlertDialogHeader>
-                <AlertDialogTitle>Are you sure you want to re-order?</AlertDialogTitle>
-                <AlertDialogDescription>
-                    This will create a new order with the exact same items and quantities as order <span className="font-medium">{selectedOrder?.orderId}</span>. This action cannot be undone.
-                </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={() => { /* Reorder logic goes here */ }}>Confirm Re-order</AlertDialogAction>
-            </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+        {/* Re-order Alert */}
+        <AlertDialog open={isReorderAlertOpen} onOpenChange={setIsReorderAlertOpen}>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Are you sure you want to re-order?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        This will create a new order with the exact same items and quantities as order <span className="font-medium">{selectedOrder?.orderId}</span>. This action cannot be undone.
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => { /* Reorder logic goes here */ }}>Confirm Re-order</AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
 
-    </div>
+        </div>
+    </TooltipProvider>
   );
 }
