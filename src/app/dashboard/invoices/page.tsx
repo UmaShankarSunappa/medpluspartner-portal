@@ -74,7 +74,6 @@ export default function InvoicesPage() {
                     <TableHead>Invoice ID</TableHead>
                     <TableHead>Order ID</TableHead>
                     <TableHead>Date</TableHead>
-                    <TableHead>Status</TableHead>
                     <TableHead className="text-right">Amount</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
@@ -85,9 +84,6 @@ export default function InvoicesPage() {
                       <TableCell className="font-medium">{invoice.invoiceId}</TableCell>
                       <TableCell>{invoice.orderId}</TableCell>
                       <TableCell>{invoice.date}</TableCell>
-                      <TableCell>
-                        <Badge variant={invoice.status === 'Paid' ? 'default' : 'destructive'}>{invoice.status}</Badge>
-                      </TableCell>
                       <TableCell className="text-right">₹{invoice.amount.toLocaleString('en-IN')}</TableCell>
                       <TableCell className="text-right">
                         <Button variant="outline" size="icon">
