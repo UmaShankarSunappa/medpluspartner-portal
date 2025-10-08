@@ -208,7 +208,7 @@ export const financialSummary = {
   storeName: "Koramangala, Bangalore",
   creditLimit: 500000,
   outstanding: 125780,
-  creditPeriod: 45,
+  creditPeriod: 365,
 };
 
 export const transactions = [
@@ -679,6 +679,7 @@ export const performanceData = {
 
 
     
+
 
 
 
