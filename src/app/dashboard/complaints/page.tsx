@@ -87,7 +87,9 @@ export default function ComplaintsPage() {
                                 <SelectValue placeholder="Select a department" />
                             </SelectTrigger>
                             <SelectContent>
+                                <SelectItem value="logistics">Logistics</SelectItem>
                                 <SelectItem value="warehouse">Warehouse</SelectItem>
+                                <SelectItem value="accounts">Accounts</SelectItem>
                                 <SelectItem value="support">Technical Support</SelectItem>
                             </SelectContent>
                         </Select>
@@ -120,8 +122,7 @@ export default function ComplaintsPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Complaint ID</TableHead>
-                <TableHead>Date & Time</TableHead>
-                <TableHead>Department</TableHead>
+                <TableHead>Date</TableHead>
                 <TableHead>Subject</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>
@@ -134,7 +135,6 @@ export default function ComplaintsPage() {
                 <TableRow key={complaint.complaintId}>
                   <TableCell className="font-medium">{complaint.complaintId}</TableCell>
                   <TableCell>{complaint.dateTime}</TableCell>
-                  <TableCell>{complaint.department}</TableCell>
                   <TableCell>{complaint.subject}</TableCell>
                   <TableCell>
                     <Badge variant={statusVariant[complaint.status] || 'secondary'}>
@@ -164,64 +164,22 @@ export default function ComplaintsPage() {
 
       {/* View Complaint Modal */}
         <Dialog open={isViewModalOpen} onOpenChange={setIsViewModalOpen}>
-            <DialogContent className="sm:max-w-2xl">
+            <DialogContent className="sm:max-w-md">
                 <DialogHeader>
-                    <DialogTitle>Complaint Details</DialogTitle>
-                    <DialogDescription>
-                        Details and activity for complaint <span className="font-medium">{selectedComplaint?.complaintId}</span>
-                    </DialogDescription>
+                <DialogTitle>Complaint Details</DialogTitle>
+                <DialogDescription>
+                    Details for complaint #{selectedComplaint?.complaintId}
+                </DialogDescription>
                 </DialogHeader>
-                <div className="grid gap-6 py-4">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="space-y-1">
-                            <p className="text-sm font-medium text-muted-foreground">Status</p>
-                            <Badge variant={selectedComplaint?.status ? statusVariant[selectedComplaint.status] : 'secondary'}>
-                                {selectedComplaint?.status}
-                            </Badge>
-                        </div>
-                        <div className="space-y-1">
-                            <p className="text-sm font-medium text-muted-foreground">Department</p>
-                            <p className="font-semibold">{selectedComplaint?.department}</p>
-                        </div>
-                         <div className="space-y-1">
-                            <p className="text-sm font-medium text-muted-foreground">Date Raised</p>
-                            <p className="font-semibold">{selectedComplaint?.dateTime}</p>
-                        </div>
-                    </div>
-                    <div className="space-y-4">
-                        <div>
-                            <h4 className="font-semibold">Subject</h4>
-                            <p className="text-sm text-muted-foreground">{selectedComplaint?.subject}</p>
-                        </div>
-                        <div>
-                            <h4 className="font-semibold">Description</h4>
-                            <p className="text-sm text-muted-foreground bg-slate-50 p-4 rounded-md border">
-                                {selectedComplaint?.description}
-                            </p>
-                        </div>
-                    </div>
-
-                    <div>
-                        <h4 className="font-semibold mb-4">Activity Log</h4>
-                        <div className="relative pl-6">
-                            <div className="absolute left-9 top-0 h-full w-px bg-border -translate-x-1/2"></div>
-                            {selectedComplaint?.activityLog?.map((activity, index) => (
-                                <div key={index} className="relative flex items-start gap-4 mb-6">
-                                     <div className="z-10 h-3 w-3 mt-1.5 rounded-full bg-primary ring-4 ring-background" />
-                                    <div className="flex-1">
-                                        <div className="flex justify-between items-center">
-                                            <p className="font-semibold">{activity.user}</p>
-                                            <time className="text-xs text-muted-foreground">{activity.date}</time>
-                                        </div>
-                                        <p className="text-sm text-muted-foreground">{activity.activity}</p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+                <div className="grid gap-4 py-4">
+                <div className="space-y-2">
+                    <p className="text-sm font-medium text-muted-foreground">Subject: {selectedComplaint?.subject}</p>
+                    <p className="text-sm">{selectedComplaint?.description}</p>
+                </div>
+                {/* Activity log could be added here */}
                 </div>
                 <DialogFooter>
-                    <Button onClick={() => setIsViewModalOpen(false)}>Close</Button>
+                <Button onClick={() => setIsViewModalOpen(false)}>Close</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

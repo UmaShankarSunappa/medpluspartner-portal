@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { Download, Search, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -34,30 +34,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 export default function InvoicesPage() {
-  const [isGenerateInvoiceOpen, setIsGenerateInvoiceOpen] = useState(false);
-  const [membershipsSold, setMembershipsSold] = useState(0);
-
-  const commissionPerMembership = 15;
-  const totalCommission = useMemo(() => {
-    return membershipsSold * commissionPerMembership;
-  }, [membershipsSold]);
-
-  const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 5 }, (_, i) => (currentYear - i).toString());
-  const months = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-  ];
-
   return (
     <div className="space-y-6">
       <div>
@@ -75,30 +53,13 @@ export default function InvoicesPage() {
         <TabsContent value="order">
           <Card>
             <CardHeader>
-              <CardTitle>Order Invoices (From Warehouse)</CardTitle>
+              <CardTitle>Order Invoices (From Franchisor)</CardTitle>
               <CardDescription>
                 Search and download invoices for your orders.
               </CardDescription>
-              <div className="flex flex-col md:flex-row gap-4 items-end pt-4">
-                  <div className="grid gap-2 w-full md:w-auto">
-                      <Label htmlFor="date-range">Date Range</Label>
-                      <DateRangePicker />
-                  </div>
-                  <div className="grid gap-2 w-full md:w-auto">
-                      <Label htmlFor="search-invoice-id">Invoice ID</Label>
-                      <div className="relative">
-                          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                          <Input placeholder="Search..." id="search-invoice-id" className="pl-8" />
-                      </div>
-                  </div>
-                   <div className="grid gap-2 w-full md:w-auto">
-                      <Label htmlFor="search-order-id">Order ID</Label>
-                      <div className="relative">
-                          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                          <Input placeholder="Search..." id="search-order-id" className="pl-8" />
-                      </div>
-                  </div>
-                  <Button>Search</Button>
+              <div className="relative mt-4">
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input placeholder="Search by Order ID or Invoice ID..." className="pl-8" />
               </div>
             </CardHeader>
             <CardContent>
@@ -108,6 +69,7 @@ export default function InvoicesPage() {
                     <TableHead>Invoice ID</TableHead>
                     <TableHead>Order ID</TableHead>
                     <TableHead>Date</TableHead>
+                    <TableHead>Status</TableHead>
                     <TableHead className="text-right">Amount</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
@@ -118,6 +80,9 @@ export default function InvoicesPage() {
                       <TableCell className="font-medium">{invoice.invoiceId}</TableCell>
                       <TableCell>{invoice.orderId}</TableCell>
                       <TableCell>{invoice.date}</TableCell>
+                      <TableCell>
+                        <Badge variant={invoice.status === 'Paid' ? 'default' : 'secondary'}>{invoice.status}</Badge>
+                      </TableCell>
                       <TableCell className="text-right">₹{invoice.amount.toLocaleString('en-IN')}</TableCell>
                       <TableCell className="text-right">
                         <Button variant="outline" size="icon">
@@ -134,78 +99,11 @@ export default function InvoicesPage() {
         </TabsContent>
         <TabsContent value="membership">
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <div>
-                <CardTitle>Membership Agent Fee Invoices (To Franchisor)</CardTitle>
-                <CardDescription>
-                  Review and accept your commission invoices, or generate one manually.
-                </CardDescription>
-              </div>
-               <Dialog open={isGenerateInvoiceOpen} onOpenChange={setIsGenerateInvoiceOpen}>
-                <DialogTrigger asChild>
-                    <Button>
-                        <PlusCircle className="mr-2 h-4 w-4" />
-                        Generate Invoice
-                    </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-md">
-                    <DialogHeader>
-                    <DialogTitle>Generate Manual Invoice</DialogTitle>
-                    <DialogDescription>
-                        Generate a commission invoice for memberships sold in a specific month.
-                    </DialogDescription>
-                    </DialogHeader>
-                    <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-2 gap-4">
-                             <div className="space-y-2">
-                                <Label htmlFor="year">Year</Label>
-                                <Select>
-                                    <SelectTrigger id="year">
-                                        <SelectValue placeholder="Select year" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {years.map(year => <SelectItem key={year} value={year}>{year}</SelectItem>)}
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="month">Month</Label>
-                                <Select>
-                                    <SelectTrigger id="month">
-                                        <SelectValue placeholder="Select month" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {months.map(month => <SelectItem key={month} value={month}>{month}</SelectItem>)}
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="memberships-sold">Number of Memberships Sold</Label>
-                            <Input
-                            id="memberships-sold"
-                            type="number"
-                            placeholder="e.g., 100"
-                            value={membershipsSold}
-                            onChange={(e) => setMembershipsSold(Number(e.target.value))}
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="total-commission">Total Commission (₹{commissionPerMembership}/membership)</Label>
-                            <Input
-                            id="total-commission"
-                            readOnly
-                            value={`₹${totalCommission.toLocaleString('en-IN')}`}
-                            className="font-bold"
-                            />
-                        </div>
-                    </div>
-                    <DialogFooter>
-                    <Button variant="outline" onClick={() => setIsGenerateInvoiceOpen(false)}>Cancel</Button>
-                    <Button type="submit" onClick={() => setIsGenerateInvoiceOpen(false)}>Generate Invoice</Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
+            <CardHeader>
+              <CardTitle>Membership Agent Fee Invoices (To Franchisor)</CardTitle>
+              <CardDescription>
+                Review and accept your commission invoices.
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <Table>
@@ -226,14 +124,17 @@ export default function InvoicesPage() {
                       <TableCell>{invoice.period}</TableCell>
                       <TableCell>{invoice.date}</TableCell>
                       <TableCell>
-                        <Badge variant={invoice.status === 'Paid' ? 'default' : 'secondary'}>{invoice.status}</Badge>
+                        <Badge variant={invoice.status === 'Paid' ? 'default' : invoice.status === 'Generated' ? 'warning' : 'secondary'}>
+                          {invoice.status}
+                        </Badge>
                       </TableCell>
                       <TableCell className="text-right">₹{invoice.amount.toLocaleString('en-IN')}</TableCell>
                       <TableCell className="text-right">
-                        <Button variant="outline" size="icon">
-                          <Download className="h-4 w-4" />
-                          <span className="sr-only">Download</span>
-                        </Button>
+                        {invoice.status === 'Generated' ? (
+                          <Button>Accept & Generate PDF</Button>
+                        ) : (
+                          <Badge variant="default">Accepted</Badge>
+                        )}
                       </TableCell>
                     </TableRow>
                   ))}

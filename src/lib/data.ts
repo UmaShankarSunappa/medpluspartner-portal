@@ -317,13 +317,13 @@ export const returnsData: Return[] = [
 ];
 
 export const monthlyReports = [
-    { id: "REP-001", name: "Net Sale vs. Margin", period: "Oct 2025", fileType: "Excel", actionRequired: false },
-    { id: "REP-002", name: "Rental Invoices", period: "Oct 2025", fileType: "PDF", actionRequired: false },
-    { id: "REP-003", name: "Expiry Products List", period: "Oct 2025", fileType: "Excel", actionRequired: true },
-    { id: "REP-004", name: "Slow-Moving Products", period: "Oct 2025", fileType: "Excel", actionRequired: true },
-    { id: "REP-005", name: "Credit Note", period: "Oct 2025", fileType: "Excel", actionRequired: false },
-    { id: "REP-006", name: "Royalty Fee Invoice", period: "Oct 2025", fileType: "PDF", actionRequired: false },
-    { id: "REP-007", name: "GST Reports", period: "Oct 2025", fileType: "Excel", actionRequired: false },
+    { id: "REP-001", name: "Net Sale vs. Margin", period: "Jan 2024", fileType: "Excel", actionRequired: false },
+    { id: "REP-002", name: "Rental Invoices", period: "Jan 2024", fileType: "PDF", actionRequired: false },
+    { id: "REP-003", name: "Expiry Products List", period: "Jan 2024", fileType: "Excel", actionRequired: true },
+    { id: "REP-004", name: "Slow-Moving Products", period: "Jan 2024", fileType: "Excel", actionRequired: true },
+    { id: "REP-005", name: "Credit Note", period: "Jan 2024", fileType: "Excel", actionRequired: false },
+    { id: "REP-006", name: "Royalty Fee Invoice", period: "Jan 2024", fileType: "PDF", actionRequired: false },
+    { id: "REP-007", name: "GST Reports", period: "Jan 2024", fileType: "Excel", actionRequired: false },
 ];
 
 
@@ -343,13 +343,13 @@ export type Complaint = {
   dateTime: string;
   department: string;
   subject: string;
-  description: string;
   status: "Resolved" | "In Progress";
   activityLog: {
     date: string;
     activity: string;
     user: string;
   }[];
+  description: string;
 };
 
 
@@ -370,7 +370,7 @@ export const complaintsData: Complaint[] = [
     { 
         complaintId: "COM-057", 
         dateTime: "2023-10-25 04:00 PM", 
-        department: "Warehouse",
+        department: "Logistics",
         subject: "Delay in order ORD75641", 
         description: "Order ORD75641 was scheduled for delivery on Oct 24th but has not yet arrived. The tracking information has not been updated in over 24 hours. Please provide an urgent update on the shipment status.",
         status: "In Progress",
@@ -444,6 +444,7 @@ export const navLinks = {
     { href: "/dashboard/payments", label: "Payments", icon: Banknote },
     { href: "/dashboard/returns", label: "Returns", icon: Undo2 },
     { href: "/dashboard/provisional-indent", label: "Provisional Indent", icon: ClipboardList },
+    { href: "/dashboard/performance", label: "Performance", icon: BarChart },
     { href: "/dashboard/reports", label: "Monthly Reports", icon: FileSliders },
     { href: "/dashboard/invoices", label: "Invoices", icon: FileClock },
     { href: "/dashboard/complaints", label: "Complaints", icon: ShieldQuestion },
@@ -554,6 +555,122 @@ export const faqs = [
     }
 ]
 
+export const performanceData = {
+  mom: {
+    netSalesMargin: [
+      { month: "Jan", netSale: 450000, margin: 75000 },
+      { month: "Feb", netSale: 420000, margin: 70000 },
+      { month: "Mar", netSale: 510000, margin: 85000 },
+      { month: "Apr", netSale: 480000, margin: 80000 },
+      { month: "May", netSale: 550000, margin: 92000 },
+      { month: "Jun", netSale: 530000, margin: 88000 },
+    ],
+    brandedVsPl: [
+      { month: "Jan", branded: 300000, pl: 150000 },
+      { month: "Feb", branded: 280000, pl: 140000 },
+      { month: "Mar", branded: 340000, pl: 170000 },
+      { month: "Apr", branded: 320000, pl: 160000 },
+      { month: "May", branded: 360000, pl: 190000 },
+      { month: "Jun", branded: 350000, pl: 180000 },
+    ],
+    salesByCategory: [
+      { month: "Jan", pharma: 200000, general: 100000, pl_pharma: 100000, pl_general: 50000, surgical: 50000 },
+      { month: "Feb", pharma: 190000, general: 90000, pl_pharma: 90000, pl_general: 40000, surgical: 40000 },
+      { month: "Mar", pharma: 220000, general: 120000, pl_pharma: 120000, pl_general: 60000, surgical: 60000 },
+      { month: "Apr", pharma: 210000, general: 110000, pl_pharma: 110000, pl_general: 55000, surgical: 55000 },
+      { month: "May", pharma: 240000, general: 130000, pl_pharma: 130000, pl_general: 65000, surgical: 65000 },
+      { month: "Jun", pharma: 230000, general: 125000, pl_pharma: 125000, pl_general: 60000, surgical: 60000 },
+    ],
+    offlineVsOnline: [
+      { name: "Offline", value: 2400000, fill: "var(--color-sales)" },
+      { name: "Online", value: 384000, fill: "var(--color-margin)" },
+    ],
+    ordersCount: [
+      { month: "Jan", salesOrders: 1500, webOrders: 300 },
+      { month: "Feb", salesOrders: 1400, webOrders: 280 },
+      { month: "Mar", salesOrders: 1600, webOrders: 320 },
+      { month_of_year: "Apr", salesOrders: 1550, webOrders: 310 },
+      { month_of_year: "May", salesOrders: 1700, webOrders: 340 },
+      { month_of_year: "Jun", salesOrders: 1650, webOrders: 330 },
+    ],
+    avgBillValue: [
+        { month: "Jan", abv: 300, bills: 1500 },
+        { month: "Feb", abv: 300, bills: 1400 },
+        { month: "Mar", abv: 318, bills: 1600 },
+        { month: "Apr", abv: 310, bills: 1550 },
+        { month: "May", abv: 323, bills: 1700 },
+        { month: "Jun", abv: 321, bills: 1650 },
+    ],
+    billsBySlab: [
+        { month: "Jan", "<200": 300, "200-500": 600, "500-999": 450, ">1000": 150 },
+        { month: "Feb", "<200": 280, "200-500": 560, "500-999": 420, ">1000": 140 },
+        { month: "Mar", "<200": 320, "200-500": 640, "500-999": 480, ">1000": 160 },
+        { month: "Apr", "<200": 310, "200-500": 620, "500-999": 465, ">1000": 155 },
+        { month: "May", "<200": 340, "200-500": 680, "500-999": 510, ">1000": 170 },
+        { month: "Jun", "<200": 330, "200-500": 660, "500-999": 495, ">1000": 165 },
+    ]
+  },
+  day: {
+    netSalesMargin: [
+      { day: "Mon", netSale: 20000, margin: 3000 },
+      { day: "Tue", netSale: 22000, margin: 3500 },
+      { day: "Wed", netSale: 21000, margin: 3200 },
+      { day: "Thu", netSale: 24000, margin: 4000 },
+      { day: "Fri", netSale: 25000, margin: 4200 },
+      { day: "Sat", netSale: 28000, margin: 4800 },
+      { day: "Sun", netSale: 18000, margin: 2800 },
+    ],
+    brandedVsPl: [
+      { day: "Mon", branded: 15000, pl: 5000 },
+      { day: "Tue", branded: 16000, pl: 6000 },
+      { day: "Wed", branded: 15500, pl: 5500 },
+      { day: "Thu", branded: 18000, pl: 6000 },
+      { day: "Fri", branded: 19000, pl: 6000 },
+      { day: "Sat", branded: 21000, pl: 7000 },
+      { day: "Sun", branded: 13000, pl: 5000 },
+    ],
+    salesByCategory: [
+      { day: "Mon", pharma: 10000, general: 5000, pl_pharma: 3000, pl_general: 2000, surgical: 1000 },
+      { day: "Tue", pharma: 11000, general: 5500, pl_pharma: 3500, pl_general: 2000, surgical: 1000 },
+      { day: "Wed", pharma: 10500, general: 5200, pl_pharma: 3300, pl_general: 2000, surgical: 1000 },
+      { day: "Thu", pharma: 12000, general: 6000, pl_pharma: 4000, pl_general: 2000, surgical: 1000 },
+      { day: "Fri", pharma: 12500, general: 6500, pl_pharma: 4000, pl_general: 2000, surgical: 1000 },
+      { day: "Sat", pharma: 14000, general: 7000, pl_pharma: 4500, pl_general: 2500, surgical: 1000 },
+      { day: "Sun", pharma: 9000, general: 4000, pl_pharma: 3000, pl_general: 2000, surgical: 1000 },
+    ],
+    offlineVsOnline: [
+      { name: "Offline", value: 120000, fill: "var(--color-sales)" },
+      { name: "Online", value: 20000, fill: "var(--color-margin)" },
+    ],
+    ordersCount: [
+      { day: "Mon", salesOrders: 50, webOrders: 10 },
+      { day: "Tue", salesOrders: 55, webOrders: 12 },
+      { day: "Wed", salesOrders: 52, webOrders: 11 },
+      { day: "Thu", salesOrders: 60, webOrders: 15 },
+      { day: "Fri", salesOrders: 62, webOrders: 18 },
+      { day: "Sat", salesOrders: 70, webOrders: 20 },
+      { day: "Sun", salesOrders: 45, webOrders: 8 },
+    ],
+    avgBillValue: [
+        { day: "Mon", abv: 400, bills: 50 },
+        { day: "Tue", abv: 400, bills: 55 },
+        { day: "Wed", abv: 403, bills: 52 },
+        { day: "Thu", abv: 400, bills: 60 },
+        { day: "Fri", abv: 403, bills: 62 },
+        { day: "Sat", abv: 400, bills: 70 },
+        { day: "Sun", abv: 400, bills: 45 },
+    ],
+    billsBySlab: [
+        { day: "Mon", "<200": 10, "200-500": 20, "500-999": 15, ">1000": 5 },
+        { day: "Tue", "<200": 11, "200-500": 22, "500-999": 16, ">1000": 6 },
+        { day: "Wed", "<200": 10, "200-500": 21, "500-999": 15, ">1000": 6 },
+        { day: "Thu", "<200": 12, "200-500": 24, "500-999": 18, ">1000": 6 },
+        { day: "Fri", "<200": 12, "200-500": 25, "500-999": 19, ">1000": 6 },
+        { day: "Sat", "<200": 14, "200-500": 28, "500-999": 21, ">1000": 7 },
+        { day: "Sun", "<200": 9, "200-500": 18, "500-999": 13, ">1000": 5 },
+    ]
+  }
+};
     
 
 
@@ -562,6 +679,7 @@ export const faqs = [
 
 
     
+
 
 
 

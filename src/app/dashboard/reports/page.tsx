@@ -28,50 +28,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export default function ReportsPage() {
-  const [currentYear, setCurrentYear] = useState('');
-  const [availableMonths, setAvailableMonths] = useState<string[]>([]);
-  const [selectedMonth, setSelectedMonth] = useState('');
+  const [currentYear] = useState(new Date().getFullYear().toString());
   
-  useEffect(() => {
-    const now = new Date();
-    const currentMonthIndex = now.getMonth(); // 0-11
-    const currentDay = now.getDate();
-    const year = now.getFullYear();
-
-    // Financial year in India starts from April
-    const financialYear = currentMonthIndex >= 3 ? year : year - 1;
-    setCurrentYear(financialYear.toString());
-
-    const allMonths = [
-      "April", "May", "June", "July", "August", "September",
-      "October", "November", "December", "January", "February", "March"
-    ];
-
-    let monthsInFinancialYear: string[];
-
-    if (financialYear < year) { // Case for Jan, Feb, March
-        monthsInFinancialYear = allMonths.slice(0, 9 + currentMonthIndex + 1);
-    } else { // Case for April to Dec
-        monthsInFinancialYear = allMonths.slice(0, currentMonthIndex - 3 + 1);
-    }
-    
-    setAvailableMonths(monthsInFinancialYear);
-    
-    // Set default selected month
-    if (monthsInFinancialYear.length > 0) {
-        const currentMonthName = now.toLocaleString('default', { month: 'long' });
-        if (monthsInFinancialYear.includes(currentMonthName)) {
-            setSelectedMonth(currentMonthName);
-        } else {
-            setSelectedMonth(monthsInFinancialYear[monthsInFinancialYear.length-1]);
-        }
-    }
-  }, []);
-  
-
   return (
     <div className="space-y-6">
       <div>
@@ -84,31 +45,31 @@ export default function ReportsPage() {
        <Card>
         <CardHeader>
           <CardTitle>Select Period</CardTitle>
-          <CardDescription>Filter reports by year and month. (only current financial year reports will be visible)</CardDescription>
+          <CardDescription>Filter reports by year and month.</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col md:flex-row gap-4">
             <div className="grid gap-2 w-full md:w-48">
               <Label htmlFor="year">Year</Label>
-              <Select value={currentYear} disabled>
+              <Select defaultValue={currentYear}>
                 <SelectTrigger id="year">
                   <SelectValue placeholder="Select year" />
                 </SelectTrigger>
                 <SelectContent>
-                  {currentYear && <SelectItem value={currentYear}>{`${currentYear}-${(parseInt(currentYear, 10)+1).toString().slice(-2)}`}</SelectItem>}
+                  <SelectItem value={currentYear}>{currentYear}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="grid gap-2 w-full md:w-48">
               <Label htmlFor="month">Month</Label>
-               <Select value={selectedMonth} onValueChange={setSelectedMonth}>
+               <Select defaultValue="january">
                 <SelectTrigger id="month">
                   <SelectValue placeholder="Select month" />
                 </SelectTrigger>
                 <SelectContent>
-                  {availableMonths.map((month) => (
-                    <SelectItem key={month} value={month}>{month}</SelectItem>
-                  ))}
+                  <SelectItem value="january">January</SelectItem>
+                  <SelectItem value="february">February</SelectItem>
+                  <SelectItem value="march">March</SelectItem>
                 </SelectContent>
               </Select>
             </div>
