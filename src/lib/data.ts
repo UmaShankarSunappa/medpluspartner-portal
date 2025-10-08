@@ -396,10 +396,10 @@ export const navLinks = {
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/dashboard/account", label: "Account profile", icon: User },
     { href: "/dashboard/orders", label: "Orders", icon: History },
-    { href: "/dashboard/provisional-indent", label: "Provisional Indent", icon: ClipboardList },
     { href: "/dashboard/financials", label: "Account Balance", icon: Landmark },
     { href: "/dashboard/payments", label: "Payments", icon: Banknote },
     { href: "/dashboard/returns", label: "Returns", icon: Undo2 },
+    { href: "/dashboard/provisional-indent", label: "Provisional Indent", icon: ClipboardList },
     { href: "/dashboard/reports", label: "Reports", icon: FileSliders },
     { href: "/dashboard/invoices", label: "Invoices", icon: FileClock },
     { href: "/dashboard/complaints", label: "Complaints", icon: ShieldQuestion },
@@ -511,6 +511,7 @@ export const faqs = [
 ]
 
     
+
 
 
 
