@@ -253,10 +253,9 @@ export const transactions = [
     }
 ];
 
-export const payments = [
-  { paymentId: "PAY-9871", date: "2023-10-26", amount: 12450.0, method: "NEFT", status: "Completed" },
-  { paymentId: "PAY-9870", date: "2023-10-20", amount: 8990.0, method: "RTGS", status: "Completed" },
-  { paymentId: "PAY-9869", date: "2023-10-15", amount: 21350.0, method: "UPI", status: "Pending" },
+export const paymentsData = [
+  { paymentId: "PAY-2024-001", name: "Monthly Payment", createdDate: "1/15/2024", approvedDate: "1/16/2024", status: "Approved", amount: 30000, mode: "NEFT" },
+  { paymentId: "PAY-2024-002", name: "Advance Payment", createdDate: "1/20/2024", approvedDate: null, status: "Pending", amount: 15000, mode: "UPI" },
 ];
 
 export type Return = {
@@ -351,6 +350,7 @@ export const navLinks = {
     { href: "/dashboard/account", label: "Account profile", icon: User },
     { href: "/dashboard/orders", label: "Orders", icon: History },
     { href: "/dashboard/financials", label: "Account Balance", icon: Landmark },
+    { href: "/dashboard/payments", label: "Payments", icon: Banknote },
     { href: "/dashboard/returns", label: "Returns", icon: Undo2 },
     { href: "/dashboard/reports", label: "Reports", icon: FileSliders },
     { href: "/dashboard/invoices", label: "Invoices", icon: FileClock },
@@ -463,4 +463,5 @@ export const faqs = [
 ]
 
     
+
 
