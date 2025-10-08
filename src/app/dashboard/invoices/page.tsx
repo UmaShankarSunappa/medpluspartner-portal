@@ -41,7 +41,7 @@ export default function InvoicesPage() {
         <TabsContent value="order">
           <Card>
             <CardHeader>
-              <CardTitle>Order Invoices (From Franchisor)</CardTitle>
+              <CardTitle>Order Invoices (From Warehouse)</CardTitle>
               <CardDescription>
                 Search and download invoices for your orders.
               </CardDescription>
