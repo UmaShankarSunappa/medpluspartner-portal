@@ -230,11 +230,10 @@ export default function InvoicesPage() {
                       </TableCell>
                       <TableCell className="text-right">₹{invoice.amount.toLocaleString('en-IN')}</TableCell>
                       <TableCell className="text-right">
-                         {invoice.status === 'Generated' ? (
-                          <Button size="sm">Accept & Generate PDF</Button>
-                        ) : (
-                          <Button variant="outline" size="sm" disabled>Accepted</Button>
-                        )}
+                        <Button variant="outline" size="icon">
+                          <Download className="h-4 w-4" />
+                          <span className="sr-only">Download</span>
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}
