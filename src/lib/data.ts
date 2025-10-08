@@ -35,6 +35,7 @@ import {
   FileClock,
   Landmark,
   ShieldQuestion,
+  ClipboardList,
 } from "lucide-react";
 
 export const user = {
@@ -337,6 +338,52 @@ export const complaints = [
     { complaintId: "COM-057", date: "2023-10-25", subject: "Delay in order ORD75641", status: "In Progress" },
 ];
 
+export type ProvisionalIndent = {
+  indentId: string;
+  dateCreated: string;
+  storeId: string;
+  totalValue: number;
+  status: "Pending";
+  products: {
+    sku: string;
+    name: string;
+    packSize: string;
+    mrp: number;
+    ptr: number;
+    quantity: number;
+    value: number;
+  }[];
+};
+
+
+export const provisionalIndentsData: ProvisionalIndent[] = [
+  {
+    indentId: "IND-2024-001",
+    dateCreated: "1/20/2024",
+    storeId: "Store 1 - Mumbai Main",
+    totalValue: 45000,
+    status: "Pending",
+    products: [
+      { sku: "PROD-A", name: "Product A", packSize: "10x10", mrp: 100, ptr: 80, quantity: 200, value: 16000 },
+      { sku: "PROD-B", name: "Product B", packSize: "1x15", mrp: 250, ptr: 200, quantity: 100, value: 20000 },
+      { sku: "PROD-C", name: "Product C", packSize: "1x5", mrp: 50, ptr: 45, quantity: 200, value: 9000 },
+    ]
+  },
+  {
+    indentId: "IND-2024-002",
+    dateCreated: "1/21/2024",
+    storeId: "Store 1 - Mumbai Main",
+    totalValue: 32000,
+    status: "Pending",
+    products: [
+      { sku: "PROD-D", name: "Product D", packSize: "1x30", mrp: 120, ptr: 100, quantity: 150, value: 15000 },
+      { sku: "PROD-E", name: "Product E", packSize: "10x10", mrp: 85, ptr: 70, quantity: 100, value: 7000 },
+      { sku: "PROD-F", name: "Product F", packSize: "1x1", mrp: 500, ptr: 400, quantity: 25, value: 10000 },
+    ]
+  }
+];
+
+
 export const navLinks = {
   public: [
     { href: "/about-us", label: "About Us" },
@@ -349,6 +396,7 @@ export const navLinks = {
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/dashboard/account", label: "Account profile", icon: User },
     { href: "/dashboard/orders", label: "Orders", icon: History },
+    { href: "/dashboard/provisional-indent", label: "Provisional Indent", icon: ClipboardList },
     { href: "/dashboard/financials", label: "Account Balance", icon: Landmark },
     { href: "/dashboard/payments", label: "Payments", icon: Banknote },
     { href: "/dashboard/returns", label: "Returns", icon: Undo2 },
@@ -463,5 +511,6 @@ export const faqs = [
 ]
 
     
+
 
 
