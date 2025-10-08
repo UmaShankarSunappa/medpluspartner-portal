@@ -1,3 +1,7 @@
+
+"use client";
+
+import { useState } from "react";
 import { MoreHorizontal, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,7 +39,8 @@ import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { complaints as complaintsData } from "@/lib/data";
+import { complaintsData, type Complaint } from "@/lib/data";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const statusVariant: { [key: string]: "default" | "secondary" | "destructive" | "outline" } = {
     "Resolved": "default",
@@ -43,6 +48,14 @@ const statusVariant: { [key: string]: "default" | "secondary" | "destructive" | 
 };
 
 export default function ComplaintsPage() {
+    const [selectedComplaint, setSelectedComplaint] = useState<Complaint | null>(null);
+    const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+
+    const handleViewClick = (complaint: Complaint) => {
+        setSelectedComplaint(complaint);
+        setIsViewModalOpen(true);
+    };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -59,7 +72,7 @@ export default function ComplaintsPage() {
                     New Complaint
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-md">
                 <DialogHeader>
                 <DialogTitle>Create a New Complaint</DialogTitle>
                 <DialogDescription>
@@ -67,17 +80,27 @@ export default function ComplaintsPage() {
                 </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="subject" className="text-right">
-                        Subject
-                        </Label>
-                        <Input id="subject" className="col-span-3" />
+                    <div className="space-y-2">
+                        <Label htmlFor="department">Department</Label>
+                         <Select>
+                            <SelectTrigger id="department">
+                                <SelectValue placeholder="Select a department" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="warehouse">Warehouse</SelectItem>
+                                <SelectItem value="accounts">Accounts</SelectItem>
+                                <SelectItem value="logistics">Logistics</SelectItem>
+                                <SelectItem value="support">Technical Support</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
-                    <div className="grid grid-cols-4 items-start gap-4">
-                        <Label htmlFor="description" className="text-right pt-2">
-                        Description
-                        </Label>
-                        <Textarea id="description" className="col-span-3" />
+                    <div className="space-y-2">
+                        <Label htmlFor="subject">Subject</Label>
+                        <Input id="subject" placeholder="e.g., Damaged stock in order XYZ" />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="description">Description</Label>
+                        <Textarea id="description" placeholder="Provide a detailed description of your issue..." />
                     </div>
                 </div>
                 <DialogFooter>
@@ -99,7 +122,8 @@ export default function ComplaintsPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Complaint ID</TableHead>
-                <TableHead>Date</TableHead>
+                <TableHead>Date & Time</TableHead>
+                <TableHead>Department</TableHead>
                 <TableHead>Subject</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>
@@ -111,7 +135,8 @@ export default function ComplaintsPage() {
               {complaintsData.map((complaint) => (
                 <TableRow key={complaint.complaintId}>
                   <TableCell className="font-medium">{complaint.complaintId}</TableCell>
-                  <TableCell>{complaint.date}</TableCell>
+                  <TableCell>{complaint.dateTime}</TableCell>
+                  <TableCell>{complaint.department}</TableCell>
                   <TableCell>{complaint.subject}</TableCell>
                   <TableCell>
                     <Badge variant={statusVariant[complaint.status] || 'secondary'}>
@@ -128,7 +153,7 @@ export default function ComplaintsPage() {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem>View Details</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleViewClick(complaint)}>View Details</DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
@@ -138,6 +163,64 @@ export default function ComplaintsPage() {
           </Table>
         </CardContent>
       </Card>
+
+      {/* View Complaint Modal */}
+        <Dialog open={isViewModalOpen} onOpenChange={setIsViewModalOpen}>
+            <DialogContent className="sm:max-w-2xl">
+                <DialogHeader>
+                    <DialogTitle>Complaint Details</DialogTitle>
+                    <DialogDescription>
+                        Details and activity for complaint <span className="font-medium">{selectedComplaint?.complaintId}</span>
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-6 py-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="space-y-1">
+                            <p className="text-sm font-medium text-muted-foreground">Status</p>
+                            <Badge variant={selectedComplaint?.status ? statusVariant[selectedComplaint.status] : 'secondary'}>
+                                {selectedComplaint?.status}
+                            </Badge>
+                        </div>
+                        <div className="space-y-1">
+                            <p className="text-sm font-medium text-muted-foreground">Department</p>
+                            <p className="font-semibold">{selectedComplaint?.department}</p>
+                        </div>
+                         <div className="space-y-1">
+                            <p className="text-sm font-medium text-muted-foreground">Date Raised</p>
+                            <p className="font-semibold">{selectedComplaint?.dateTime}</p>
+                        </div>
+                    </div>
+                    <div className="space-y-2">
+                        <h4 className="font-semibold">Subject: {selectedComplaint?.subject}</h4>
+                        <p className="text-sm text-muted-foreground bg-slate-50 p-4 rounded-md border">
+                            {selectedComplaint?.description}
+                        </p>
+                    </div>
+
+                    <div>
+                        <h4 className="font-semibold mb-4">Activity Log</h4>
+                        <div className="relative pl-6">
+                            <div className="absolute left-9 top-0 h-full w-px bg-border -translate-x-1/2"></div>
+                            {selectedComplaint?.activityLog?.map((activity, index) => (
+                                <div key={index} className="relative flex items-start gap-4 mb-6">
+                                     <div className="z-10 h-3 w-3 mt-1.5 rounded-full bg-primary ring-4 ring-background" />
+                                    <div className="flex-1">
+                                        <div className="flex justify-between items-center">
+                                            <p className="font-semibold">{activity.user}</p>
+                                            <time className="text-xs text-muted-foreground">{activity.date}</time>
+                                        </div>
+                                        <p className="text-sm text-muted-foreground">{activity.activity}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+                <DialogFooter>
+                    <Button onClick={() => setIsViewModalOpen(false)}>Close</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     </div>
   );
 }

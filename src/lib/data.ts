@@ -338,9 +338,48 @@ export const invoices = {
   ],
 };
 
-export const complaints = [
-    { complaintId: "COM-056", date: "2023-10-12", subject: "Damaged stock received", status: "Resolved" },
-    { complaintId: "COM-057", date: "2023-10-25", subject: "Delay in order ORD75641", status: "In Progress" },
+export type Complaint = {
+  complaintId: string;
+  dateTime: string;
+  department: string;
+  subject: string;
+  description: string;
+  status: "Resolved" | "In Progress";
+  activityLog: {
+    date: string;
+    activity: string;
+    user: string;
+  }[];
+};
+
+
+export const complaintsData: Complaint[] = [
+    { 
+        complaintId: "COM-056", 
+        dateTime: "2023-10-12 10:30 AM", 
+        department: "Warehouse",
+        subject: "Damaged stock received", 
+        description: "Received 10 units of Paracetamol 500mg with damaged packaging in order ORD-2023-123. The outer carton was crushed, and some strips were torn. Please arrange for a replacement or credit note.",
+        status: "Resolved",
+        activityLog: [
+            { date: "2023-10-14 11:00 AM", activity: "Credit note issued for damaged items.", user: "Support Team" },
+            { date: "2023-10-13 02:15 PM", activity: "Complaint reviewed. Awaiting confirmation from warehouse.", user: "Support Team" },
+            { date: "2023-10-12 10:30 AM", activity: "Complaint raised by partner.", user: "Anand Sharma" },
+        ]
+    },
+    { 
+        complaintId: "COM-057", 
+        dateTime: "2023-10-25 04:00 PM", 
+        department: "Logistics",
+        subject: "Delay in order ORD75641", 
+        description: "Order ORD75641 was scheduled for delivery on Oct 24th but has not yet arrived. The tracking information has not been updated in over 24 hours. Please provide an urgent update on the shipment status.",
+        status: "In Progress",
+        activityLog: [
+            { date: "2023-10-26 09:00 AM", activity: "Contacted logistics partner for an update. Awaiting response.", user: "Support Team" },
+            { date: "2023-10-25 04:05 PM", activity: "Complaint acknowledged and assigned to logistics team.", user: "Support Team" },
+            { date: "2023-10-25 04:00 PM", activity: "Complaint raised by partner.", user: "Anand Sharma" },
+        ]
+    },
 ];
 
 export type ProvisionalIndent = {
@@ -523,4 +562,5 @@ export const faqs = [
 
 
     
+
 
