@@ -1,4 +1,3 @@
-
 import {
   Activity,
   Banknote,
@@ -29,6 +28,11 @@ import {
   Star,
   Quote,
   CheckCircle,
+  BookUser,
+  History,
+  FileClock,
+  Landmark,
+  ShieldQuestion,
 } from "lucide-react";
 
 export const user = {
@@ -159,18 +163,14 @@ export const navLinks = {
     { href: "/contact-us", label: "Contact Us" },
   ],
   dashboard: [
-    { href: "/dashboard", label: "Home", icon: Home },
-    { href: "/dashboard/account", label: "Account Profile", icon: User },
-    { href: "/dashboard/orders", label: "Order History", icon: ShoppingCart },
-    { href: "/dashboard/financials", label: "Account Balance", icon: Wallet },
-    { href: "/dashboard/returns", label: "Return Details", icon: Undo2 },
-    { href: "/dashboard/financials/payments", label: "Payments", icon: CreditCard },
-    { href: "/dashboard/orders/provisional", label: "Provisional Indent", icon: FileWarning },
-    { href: "/dashboard/reports", label: "Performance Reports", icon: LineChart },
-    { href: "/dashboard/reports/field-visit", label: "Field Visit Reports", icon: MapPin },
-    { href: "/dashboard/invoices", label: "Monthly Reports", icon: FileSliders },
-    { href: "/dashboard/invoices/membership", label: "Invoices", icon: FileQuestion },
-    { href: "/dashboard/complaints", label: "Complaints", icon: MessageCircleQuestion },
+    { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/dashboard/account", label: "Account", icon: BookUser },
+    { href: "/dashboard/orders", label: "Orders", icon: History },
+    { href: "/dashboard/financials", label: "Financials", icon: Landmark },
+    { href: "/dashboard/returns", label: "Returns", icon: Undo2 },
+    { href: "/dashboard/reports", label: "Reports", icon: FileSliders },
+    { href: "/dashboard/invoices", label: "Invoices", icon: FileClock },
+    { href: "/dashboard/complaints", label: "Complaints", icon: ShieldQuestion },
   ],
   footer: {
     company: [
@@ -277,5 +277,3 @@ export const faqs = [
         answer: "A: MedPlus provides launch kits — including banners, posters, flyers, and digital campaigns — to help promote your store in the local area."
     }
 ]
-
-

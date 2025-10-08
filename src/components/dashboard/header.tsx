@@ -1,7 +1,6 @@
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { UserNav } from "./user-nav";
-import { Home } from "lucide-react";
-import { Button } from "../ui/button";
+import { StoreSwitcher } from "./store-switcher";
 
 export function DashboardHeader() {
   return (
@@ -10,9 +9,7 @@ export function DashboardHeader() {
             <SidebarTrigger />
         </div>
         <div className="hidden md:block">
-           <Button variant="ghost" size="icon">
-              <Home className="h-5 w-5" />
-            </Button>
+           <StoreSwitcher />
         </div>
         <div className="ml-auto flex items-center gap-4">
             <UserNav />
