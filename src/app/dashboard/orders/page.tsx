@@ -1,6 +1,7 @@
 
 "use client";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,10 +19,28 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { ordersData } from "@/lib/data";
-import { Eye, RefreshCw, Search, Truck } from "lucide-react";
+import { ordersData, type Order } from "@/lib/data";
+import { Eye, RefreshCw, Search, Truck, CheckCircle, Package } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Separator } from "@/components/ui/separator";
 
 const statusVariant: { [key: string]: "default" | "secondary" | "destructive" | "outline" | "success" | "warning" | "info" } = {
     "Delivered": "success",
@@ -32,6 +51,27 @@ const statusVariant: { [key: string]: "default" | "secondary" | "destructive" | 
 };
 
 export default function OrdersPage() {
+    const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+    const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+    const [isTrackModalOpen, setIsTrackModalOpen] = useState(false);
+    const [isReorderAlertOpen, setIsReorderAlertOpen] = useState(false);
+
+    const handleViewClick = (order: Order) => {
+        setSelectedOrder(order);
+        setIsViewModalOpen(true);
+    };
+
+    const handleTrackClick = (order: Order) => {
+        setSelectedOrder(order);
+        setIsTrackModalOpen(true);
+    };
+
+    const handleReorderClick = (order: Order) => {
+        setSelectedOrder(order);
+        setIsReorderAlertOpen(true);
+    };
+
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -92,14 +132,17 @@ export default function OrdersPage() {
                   <TableCell>{order.type}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex gap-2 justify-end">
-                      <Button variant="ghost" size="icon">
+                      <Button variant="ghost" size="icon" onClick={() => handleViewClick(order)}>
                         <Eye className="h-4 w-4" />
+                         <span className="sr-only">View Order</span>
                       </Button>
-                      <Button variant="ghost" size="icon">
+                      <Button variant="ghost" size="icon" onClick={() => handleReorderClick(order)}>
                         <RefreshCw className="h-4 w-4" />
+                         <span className="sr-only">Re-order</span>
                       </Button>
-                      <Button variant="ghost" size="icon">
+                      <Button variant="ghost" size="icon" onClick={() => handleTrackClick(order)}>
                         <Truck className="h-4 w-4" />
+                         <span className="sr-only">Track Order</span>
                       </Button>
                     </div>
                   </TableCell>
@@ -109,6 +152,85 @@ export default function OrdersPage() {
           </Table>
         </CardContent>
       </Card>
+
+      {/* View Order Modal */}
+      <Dialog open={isViewModalOpen} onOpenChange={setIsViewModalOpen}>
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Order Details</DialogTitle>
+            <DialogDescription>
+              Products in order <span className="font-medium">{selectedOrder?.orderId}</span>
+            </DialogDescription>
+          </DialogHeader>
+          <div className="max-h-[60vh] overflow-y-auto">
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>Product</TableHead>
+                        <TableHead>SKU</TableHead>
+                        <TableHead className="text-center">Quantity</TableHead>
+                        <TableHead className="text-right">Price</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {selectedOrder?.products?.map(product => (
+                        <TableRow key={product.sku}>
+                            <TableCell className="font-medium">{product.name}</TableCell>
+                            <TableCell>{product.sku}</TableCell>
+                            <TableCell className="text-center">{product.quantity}</TableCell>
+                            <TableCell className="text-right">₹{product.price.toLocaleString('en-IN')}</TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+          </div>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Track Order Modal */}
+      <Dialog open={isTrackModalOpen} onOpenChange={setIsTrackModalOpen}>
+        <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+                <DialogTitle>Track Order</DialogTitle>
+                <DialogDescription>
+                Shipping status for order <span className="font-medium">{selectedOrder?.orderId}</span>
+                </DialogDescription>
+            </DialogHeader>
+            <div className="relative pl-6 py-4">
+                <div className="absolute left-9 top-6 h-full w-0.5 bg-border -translate-x-1/2"></div>
+                 {selectedOrder?.trackingHistory?.map((event, index) => (
+                    <div key={index} className="relative flex items-start gap-4 mb-6">
+                        <div className="z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                            {event.status === 'Delivered' ? <CheckCircle className="h-5 w-5" /> : <Package className="h-5 w-5" />}
+                        </div>
+                        <div className="mt-1">
+                            <p className="font-semibold">{event.status}</p>
+                            <p className="text-sm text-muted-foreground">{event.location}</p>
+                            <time className="text-xs text-muted-foreground">{event.date}</time>
+                        </div>
+                    </div>
+                 ))}
+            </div>
+        </DialogContent>
+      </Dialog>
+
+
+      {/* Re-order Alert */}
+      <AlertDialog open={isReorderAlertOpen} onOpenChange={setIsReorderAlertOpen}>
+        <AlertDialogContent>
+            <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure you want to re-order?</AlertDialogTitle>
+                <AlertDialogDescription>
+                    This will create a new order with the exact same items and quantities as order <span className="font-medium">{selectedOrder?.orderId}</span>. This action cannot be undone.
+                </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={() => { /* Reorder logic goes here */ }}>Confirm Re-order</AlertDialogAction>
+            </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
     </div>
   );
 }
