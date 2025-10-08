@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/table";
 import { financialSummary, transactions } from "@/lib/data";
 import { Download, Calendar as CalendarIcon } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 export default function FinancialsPage() {
 
@@ -87,20 +88,26 @@ export default function FinancialsPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Date</TableHead>
-                <TableHead>Description</TableHead>
-                <TableHead>Type</TableHead>
+                <TableHead>Date & Time</TableHead>
+                <TableHead>Bill ID</TableHead>
+                <TableHead>Bill Type</TableHead>
+                <TableHead>Billing Place</TableHead>
+                <TableHead>Dr/Cr</TableHead>
                 <TableHead className="text-right">Amount</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {transactions.map((tx) => (
-                <TableRow key={tx.date + tx.description}>
-                  <TableCell>{tx.date}</TableCell>
-                  <TableCell>{tx.description}</TableCell>
+                <TableRow key={tx.billId}>
+                  <TableCell>{tx.dateTime}</TableCell>
+                  <TableCell className="font-medium">{tx.billId}</TableCell>
                   <TableCell>
-                    <span className={tx.type === 'Credit' ? 'text-green-600' : 'text-red-600'}>
-                        {tx.type}
+                    <Badge variant="outline">{tx.billType}</Badge>
+                  </TableCell>
+                  <TableCell>{tx.billingPlace}</TableCell>
+                  <TableCell>
+                    <span className={tx.transactionType === 'Cr' ? 'text-green-600' : 'text-red-600'}>
+                        {tx.transactionType}
                     </span>
                   </TableCell>
                   <TableCell className="text-right">₹{tx.amount.toLocaleString('en-IN')}</TableCell>

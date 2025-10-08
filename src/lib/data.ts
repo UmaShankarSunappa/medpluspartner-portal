@@ -210,10 +210,46 @@ export const financialSummary = {
 };
 
 export const transactions = [
-  { date: "2023-10-26", description: "INV-1024 Payment", type: "Debit", amount: 12450.0 },
-  { date: "2023-10-25", description: "Credit Note CN-056", type: "Credit", amount: 2300.0 },
-  { date: "2023-10-20", description: "INV-1022 Payment", type: "Debit", amount: 8990.0 },
-  { date: "2023-09-30", description: "Monthly Commission", type: "Credit", amount: 35000.0 },
+    { 
+        dateTime: "2023-10-26 14:30", 
+        billId: "INV-1024", 
+        billType: "Payment", 
+        amount: 12450.0,
+        billingPlace: "Bangalore",
+        transactionType: "Dr"
+    },
+    { 
+        dateTime: "2023-10-25 11:00", 
+        billId: "CN-056", 
+        billType: "Credit Note", 
+        amount: 2300.0,
+        billingPlace: "Hyderabad",
+        transactionType: "Cr"
+    },
+    { 
+        dateTime: "2023-10-21 10:15", 
+        billId: "PUR-5678", 
+        billType: "Purchases", 
+        amount: 32000.0,
+        billingPlace: "Hyderabad",
+        transactionType: "Dr"
+    },
+    { 
+        dateTime: "2023-10-20 18:00", 
+        billId: "INV-1022", 
+        billType: "Payment", 
+        amount: 8990.0,
+        billingPlace: "Bangalore",
+        transactionType: "Dr"
+    },
+    { 
+        dateTime: "2023-09-30 20:00", 
+        billId: "COMM-0923", 
+        billType: "Commission", 
+        amount: 35000.0,
+        billingPlace: "Corporate",
+        transactionType: "Cr"
+    }
 ];
 
 export const payments = [
@@ -260,6 +296,7 @@ export const navLinks = {
   ],
   dashboard: [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/dashboard/account", label: "Account profile", icon: User },
     { href: "/dashboard/orders", label: "Orders", icon: History },
     { href: "/dashboard/financials", label: "Account Balance", icon: Landmark },
     { href: "/dashboard/returns", label: "Returns", icon: Undo2 },
