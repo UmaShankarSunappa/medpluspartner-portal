@@ -117,7 +117,7 @@ export default function OrdersPage() {
                     <TableHead>Total</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Type</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                    <TableHead className="text-center">Actions</TableHead>
                 </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -131,8 +131,8 @@ export default function OrdersPage() {
                         <Badge variant={statusVariant[order.status] || 'secondary'}>{order.status}</Badge>
                     </TableCell>
                     <TableCell>{order.type}</TableCell>
-                    <TableCell className="text-right">
-                        <div className="flex gap-2 justify-end">
+                    <TableCell className="text-center">
+                        <div className="flex gap-2 justify-center">
                             <Tooltip>
                                 <TooltipTrigger asChild>
                                     <Button variant="ghost" size="icon" onClick={() => handleViewClick(order)}>
