@@ -276,7 +276,7 @@ export type Return = {
   }[];
 };
 
-export const returns: Return[] = [
+export const returnsData: Return[] = [
   { 
     returnId: "RET-0123", 
     taxInvoice: "TINV-987",
@@ -400,7 +400,7 @@ export const navLinks = {
     { href: "/dashboard/payments", label: "Payments", icon: Banknote },
     { href: "/dashboard/returns", label: "Returns", icon: Undo2 },
     { href: "/dashboard/provisional-indent", label: "Provisional Indent", icon: ClipboardList },
-    { href: "/dashboard/reports", label: "Reports", icon: FileSliders },
+    { href: "/dashboard/reports", label: "Monthly Reports", icon: FileSliders },
     { href: "/dashboard/invoices", label: "Invoices", icon: FileClock },
     { href: "/dashboard/complaints", label: "Complaints", icon: ShieldQuestion },
   ],
@@ -515,3 +515,6 @@ export const faqs = [
 
 
 
+
+
+    
