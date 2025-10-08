@@ -316,11 +316,16 @@ export const returnsData: Return[] = [
   },
 ];
 
-export const reports = [
-  { id: "REP-M0923", name: "September 2023 Monthly Statement", type: "PDF", date: "2023-10-05", actionRequired: false },
-  { id: "REP-R0923", name: "September 2023 Returns Confirmation", type: "Excel", date: "2023-10-03", actionRequired: true },
-  { id: "REP-M0823", name: "August 2023 Monthly Statement", type: "PDF", date: "2023-09-05", actionRequired: false },
+export const monthlyReports = [
+    { id: "REP-001", name: "Net Sale vs. Margin", period: "Jan 2024", fileType: "Excel", actionRequired: false },
+    { id: "REP-002", name: "Rental Invoices", period: "Jan 2024", fileType: "PDF", actionRequired: false },
+    { id: "REP-003", name: "Expiry Products List", period: "Jan 2024", fileType: "Excel", actionRequired: true },
+    { id: "REP-004", name: "Slow-Moving Products", period: "Jan 2024", fileType: "Excel", actionRequired: true },
+    { id: "REP-005", name: "Credit Note", period: "Jan 2024", fileType: "Excel", actionRequired: false },
+    { id: "REP-006", name: "Royalty Fee Invoice", period: "Jan 2024", fileType: "PDF", actionRequired: false },
+    { id: "REP-007", name: "GST Reports", period: "Jan 2024", fileType: "Excel", actionRequired: false },
 ];
+
 
 export const invoices = {
   order: [

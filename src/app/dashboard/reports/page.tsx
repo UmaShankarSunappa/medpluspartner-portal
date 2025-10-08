@@ -1,4 +1,7 @@
-import { Download, CheckCircle } from "lucide-react";
+
+"use client";
+
+import { Download, CheckCircle, File as FileIcon, Sheet as ExcelIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,9 +19,23 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { reports as reportsData } from "@/lib/data";
+import { monthlyReports } from "@/lib/data";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function ReportsPage() {
+  const years = ["2024", "2023"];
+  const months = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+
   return (
     <div className="space-y-6">
       <div>
@@ -27,11 +44,50 @@ export default function ReportsPage() {
           Access and download your monthly statements and reports.
         </p>
       </div>
+
+       <Card>
+        <CardHeader>
+          <CardTitle>Select Period</CardTitle>
+          <CardDescription>Filter reports by year and month.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="grid gap-2 w-full md:w-48">
+              <Label htmlFor="year">Year</Label>
+              <Select defaultValue="2024">
+                <SelectTrigger id="year">
+                  <SelectValue placeholder="Select year" />
+                </SelectTrigger>
+                <SelectContent>
+                  {years.map((year) => (
+                    <SelectItem key={year} value={year}>{year}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid gap-2 w-full md:w-48">
+              <Label htmlFor="month">Month</Label>
+               <Select defaultValue="January">
+                <SelectTrigger id="month">
+                  <SelectValue placeholder="Select month" />
+                </SelectTrigger>
+                <SelectContent>
+                  {months.map((month) => (
+                    <SelectItem key={month} value={month}>{month}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+
       <Card>
         <CardHeader>
-          <CardTitle>Downloadable Reports</CardTitle>
+          <CardTitle>Available Reports</CardTitle>
           <CardDescription>
-            Find your historical performance and financial reports here.
+            Download reports and complete required actions.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -39,39 +95,42 @@ export default function ReportsPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Report Name</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead>Month/Year</TableHead>
+                <TableHead>File Type</TableHead>
+                <TableHead>Status / Action</TableHead>
+                <TableHead className="text-right">Download</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {reportsData.map((report) => (
+              {monthlyReports.map((report) => (
                 <TableRow key={report.id}>
                   <TableCell className="font-medium">{report.name}</TableCell>
-                  <TableCell>
-                    <Badge variant="outline">{report.type}</Badge>
+                  <TableCell>{report.period}</TableCell>
+                  <TableCell className="flex items-center gap-2">
+                    {report.fileType === 'Excel' ? 
+                        <ExcelIcon className="h-4 w-4 text-green-600"/> : 
+                        <FileIcon className="h-4 w-4 text-red-600"/>
+                    }
+                    {report.fileType}
                   </TableCell>
-                  <TableCell>{report.date}</TableCell>
                   <TableCell>
                     {report.actionRequired ? (
-                      <Badge variant="destructive">Action Required</Badge>
+                        <div className="flex items-center gap-2">
+                            <Badge variant="warning">Awaiting Confirmation</Badge>
+                             <Button variant="outline" size="sm">
+                                <CheckCircle className="mr-2 h-4 w-4" />
+                                Confirm Return
+                            </Button>
+                        </div>
                     ) : (
-                      <Badge>No Action</Badge>
+                      <span>-</span>
                     )}
                   </TableCell>
                   <TableCell className="text-right">
-                    {report.actionRequired ? (
-                      <Button variant="outline" size="sm">
-                        <CheckCircle className="mr-2 h-4 w-4" />
-                        Confirm Returns
-                      </Button>
-                    ) : (
-                      <Button variant="ghost" size="sm">
-                        <Download className="mr-2 h-4 w-4" />
-                        Download
-                      </Button>
-                    )}
+                     <Button variant="ghost" size="icon">
+                        <Download className="h-4 w-4" />
+                        <span className="sr-only">Download</span>
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
