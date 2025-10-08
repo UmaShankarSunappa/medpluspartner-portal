@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -16,19 +17,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { ordersData } from "@/lib/data";
-import { CalendarIcon, Eye, MoreHorizontal, RefreshCw, Search, Truck } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { Eye, RefreshCw, Search, Truck } from "lucide-react";
 import { Label } from "@/components/ui/label";
-import { DatePicker } from "@/components/ui/date-picker";
+import { DateRangePicker } from "@/components/ui/date-range-picker";
 
 const statusVariant: { [key: string]: "default" | "secondary" | "destructive" | "outline" | "success" | "warning" | "info" } = {
     "Delivered": "success",
@@ -56,12 +49,8 @@ export default function OrdersPage() {
         <CardContent>
           <div className="flex flex-col md:flex-row gap-4 items-end">
             <div className="grid gap-2">
-              <Label htmlFor="start-date">Start Date</Label>
-              <DatePicker placeholder="dd-mm-yyyy" />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="end-date">End Date</Label>
-              <DatePicker placeholder="dd-mm-yyyy" />
+              <Label htmlFor="date-range">Date Range</Label>
+              <DateRangePicker />
             </div>
             <Button>
               <Search className="mr-2 h-4 w-4" />
