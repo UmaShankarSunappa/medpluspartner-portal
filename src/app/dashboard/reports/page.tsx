@@ -84,7 +84,7 @@ export default function ReportsPage() {
        <Card>
         <CardHeader>
           <CardTitle>Select Period</CardTitle>
-          <CardDescription>Filter reports by year and month.</CardDescription>
+          <CardDescription>Filter reports by year and month. (only current financial year reports will be visible)</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col md:flex-row gap-4">
