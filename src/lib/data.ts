@@ -1,4 +1,5 @@
 
+
 import {
   Activity,
   Banknote,
@@ -258,10 +259,61 @@ export const payments = [
   { paymentId: "PAY-9869", date: "2023-10-15", amount: 21350.0, method: "UPI", status: "Pending" },
 ];
 
-export const returns = [
-  { returnId: "RET-0123", date: "2023-10-15", status: "Approved", total: 2300.0 },
-  { returnId: "RET-0124", date: "2023-10-18", status: "Pending", total: 1250.0 },
-  { returnId: "RET-0125", date: "2023-10-22", status: "Rejected", total: 800.0 },
+export type Return = {
+  returnId: string;
+  taxInvoice: string;
+  createdBy: string;
+  total: number;
+  receivedDate: string;
+  returnNoteId: string | null;
+  status: "Approved" | "Pending" | "Rejected";
+  products: {
+    sku: string;
+    name: string;
+    batch: string;
+    quantity: number;
+    value: number;
+  }[];
+};
+
+export const returns: Return[] = [
+  { 
+    returnId: "RET-0123", 
+    taxInvoice: "TINV-987",
+    createdBy: "Anand Sharma",
+    total: 2300.0,
+    receivedDate: "2023-10-15",
+    returnNoteId: "CN-056",
+    status: "Approved",
+    products: [
+        { sku: "PARA500", name: "Paracetamol 500mg", batch: "B123", quantity: 10, value: 150 },
+        { sku: "VICKS-AC", name: "Vicks Action 500", batch: "V456", quantity: 5, value: 200 },
+    ]
+  },
+  { 
+    returnId: "RET-0124", 
+    taxInvoice: "TINV-991",
+    createdBy: "Anand Sharma",
+    total: 1250.0,
+    receivedDate: "2023-10-18",
+    returnNoteId: null,
+    status: "Pending",
+    products: [
+        { sku: "MOOV", name: "Moov Ointment", batch: "M789", quantity: 10, value: 1200 }
+    ]
+  },
+  { 
+    returnId: "RET-0125", 
+    taxInvoice: "TINV-992",
+    createdBy: "Anand Sharma",
+    total: 800.0,
+    receivedDate: "2023-10-22",
+    returnNoteId: null,
+    status: "Rejected",
+    products: [
+        { sku: "VOLINI", name: "Volini Spray", batch: "VO101", quantity: 5, value: 750 }
+    ]
+  },
 ];
 
 export const reports = [
@@ -411,3 +463,4 @@ export const faqs = [
 ]
 
     
+
