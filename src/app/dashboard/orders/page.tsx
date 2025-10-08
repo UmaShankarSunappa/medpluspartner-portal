@@ -64,7 +64,7 @@ export default function OrdersPage() {
       <Card>
         <CardHeader>
           <CardTitle>Orders</CardTitle>
-          <CardDescription>Your order history and details</CardDescription>
+          <CardDescription>Your order history and details (by default last 15 days orders will appear here)</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
