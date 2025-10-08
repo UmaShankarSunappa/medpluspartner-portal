@@ -190,11 +190,17 @@ export default function ComplaintsPage() {
                             <p className="font-semibold">{selectedComplaint?.dateTime}</p>
                         </div>
                     </div>
-                    <div className="space-y-2">
-                        <h4 className="font-semibold">Subject: {selectedComplaint?.subject}</h4>
-                        <p className="text-sm text-muted-foreground bg-slate-50 p-4 rounded-md border">
-                            {selectedComplaint?.description}
-                        </p>
+                    <div className="space-y-4">
+                        <div>
+                            <h4 className="font-semibold">Subject</h4>
+                            <p className="text-sm text-muted-foreground">{selectedComplaint?.subject}</p>
+                        </div>
+                        <div>
+                            <h4 className="font-semibold">Description</h4>
+                            <p className="text-sm text-muted-foreground bg-slate-50 p-4 rounded-md border">
+                                {selectedComplaint?.description}
+                            </p>
+                        </div>
                     </div>
 
                     <div>
