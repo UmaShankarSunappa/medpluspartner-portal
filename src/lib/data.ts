@@ -164,7 +164,7 @@ export const navLinks = {
   ],
   dashboard: [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/dashboard/account", label: "Account", icon: BookUser },
+    { href: "/dashboard/account", label: "Account profile", icon: BookUser },
     { href: "/dashboard/orders", label: "Orders", icon: History },
     { href: "/dashboard/financials", label: "Financials", icon: Landmark },
     { href: "/dashboard/returns", label: "Returns", icon: Undo2 },
