@@ -370,7 +370,7 @@ export const complaintsData: Complaint[] = [
     { 
         complaintId: "COM-057", 
         dateTime: "2023-10-25 04:00 PM", 
-        department: "Logistics",
+        department: "Warehouse",
         subject: "Delay in order ORD75641", 
         description: "Order ORD75641 was scheduled for delivery on Oct 24th but has not yet arrived. The tracking information has not been updated in over 24 hours. Please provide an urgent update on the shipment status.",
         status: "In Progress",
@@ -562,5 +562,6 @@ export const faqs = [
 
 
     
+
 
 
