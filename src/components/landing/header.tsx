@@ -25,7 +25,7 @@ export function LandingHeader() {
       <Link href="/" className="flex items-center justify-center">
         <Mountain className="h-6 w-6" />
         <span className="sr-only">MedPlus</span>
-        <span className="font-headline text-xl font-semibold ml-2">MedPlus</span>
+        <span className="font-headline text-xl font-semibold ml-2">MedPlus Franchisee</span>
       </Link>
       <nav className="ml-auto hidden gap-4 sm:gap-6 lg:flex">
         {navLinks.public.map((link) => (
@@ -33,6 +33,7 @@ export function LandingHeader() {
             key={link.label}
             href={link.href}
             className="text-sm font-medium hover:underline underline-offset-4"
+            prefetch={false}
           >
             {link.label}
           </Link>
