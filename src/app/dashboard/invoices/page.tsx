@@ -1,3 +1,4 @@
+
 import { Download, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +20,8 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { invoices as invoicesData } from "@/lib/data";
+import { DateRangePicker } from "@/components/ui/date-range-picker";
+import { Label } from "@/components/ui/label";
 
 export default function InvoicesPage() {
   return (
@@ -42,9 +45,26 @@ export default function InvoicesPage() {
               <CardDescription>
                 Search and download invoices for your orders.
               </CardDescription>
-              <div className="relative pt-2">
-                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input placeholder="Search invoices..." className="pl-8" />
+              <div className="flex flex-col md:flex-row gap-4 items-end pt-4">
+                  <div className="grid gap-2 w-full md:w-auto">
+                      <Label htmlFor="date-range">Date Range</Label>
+                      <DateRangePicker />
+                  </div>
+                  <div className="grid gap-2 w-full md:w-auto">
+                      <Label htmlFor="search-invoice-id">Invoice ID</Label>
+                      <div className="relative">
+                          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                          <Input placeholder="Search..." id="search-invoice-id" className="pl-8" />
+                      </div>
+                  </div>
+                   <div className="grid gap-2 w-full md:w-auto">
+                      <Label htmlFor="search-order-id">Order ID</Label>
+                      <div className="relative">
+                          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                          <Input placeholder="Search..." id="search-order-id" className="pl-8" />
+                      </div>
+                  </div>
+                  <Button>Search</Button>
               </div>
             </CardHeader>
             <CardContent>
