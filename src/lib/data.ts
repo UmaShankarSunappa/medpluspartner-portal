@@ -427,6 +427,92 @@ export const provisionalIndentsData: ProvisionalIndent[] = [
   }
 ];
 
+export type FieldVisitReport = {
+  id: string;
+  visitDateTime: string;
+  employeeName: string;
+  employeeId: string;
+  storeId: string;
+  storeName: string;
+  localHeadName: string;
+  ratings: {
+    storeEnvironment: number;
+    staffGrooming: number;
+    staffQuality: number;
+    pvtLabelPharma: number;
+    pvtLabelNonPharma: number;
+  };
+  remarks: {
+    storeEnvironment?: string;
+    staffGrooming?: string;
+    staffQuality?: string;
+    pvtLabelPharma?: string;
+    pvtLabelNonPharma?: string;
+  };
+  staffPresent: number;
+  replenishmentStatus: "Completed" | "Pending";
+  outstandingPayments: "Yes" | "No";
+  outstandingPaymentsRemarks?: string;
+  sopDeviation?: string;
+  otherObservations?: string;
+  franchiseeComments?: { text: string; date: string }[];
+};
+
+export const fieldVisitReportsData: FieldVisitReport[] = [
+  {
+    id: "FVR-001",
+    visitDateTime: "2024-10-25 11:30 AM",
+    employeeName: "Sanjay Verma",
+    employeeId: "EMP-101",
+    storeId: "MP-BLR-KOR-01",
+    storeName: "Koramangala, Bangalore",
+    localHeadName: "Anand Sharma",
+    ratings: {
+      storeEnvironment: 4,
+      staffGrooming: 5,
+      staffQuality: 4,
+      pvtLabelPharma: 5,
+      pvtLabelNonPharma: 3,
+    },
+    remarks: {
+      pvtLabelNonPharma: "Non-pharma promotions could be more visible.",
+    },
+    staffPresent: 4,
+    replenishmentStatus: "Completed",
+    outstandingPayments: "No",
+    sopDeviation: "None observed.",
+    otherObservations: "Store is well-maintained and organized.",
+    franchiseeComments: [{ text: "Thanks for the feedback, we will work on the non-pharma promos.", date: "2024-10-26" }],
+  },
+  {
+    id: "FVR-002",
+    visitDateTime: "2024-10-26 02:00 PM",
+    employeeName: "Priya Singh",
+    employeeId: "EMP-102",
+    storeId: "MP-BLR-IND-02",
+    storeName: "Indiranagar, Bangalore",
+    localHeadName: "Rohan Patel",
+    ratings: {
+      storeEnvironment: 2,
+      staffGrooming: 3,
+      staffQuality: 3,
+      pvtLabelPharma: 2,
+      pvtLabelNonPharma: 2,
+    },
+    remarks: {
+      storeEnvironment: "Store entrance was cluttered, needs cleaning.",
+      pvtLabelPharma: "Staff not fully aware of the latest pharma label offers.",
+      pvtLabelNonPharma: "Promotional standee was not displayed correctly."
+    },
+    staffPresent: 3,
+    replenishmentStatus: "Pending",
+    outstandingPayments: "Yes",
+    outstandingPaymentsRemarks: "Followed up on pending invoice from last month.",
+    otherObservations: "Staff requires additional training on new products.",
+    franchiseeComments: [],
+  },
+];
+
 
 export const navLinks = {
   public: [
@@ -448,6 +534,7 @@ export const navLinks = {
     { href: "/dashboard/gst-reports", label: "GST Reports", icon: FileText },
     { href: "/dashboard/invoices", label: "Invoices", icon: FileClock },
     { href: "/dashboard/complaints", label: "Complaints", icon: ShieldQuestion },
+    { href: "/dashboard/field-visit-reports", label: "Field Visit Reports", icon: ClipboardList },
   ],
   footer: {
     company: [
@@ -679,6 +766,7 @@ export const performanceData = {
 
 
     
+
 
 
 
