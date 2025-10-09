@@ -29,7 +29,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { fieldVisitReportsData, type FieldVisitReport } from "@/lib/data";
 import { cn } from "@/lib/utils";
-import { Clock, Download, MessageSquare, PlusCircle, Star, SortAsc, SortDesc } from "lucide-react";
+import { Clock, Download, MessageSquare, PlusCircle, Star, SortAsc, SortDesc, ClipboardList } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
 type SortOrder = "newest" | "oldest" | "highest-rated" | "lowest-rated";
@@ -316,4 +316,3 @@ export default function FieldVisitReportsPage() {
     </TooltipProvider>
   );
 }
-
