@@ -31,12 +31,14 @@ import { fieldVisitReportsData, type FieldVisitReport } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { Clock, Download, MessageSquare, PlusCircle, Star, SortAsc, SortDesc, ClipboardList } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
 
 type SortOrder = "newest" | "oldest" | "highest-rated" | "lowest-rated";
 
 export default function FieldVisitReportsPage() {
   const [selectedReport, setSelectedReport] = useState<FieldVisitReport | null>(null);
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
+  const [newComment, setNewComment] = useState("");
   
   const getRatingColor = (rating: number) => {
     if (rating >= 4) return "bg-green-500";
@@ -108,6 +110,13 @@ export default function FieldVisitReportsPage() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  const handleCommentSubmit = () => {
+    if (!newComment.trim()) return;
+    // Here you would typically call an API to save the comment
+    console.log("Submitting comment:", newComment);
+    setNewComment(""); // Clear the textarea
   };
 
 
@@ -288,7 +297,7 @@ export default function FieldVisitReportsPage() {
                  <div>
                     <h3 className="font-headline text-lg font-semibold mb-4">Franchisee Comments</h3>
                     {selectedReport.franchiseeComments && selectedReport.franchiseeComments.length > 0 ? (
-                        <div className="space-y-4">
+                        <div className="space-y-4 mb-6">
                             {selectedReport.franchiseeComments.map((comment, index) => (
                                 <div key={index} className="p-3 rounded-lg bg-muted/50 border">
                                     <p className="text-sm text-muted-foreground">"{comment.text}"</p>
@@ -297,8 +306,18 @@ export default function FieldVisitReportsPage() {
                             ))}
                         </div>
                     ) : (
-                        <p className="text-sm text-muted-foreground">No comments from franchisee yet.</p>
+                        <p className="text-sm text-muted-foreground mb-4">No comments from franchisee yet.</p>
                     )}
+                    <div className="space-y-2">
+                        <Textarea 
+                            placeholder="Write your comment here..."
+                            value={newComment}
+                            onChange={(e) => setNewComment(e.target.value)}
+                        />
+                        <Button onClick={handleCommentSubmit} disabled={!newComment.trim()}>
+                            Submit Comment
+                        </Button>
+                    </div>
                  </div>
 
               </div>
