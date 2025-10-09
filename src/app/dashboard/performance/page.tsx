@@ -55,7 +55,7 @@ const chartConfigBase = {
   salesOrders: { label: "Sales Orders", color: "hsl(var(--chart-1))" },
   webOrders: { label: "Web Orders", color: "hsl(var(--chart-2))" },
   abv: { label: "Avg Bill Value", color: "hsl(var(--primary))" },
-  bills: { label: "No. of Bills", color: "hsl(var(--secondary))" },
+  bills: { label: "No. of Bills", color: "hsl(var(--chart-5))" },
 };
 
 export default function PerformancePage() {
