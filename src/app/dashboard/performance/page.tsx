@@ -52,8 +52,8 @@ const chartConfigBase = {
   pl_pharma: { label: "PL Pharma", color: "hsl(var(--chart-3))" },
   pl_general: { label: "PL General", color: "hsl(var(--chart-4))" },
   surgical: { label: "Surgical", color: "hsl(var(--chart-5))" },
-  salesOrders: { label: "Sales Orders", color: "hsl(var(--primary))" },
-  webOrders: { label: "Web Orders", color: "hsl(var(--secondary))" },
+  salesOrders: { label: "Sales Orders", color: "hsl(var(--chart-1))" },
+  webOrders: { label: "Web Orders", color: "hsl(var(--chart-2))" },
   abv: { label: "Avg Bill Value", color: "hsl(var(--primary))" },
   bills: { label: "No. of Bills", color: "hsl(var(--secondary))" },
 };
