@@ -35,6 +35,13 @@ import { Textarea } from "@/components/ui/textarea";
 
 type SortOrder = "newest" | "oldest" | "highest-rated" | "lowest-rated";
 
+const ReportDetailItem = ({ label, value }: { label: string; value: React.ReactNode }) => (
+  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-3 border-b">
+    <p className="text-sm font-medium text-muted-foreground">{label}</p>
+    <p className="text-sm text-foreground text-left sm:text-right">{value}</p>
+  </div>
+);
+
 export default function FieldVisitReportsPage() {
   const [selectedReport, setSelectedReport] = useState<FieldVisitReport | null>(null);
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
@@ -204,93 +211,57 @@ export default function FieldVisitReportsPage() {
           <Card>
             <CardHeader className="flex flex-row justify-between items-center">
               <div>
-                <CardTitle>Report Details</CardTitle>
+                <CardTitle>Report Overview</CardTitle>
                 <CardDescription>
                   Visit to {selectedReport.storeName} on {new Date(selectedReport.visitDateTime).toLocaleDateString()}
                 </CardDescription>
               </div>
-              <Button onClick={handleDownload}>
-                <Download className="h-4 w-4 mr-2" />
-                Download Report
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                    <Button variant="ghost" size="icon" onClick={handleDownload}>
+                        <Download className="h-5 w-5" />
+                        <span className="sr-only">Download Report</span>
+                    </Button>
+                </TooltipTrigger>
+                <TooltipContent>Download Report (CSV)</TooltipContent>
+              </Tooltip>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
                 
-                {/* General Info */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                    <div className="space-y-1">
-                        <p className="font-medium text-muted-foreground">Employee</p>
-                        <p>{selectedReport.employeeName} ({selectedReport.employeeId})</p>
+                <ReportDetailItem label="Employee" value={`${selectedReport.employeeName} (${selectedReport.employeeId})`} />
+                <ReportDetailItem label="Store ID" value={selectedReport.storeId} />
+                <ReportDetailItem label="Local Head" value={selectedReport.localHeadName} />
+                <Separator />
+                {(Object.keys(selectedReport.ratings) as Array<keyof typeof selectedReport.ratings>).map(key => (
+                   <ReportDetailItem 
+                     key={key}
+                     label={<span className="capitalize">{key.replace(/([A-Z])/g, ' $1')}</span>}
+                     value={
+                       <div className="flex flex-col items-start sm:items-end gap-1">
+                         <Badge variant={selectedReport.ratings[key] <= 2 ? "destructive" : "secondary"}>
+                           Rating: {selectedReport.ratings[key]}/5
+                         </Badge>
+                         {selectedReport.remarks[key] && <p className="text-xs text-muted-foreground italic">"{selectedReport.remarks[key]}"</p>}
+                       </div>
+                     } 
+                   />
+                ))}
+                <Separator />
+                <ReportDetailItem label="Staff Present" value={selectedReport.staffPresent} />
+                <ReportDetailItem label="Replenishment Status" value={selectedReport.replenishmentStatus} />
+                <ReportDetailItem 
+                  label="Outstanding Payments" 
+                  value={
+                    <div className="flex flex-col items-start sm:items-end gap-1">
+                      <span>{selectedReport.outstandingPayments}</span>
+                      {selectedReport.outstandingPaymentsRemarks && <p className="text-xs text-muted-foreground italic">"{selectedReport.outstandingPaymentsRemarks}"</p>}
                     </div>
-                    <div className="space-y-1">
-                        <p className="font-medium text-muted-foreground">Store ID</p>
-                        <p>{selectedReport.storeId}</p>
-                    </div>
-                     <div className="space-y-1">
-                        <p className="font-medium text-muted-foreground">Local Head</p>
-                        <p>{selectedReport.localHeadName}</p>
-                    </div>
-                </div>
-
-                <Separator/>
-
-                {/* Ratings and Remarks Table */}
-                <div>
-                  <h3 className="font-headline text-lg font-semibold mb-4">Ratings & Remarks</h3>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Category</TableHead>
-                        <TableHead className="text-center">Rating (0-5)</TableHead>
-                        <TableHead>Remarks</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {(Object.keys(selectedReport.ratings) as Array<keyof typeof selectedReport.ratings>).map(key => (
-                           <TableRow key={key}>
-                                <TableCell className="font-medium capitalize">{key.replace(/([A-Z])/g, ' $1')}</TableCell>
-                                <TableCell className="text-center">
-                                    <Badge variant={selectedReport.ratings[key] <= 2 ? "destructive" : "secondary"}>
-                                        {selectedReport.ratings[key]}
-                                    </Badge>
-                                </TableCell>
-                                <TableCell>{selectedReport.remarks[key] || "-"}</TableCell>
-                           </TableRow>
-                        ))}
-                    </TableBody>
-                  </Table>
-                </div>
+                  }
+                />
+                <ReportDetailItem label="SOP Deviation Observations" value={selectedReport.sopDeviation || "None"} />
+                <ReportDetailItem label="Other Observations" value={selectedReport.otherObservations || "None"} />
                 
-                 <Separator/>
-
-                {/* Other Details */}
-                 <div className="space-y-4">
-                    <h3 className="font-headline text-lg font-semibold">Other Details</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-sm">
-                        <div className="space-y-1">
-                            <p className="font-medium text-muted-foreground">Staff Present</p>
-                            <p>{selectedReport.staffPresent}</p>
-                        </div>
-                        <div className="space-y-1">
-                            <p className="font-medium text-muted-foreground">Replenishment Status</p>
-                            <p>{selectedReport.replenishmentStatus}</p>
-                        </div>
-                        <div className="space-y-1 col-span-full">
-                            <p className="font-medium text-muted-foreground">Outstanding Payments</p>
-                            <p>{selectedReport.outstandingPayments} {selectedReport.outstandingPaymentsRemarks && ` - ${selectedReport.outstandingPaymentsRemarks}`}</p>
-                        </div>
-                         <div className="space-y-1 col-span-full">
-                            <p className="font-medium text-muted-foreground">SOP Deviation Observations</p>
-                            <p className="text-muted-foreground">{selectedReport.sopDeviation || "None"}</p>
-                        </div>
-                        <div className="space-y-1 col-span-full">
-                            <p className="font-medium text-muted-foreground">Other Observations</p>
-                            <p className="text-muted-foreground">{selectedReport.otherObservations || "None"}</p>
-                        </div>
-                    </div>
-                </div>
-
                  <Separator/>
 
                  {/* Franchisee Comments */}
@@ -335,3 +306,4 @@ export default function FieldVisitReportsPage() {
     </TooltipProvider>
   );
 }
+
