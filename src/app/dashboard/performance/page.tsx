@@ -53,9 +53,13 @@ const chartConfigBase = {
   pl_general: { label: "PL General", color: "hsl(var(--chart-4))" },
   surgical: { label: "Surgical", color: "hsl(var(--chart-5))" },
   salesOrders: { label: "Sales Orders", color: "hsl(var(--chart-1))" },
-  webOrders: { label: "Web Orders", color: "hsl(var(--chart-2))" },
+  webOrders: { label: "Web Orders", color: "hsl(var(--chart-3))" },
   abv: { label: "Avg Bill Value", color: "hsl(var(--primary))" },
-  bills: { label: "No. of Bills", color: "hsl(var(--chart-5))" },
+  bills: { label: "No. of Bills", color: "hsl(var(--chart-4))" },
+  "bills_lt_200": { label: "<200", color: "hsl(var(--chart-1))" },
+  "bills_200_500": { label: "200-500", color: "hsl(var(--chart-2))" },
+  "bills_500_999": { label: "500-999", color: "hsl(var(--chart-3))" },
+  "bills_gt_1000": { label: ">1000", color: "hsl(var(--chart-4))" },
 };
 
 export default function PerformancePage() {
@@ -244,10 +248,10 @@ export default function PerformancePage() {
                     <YAxis />
                     <ChartTooltip content={<ChartTooltipContent />} />
                     <Legend />
-                    <Line type="monotone" dataKey="<200" stroke="var(--color-chart-1)" name="<200" />
-                    <Line type="monotone" dataKey="200-500" stroke="var(--color-chart-2)" name="200-500" />
-                    <Line type="monotone" dataKey="500-999" stroke="var(--color-chart-3)" name="500-999" />
-                    <Line type="monotone" dataKey=">1000" stroke="var(--color-chart-4)" name=">1000" />
+                    <Line type="monotone" dataKey="<200" stroke="var(--color-bills_lt_200)" name={chartConfigBase['bills_lt_200'].label} />
+                    <Line type="monotone" dataKey="200-500" stroke="var(--color-bills_200_500)" name={chartConfigBase['bills_200_500'].label} />
+                    <Line type="monotone" dataKey="500-999" stroke="var(--color-bills_500_999)" name={chartConfigBase['bills_500_999'].label} />
+                    <Line type="monotone" dataKey=">1000" stroke="var(--color-bills_gt_1000)" name={chartConfigBase['bills_gt_1000'].label} />
                 </LineChart>
             </ChartContainer>
           </CardContent>
