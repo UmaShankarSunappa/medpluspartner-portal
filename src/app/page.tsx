@@ -1,6 +1,8 @@
+"use client";
 
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import { ArrowRight, Briefcase, DollarSign, FileText, GraduationCap, Headset, MapPin, Target, Users, Library, LineChart, Cpu, Truck, CheckCircle, Star, Quote, TrendingUp, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LandingHeader } from "@/components/landing/header";
@@ -9,6 +11,7 @@ import { placeholderImages } from "@/lib/placeholder-images.json";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { successStories } from "@/lib/data";
+import { FranchiseQueryForm } from "@/components/landing/franchise-query-form";
 
 const heroImage = placeholderImages.find(img => img.id === "hero-banner");
 
@@ -130,6 +133,7 @@ const newFranchiseeSteps = [
 ];
 
 export default function Home() {
+  const [isFormOpen, setIsFormOpen] = useState(false);
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <LandingHeader />
@@ -151,13 +155,11 @@ export default function Home() {
             <p className="mx-auto mt-6 max-w-3xl text-lg">
               Join India's leading pharmacy retail chain and be part of a trusted healthcare network serving millions of customers across the nation.
             </p>
-            <div className="mt-10 flex justify-center gap-4">
-              <Button asChild size="lg" className="font-bold">
-                <Link href="/signup">
+            <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Button onClick={() => setIsFormOpen(true)} size="lg" className="font-bold w-full sm:w-auto">
                   Become a Partner <ArrowRight className="ml-2" />
-                </Link>
               </Button>
-              <Button asChild size="lg" variant="secondary" className="font-bold">
+              <Button asChild size="lg" variant="secondary" className="font-bold w-full sm:w-auto">
                 <Link href="/login">Existing Partner Login</Link>
               </Button>
             </div>
@@ -312,8 +314,8 @@ export default function Home() {
                 </div>
                  <div className="text-center mt-12">
                     <p className="text-lg mb-4">Ready to write your own success story?</p>
-                    <Button asChild size="lg">
-                        <Link href="/signup">Start Your Journey Today</Link>
+                    <Button onClick={() => setIsFormOpen(true)} size="lg">
+                        Start Your Journey Today
                     </Button>
                 </div>
             </div>
@@ -321,6 +323,7 @@ export default function Home() {
         
       </main>
       <LandingFooter />
+      <FranchiseQueryForm open={isFormOpen} onOpenChange={setIsFormOpen} />
     </div>
   );
 }

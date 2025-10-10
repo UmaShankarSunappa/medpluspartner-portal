@@ -1,5 +1,4 @@
 
-
 import {
   Activity,
   Banknote,
@@ -640,7 +639,7 @@ export const faqs = [
         question: "Q10. What initial marketing support will I receive for my store launch?",
         answer: "A: MedPlus provides launch kits — including banners, posters, flyers, and digital campaigns — to help promote your store in the local area."
     }
-]
+];
 
 export const performanceData = {
   mom: {
@@ -759,23 +758,23 @@ export const performanceData = {
   }
 };
     
+export const indianStates = [
+    "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal"
+];
 
+export const districts = {
+    "Maharashtra": ["Mumbai", "Pune", "Nagpur", "Thane", "Nashik"],
+    "Karnataka": ["Bengaluru Urban", "Mysuru", "Mangaluru", "Belagavi", "Hubballi-Dharwad"],
+    "Telangana": ["Hyderabad", "Warangal", "Nizamabad", "Karimnagar", "Ranga Reddy"],
+    "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai", "Tiruchirappalli", "Salem"],
+};
 
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-    
+export const franchiseReasons = [
+    "Strong Brand Reputation and Customer Trust",
+    "High Demand for Organized Pharmacy Chains",
+    "Attractive ROI and Growth Potential",
+    "Supply Chain and Technology Support from MedPlus",
+    "Healthcare Background or Personal Interest",
+    "Expanding My Existing Business Portfolio",
+    "Other"
+];
