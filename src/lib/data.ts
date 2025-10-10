@@ -516,9 +516,9 @@ export const fieldVisitReportsData: FieldVisitReport[] = [
 export const navLinks = {
   public: [
     { href: "/about-us", label: "About Us" },
-    { href: "#", label: "News &amp; Updates" },
+    { href: "#", label: "News & Updates" },
     { href: "/faq", label: "FAQs" },
-    { href: "#", label: "Resources &amp; Training" },
+    { href: "#", label: "Resources & Training" },
     { href: "/contact-us", label: "Contact Us" },
   ],
   dashboard: [
@@ -601,7 +601,7 @@ export const successStories = [
 export const faqs = [
     {
         question: "Q1. What documents are required before signing the franchise agreement?",
-        answer: "A: You will need to submit KYC documents (PAN, Aadhaar, GST Registration, Shop &amp; Establishment License, and Drug License for pharmacy operations)."
+        answer: "A: You will need to submit KYC documents (PAN, Aadhaar, GST Registration, Shop & Establishment License, and Drug License for pharmacy operations)."
     },
     {
         question: "Q2. What is the minimum investment required to start a MedPlus franchise?",
@@ -778,4 +778,5 @@ export const franchiseReasons = [
     "Expanding My Existing Business Portfolio",
     "Other"
 ];
+
 
