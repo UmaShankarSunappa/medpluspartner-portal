@@ -38,6 +38,7 @@ import {
   Truck,
   CalendarDays,
   TrendingDown,
+  PenSquare,
 } from "lucide-react";
 
 export const user = {
@@ -609,6 +610,7 @@ export const navLinks = {
     { href: "/dashboard/invoices", label: "Invoices", icon: FileClock },
     { href: "/dashboard/complaints", label: "Complaints", icon: ShieldQuestion },
     { href: "/dashboard/field-visit-reports", label: "Field Visit Reports", icon: ClipboardList },
+    { href: "/dashboard/stationery-orders", label: "Stationery Orders", icon: PenSquare },
   ],
   footer: {
     company: [
@@ -847,7 +849,83 @@ export const franchiseReasons = [
     "Other"
 ];
 
+export type StationeryOrder = {
+  id: string;
+  orderId: string;
+  orderDate: string;
+  totalItems: number;
+  totalCost: number;
+  status: "Pending" | "Approved" | "Dispatched" | "Completed" | "Cancelled";
+  items: { code: string; name: string; uom: string; quantity: number; cost: number; }[];
+  trackingHistory: { status: string; date: string; location: string; }[];
+};
 
+export const stationeryOrdersData: StationeryOrder[] = [
+  {
+    id: "stn-1",
+    orderId: "STN-00001",
+    orderDate: "2025-09-25",
+    totalItems: 2,
+    totalCost: 1540,
+    status: "Approved",
+    items: [
+      { code: "PRIN0040", name: "Thermal Rolls - 3” Width & 50 Mtrs Length", uom: "Number", quantity: 20, cost: 1000 },
+      { code: "BILL0009", name: "Bill Paper - 10 X 12 X 1, GSM 70", uom: "Pkt", quantity: 4, cost: 540 },
+    ],
+    trackingHistory: [
+        { status: "Approved", date: "2025-09-26", location: "Head Office"},
+        { status: "Pending", date: "2025-09-25", location: "Franchisee Portal"},
+    ]
+  },
+   {
+    id: "stn-2",
+    orderId: "STN-00002",
+    orderDate: "2025-09-30",
+    totalItems: 1,
+    totalCost: 720,
+    status: "Pending",
+    items: [
+      { code: "PRIN0061", name: "Printed Compostable Covers - 7 X 10 inches", uom: "Kilogram", quantity: 3, cost: 720 },
+    ],
+     trackingHistory: [
+        { status: "Pending", date: "2025-09-30", location: "Franchisee Portal"},
+    ]
+  },
+  {
+    id: "stn-3",
+    orderId: "STN-00003",
+    orderDate: "2025-10-05",
+    totalItems: 3,
+    totalCost: 2140,
+    status: "Dispatched",
+    items: [
+        { code: "PRIN0040", name: "Thermal Rolls - 3” Width & 50 Mtrs Length", uom: "Number", quantity: 10, cost: 500 },
+        { code: "BILL0009", name: "Bill Paper - 10 X 12 X 1, GSM 70", uom: "Pkt", quantity: 8, cost: 1080 },
+        { code: "REGI0022", name: "Register No. 1, Ledger Pages 300", uom: "Number", quantity: 4, cost: 560 },
+    ],
+    trackingHistory: [
+        { status: "Dispatched", date: "2025-10-06", location: "Central Warehouse"},
+        { status: "Approved", date: "2025-10-06", location: "Head Office"},
+        { status: "Pending", date: "2025-10-05", location: "Franchisee Portal"},
+    ]
+  },
+];
 
+export type StationeryItem = {
+    code: string;
+    name: string;
+    uom: string;
+    example: number;
+};
 
+export const stationeryItemsData: StationeryItem[] = [
+    { code: "PRIN0040", name: "Thermal Rolls - 3” Width & 50 Mtrs Length", uom: "Number", example: 50},
+    { code: "BILL0009", name: "Bill Paper - 10 X 12 X 1, GSM 70", uom: "Pkt", example: 3},
+    { code: "PRIN0061", name: "Printed Compostable Covers - 7 X 10 inches", uom: "Kilogram", example: 3},
+    { code: "PRIN0062", name: "Printed Compostable Covers - 9 X 12 inches", uom: "Kilogram", example: 5},
+    { code: "REGI0022", name: "Register No. 1, Ledger Pages 300", uom: "Number", example: 1},
+    { code: "STAT0034", name: "Ball Point Pens - Blue", uom: "Box", example: 2},
+    { code: "STAT0035", name: "Stapler Machine - No. 10", uom: "Number", example: 1},
+];
   
+
