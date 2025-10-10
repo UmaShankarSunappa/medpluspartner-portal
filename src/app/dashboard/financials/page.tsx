@@ -76,10 +76,10 @@ export default function FinancialsPage() {
 
       <Card className="shadow-md">
         <CardContent className="p-4">
-            <div className="flex flex-wrap items-center justify-between gap-y-4">
+            <div className="flex flex-col lg:flex-row lg:flex-nowrap items-center justify-between gap-y-4">
                 {summaryItems.map((item, index) => (
                     <React.Fragment key={item.label}>
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-3 w-full lg:w-auto">
                             <div className="flex-shrink-0">
                                 <item.icon className="h-5 w-5 text-muted-foreground" />
                             </div>
