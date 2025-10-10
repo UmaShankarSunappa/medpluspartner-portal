@@ -16,7 +16,7 @@ import {
   ChartConfig,
 } from "@/components/ui/chart";
 import { kpiData, salesData } from "@/lib/data";
-import { CreditCard, Package, Ticket, Undo2 } from "lucide-react";
+import { CreditCard, Package, DollarSign, TrendingUp } from "lucide-react";
 
 const chartConfig = {
   sales: {
@@ -62,22 +62,26 @@ export default function DashboardPage() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pending Returns</CardTitle>
-            <Undo2 className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Average Daily Sales</CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{storeKpis.pendingReturns}</div>
-            <p className="text-xs text-muted-foreground">Returns awaiting approval</p>
+            <div className="text-2xl font-bold">₹{storeKpis.averageDailySales.toLocaleString('en-IN')}</div>
+            <p className="text-xs text-muted-foreground">
+                {storeKpis.avgSalesTrend > 0 ? '↑' : '↓'} {Math.abs(storeKpis.avgSalesTrend)}% vs last month
+            </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Open Tickets</CardTitle>
-            <Ticket className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">MTD Sales</CardTitle>
+            <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{storeKpis.openTickets}</div>
-            <p className="text-xs text-muted-foreground">Support tickets needing attention</p>
+            <div className="text-2xl font-bold">₹{storeKpis.mtdSales.toLocaleString('en-IN')}</div>
+            <p className="text-xs text-muted-foreground">
+                {storeKpis.mtdSalesTrend > 0 ? '+' : ''}{storeKpis.mtdSalesTrend}% from last month
+            </p>
           </CardContent>
         </Card>
       </div>

@@ -39,6 +39,8 @@ import {
   CalendarDays,
   TrendingDown,
   PenSquare,
+  DollarSign,
+  Calendar,
 } from "lucide-react";
 
 export const user = {
@@ -57,20 +59,26 @@ export const kpiData = {
   "store-01": {
     activeOrders: 12,
     availableCredit: 150000,
-    pendingReturns: 3,
-    openTickets: 1,
+    averageDailySales: 42560,
+    avgSalesTrend: 5.2,
+    mtdSales: 1245300,
+    mtdSalesTrend: 15.1,
   },
   "store-02": {
     activeOrders: 8,
     availableCredit: 250000,
-    pendingReturns: 1,
-    openTickets: 0,
+    averageDailySales: 38900,
+    avgSalesTrend: -1.5,
+    mtdSales: 1132100,
+    mtdSalesTrend: -2.4,
   },
   "store-03": {
     activeOrders: 21,
     availableCredit: 85000,
-    pendingReturns: 5,
-    openTickets: 2,
+    averageDailySales: 51200,
+    avgSalesTrend: 8.9,
+    mtdSales: 1489600,
+    mtdSalesTrend: 18.7,
   },
 };
 
@@ -928,5 +936,6 @@ export const stationeryItemsData: StationeryItem[] = [
     { code: "STAT0035", name: "Stapler Machine - No. 10", uom: "Number", example: 1},
 ];
   
+
 
 
