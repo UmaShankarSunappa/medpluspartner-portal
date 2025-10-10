@@ -778,3 +778,4 @@ export const franchiseReasons = [
     "Expanding My Existing Business Portfolio",
     "Other"
 ];
+

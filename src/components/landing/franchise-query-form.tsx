@@ -32,7 +32,7 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CheckCircle } from "lucide-react";
-import { indianStates, districts, franchiseReasons } from "@/lib/data";
+import { indianStates, franchiseReasons } from "@/lib/data";
 
 const formSchema = z.object({
   applicantName: z.string().min(1, "Applicant name is required"),
@@ -220,16 +220,9 @@ export function FranchiseQueryForm({ open, onOpenChange }: FranchiseQueryFormPro
                         render={({ field }) => (
                             <FormItem>
                             <FormLabel>District*</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value} disabled={!selectedState}>
-                                <FormControl>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select a district" />
-                                </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                    {(districts[selectedState as keyof typeof districts] || []).map((d) => <SelectItem key={d} value={d}>{d}</SelectItem>)}
-                                </SelectContent>
-                            </Select>
+                            <FormControl>
+                                <Input placeholder="Enter your district" {...field} />
+                            </FormControl>
                             <FormMessage />
                             </FormItem>
                         )}
