@@ -36,6 +36,8 @@ import {
   ShieldQuestion,
   ClipboardList,
   Truck,
+  CalendarDays,
+  TrendingDown,
 } from "lucide-react";
 
 export const user = {
@@ -205,7 +207,7 @@ export const accountProfile = {
 };
 
 export const financialSummary = {
-  storeName: "Koramangala, Bangalore",
+  storeName: "Koramangala, BTM",
   creditLimit: 500000,
   outstanding: 125780,
   creditPeriod: 365,

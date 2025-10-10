@@ -18,9 +18,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { financialSummary, transactions } from "@/lib/data";
-import { Download } from "lucide-react";
+import { Download, Landmark, Wallet, CalendarDays, TrendingUp, TrendingDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
+import { Separator } from "@/components/ui/separator";
 
 export default function FinancialsPage() {
 
@@ -53,6 +54,15 @@ export default function FinancialsPage() {
         link.click();
         document.body.removeChild(link);
     };
+    
+    const summaryItems = [
+        { icon: Landmark, label: "Account Name", value: financialSummary.storeName, color: "" },
+        { icon: Wallet, label: "Credit Limit", value: `₹${financialSummary.creditLimit.toLocaleString('en-IN')}`, color: "" },
+        { icon: TrendingUp, label: "Available Credit", value: `₹${availableCredit.toLocaleString('en-IN')}`, color: "text-green-600" },
+        { icon: TrendingDown, label: "Current Outstanding", value: `₹${financialSummary.outstanding.toLocaleString('en-IN')}`, color: "text-red-600" },
+        { icon: CalendarDays, label: "Credit Period", value: `${financialSummary.creditPeriod} Days`, color: "" },
+    ];
+
 
   return (
     <div className="space-y-6">
@@ -63,38 +73,30 @@ export default function FinancialsPage() {
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-         <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>Account Name</CardDescription>
-            <CardTitle className="text-2xl truncate">{financialSummary.storeName}</CardTitle>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>Credit Limit</CardDescription>
-            <CardTitle className="text-2xl">₹{financialSummary.creditLimit.toLocaleString('en-IN')}</CardTitle>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>Available Credit</CardDescription>
-            <CardTitle className="text-2xl">₹{availableCredit.toLocaleString('en-IN')}</CardTitle>
-          </CardHeader>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>Current Outstanding</CardDescription>
-            <CardTitle className="text-2xl text-destructive">₹{financialSummary.outstanding.toLocaleString('en-IN')}</CardTitle>
-          </CardHeader>
-        </Card>
-        <Card className="lg:col-span-1 xl:col-auto">
-          <CardHeader className="pb-2">
-            <CardDescription>Credit Period</CardDescription>
-            <CardTitle className="text-2xl">{financialSummary.creditPeriod} Days</CardTitle>
-          </CardHeader>
-        </Card>
-      </div>
+      <Card className="shadow-md">
+        <CardContent className="p-4">
+            <div className="flex flex-wrap items-center justify-between gap-y-4">
+                {summaryItems.map((item, index) => (
+                    <React.Fragment key={item.label}>
+                        <div className="flex items-center gap-3">
+                            <div className="flex-shrink-0">
+                                <item.icon className="h-5 w-5 text-muted-foreground" />
+                            </div>
+                            <div>
+                                <p className="text-xs text-muted-foreground">{item.label}</p>
+                                <p className={`text-base font-bold truncate ${item.color}`}>
+                                    {item.value}
+                                </p>
+                            </div>
+                        </div>
+                        {index < summaryItems.length - 1 && (
+                            <Separator orientation="vertical" className="h-8 mx-4 hidden lg:block" />
+                        )}
+                    </React.Fragment>
+                ))}
+            </div>
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
