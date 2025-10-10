@@ -274,6 +274,7 @@ export type Return = {
     quantity: number;
     value: number;
   }[];
+  trackingHistory?: { status: string; date: string; location: string }[];
 };
 
 export const returnsData: Return[] = [
@@ -288,6 +289,11 @@ export const returnsData: Return[] = [
     products: [
         { sku: "PARA500", name: "Paracetamol 500mg", batch: "B123", quantity: 10, value: 150 },
         { sku: "VICKS-AC", name: "Vicks Action 500", batch: "V456", quantity: 5, value: 200 },
+    ],
+    trackingHistory: [
+        { status: 'Received', date: '2023-10-20 14:30', location: 'Hyderabad Warehouse' },
+        { status: 'In Transit', date: '2023-10-18 09:00', location: 'Bangalore Hub' },
+        { status: 'Picked Up', date: '2023-10-17 18:00', location: 'Koramangala, Bangalore' },
     ]
   },
   { 
@@ -300,6 +306,9 @@ export const returnsData: Return[] = [
     status: "Pending",
     products: [
         { sku: "MOOV", name: "Moov Ointment", batch: "M789", quantity: 10, value: 1200 }
+    ],
+    trackingHistory: [
+        { status: 'Pending Pickup', date: '2023-10-25 12:00', location: 'Koramangala, Bangalore' },
     ]
   },
   { 
@@ -312,6 +321,9 @@ export const returnsData: Return[] = [
     status: "Rejected",
     products: [
         { sku: "VOLINI", name: "Volini Spray", batch: "VO101", quantity: 5, value: 750 }
+    ],
+     trackingHistory: [
+        { status: 'Rejected', date: '2023-10-22 15:00', location: 'Documentation Issue' },
     ]
   },
 ];
@@ -583,6 +595,7 @@ export const navLinks = {
   ],
   dashboard: [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/dashboard/account", label: "Account Profile", icon: User },
     { href: "/dashboard/orders", label: "Orders", icon: History },
     { href: "/dashboard/financials", label: "Account Balance", icon: Landmark },
     { href: "/dashboard/payments", label: "Payments", icon: Banknote },
