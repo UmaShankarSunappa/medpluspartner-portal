@@ -101,6 +101,10 @@ export default function ComplaintsPage() {
                         <Label htmlFor="description">Description</Label>
                         <Textarea id="description" placeholder="Provide a detailed description of your issue..." />
                     </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="attachment">Attachment (Optional)</Label>
+                        <Input id="attachment" type="file" />
+                    </div>
                 </div>
                 <DialogFooter>
                 <Button type="submit">Submit Complaint</Button>
