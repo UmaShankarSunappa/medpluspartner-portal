@@ -7,11 +7,29 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
-const ReportLink = ({ children }: { children: React.ReactNode }) => (
-  <Link href="#" className="text-sm text-primary hover:underline underline-offset-4">
-    {children}
-  </Link>
+const ReportLink = ({ reportName }: { reportName: string }) => (
+  <TooltipProvider>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Link 
+          href="#" 
+          className="text-sm text-primary hover:underline underline-offset-4 block truncate"
+        >
+          {reportName}
+        </Link>
+      </TooltipTrigger>
+      <TooltipContent>
+        <p>{reportName}</p>
+      </TooltipContent>
+    </Tooltip>
+  </TooltipProvider>
 );
 
 export default function GstReportsPage() {
@@ -30,19 +48,19 @@ export default function GstReportsPage() {
             <CardTitle>Post GST Reports</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <ReportLink>GST Sale Invoice Details Report</ReportLink>
-            <ReportLink>GST Consolidated Sale Invoice Details Report</ReportLink>
-            <ReportLink>GST Franchise Sale Tax Wise</ReportLink>
-            <ReportLink>GST Franchise Sale Return Tax Wise</ReportLink>
-            <ReportLink>GST Franchise Purchase Tax Wise</ReportLink>
-            <ReportLink>GST Franchise PurchaseReturn Tax Wise</ReportLink>
-            <ReportLink>GST Franchise Purchase HSN Wise</ReportLink>
-            <ReportLink>GST Franchise PurchaseReturn HSN Wise</ReportLink>
-            <ReportLink>GST Franchise Sales HSN Wise</ReportLink>
-            <ReportLink>GST Franchise Sale Returns HSN Wise</ReportLink>
-            <ReportLink>Franchise Audit Form Wise Stock Value</ReportLink>
-            <ReportLink>Return Invoices</ReportLink>
-            <ReportLink>Return Rejections</ReportLink>
+            <ReportLink reportName="GST Sale Invoice Details Report" />
+            <ReportLink reportName="GST Consolidated Sale Invoice Details Report" />
+            <ReportLink reportName="GST Franchise Sale Tax Wise" />
+            <ReportLink reportName="GST Franchise Sale Return Tax Wise" />
+            <ReportLink reportName="GST Franchise Purchase Tax Wise" />
+            <ReportLink reportName="GST Franchise PurchaseReturn Tax Wise" />
+            <ReportLink reportName="GST Franchise Purchase HSN Wise" />
+            <ReportLink reportName="GST Franchise PurchaseReturn HSN Wise" />
+            <ReportLink reportName="GST Franchise Sales HSN Wise" />
+            <ReportLink reportName="GST Franchise Sale Returns HSN Wise" />
+            <ReportLink reportName="Franchise Audit Form Wise Stock Value" />
+            <ReportLink reportName="Return Invoices" />
+            <ReportLink reportName="Return Rejections" />
           </CardContent>
         </Card>
 
@@ -51,13 +69,13 @@ export default function GstReportsPage() {
             <CardTitle>Pre GST Reports</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <ReportLink>Sale Invoice Details Report</ReportLink>
-            <ReportLink>Consolidated Sale Invoice Details Report</ReportLink>
-            <ReportLink>Franchise Sale Tax Wise</ReportLink>
-            <ReportLink>Franchise Sale Return Tax Wise</ReportLink>
-            <ReportLink>Franchise Purchase Tax Wise</ReportLink>
-            <ReportLink>Franchise PurchaseReturn Tax Wise</ReportLink>
-            <ReportLink>Total Stock Value Report</ReportLink>
+            <ReportLink reportName="Sale Invoice Details Report" />
+            <ReportLink reportName="Consolidated Sale Invoice Details Report" />
+            <ReportLink reportName="Franchise Sale Tax Wise" />
+            <ReportLink reportName="Franchise Sale Return Tax Wise" />
+            <ReportLink reportName="Franchise Purchase Tax Wise" />
+            <ReportLink reportName="Franchise PurchaseReturn Tax Wise" />
+            <ReportLink reportName="Total Stock Value Report" />
           </CardContent>
         </Card>
 
@@ -66,8 +84,8 @@ export default function GstReportsPage() {
             <CardTitle>ValuePlus</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <ReportLink>Points sale Debit</ReportLink>
-            <ReportLink>Points sale Credit</ReportLink>
+            <ReportLink reportName="Points sale Debit" />
+            <ReportLink reportName="Points sale Credit" />
           </CardContent>
         </Card>
       </div>
