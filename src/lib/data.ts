@@ -535,7 +535,6 @@ export const navLinks = {
     { href: "/dashboard/invoices", label: "Invoices", icon: FileClock },
     { href: "/dashboard/complaints", label: "Complaints", icon: ShieldQuestion },
     { href: "/dashboard/field-visit-reports", label: "Field Visit Reports", icon: ClipboardList },
-    { href: "/dashboard/account", label: "Account Profile", icon: User },
   ],
   footer: {
     company: [
@@ -777,3 +776,6 @@ export const performanceData = {
 
 
 
+
+
+    
