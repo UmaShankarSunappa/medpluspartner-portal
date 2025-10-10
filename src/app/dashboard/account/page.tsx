@@ -52,13 +52,17 @@ export default function AccountPage() {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
+                    <Label htmlFor="storeId">Store ID</Label>
+                    <Input id="storeId" defaultValue={accountProfile.licenseDetails.storeId} readOnly />
+                </div>
+                <div className="space-y-2">
                   <Label htmlFor="name">Full Name</Label>
                   <Input id="name" defaultValue={accountProfile.personalDetails.name} readOnly={!isProfileEditing} />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="businessName">Business Name</Label>
-                  <Input id="businessName" defaultValue={accountProfile.personalDetails.businessName} readOnly={!isProfileEditing} />
-                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="businessName">Business Name</Label>
+                <Input id="businessName" defaultValue={accountProfile.personalDetails.businessName} readOnly={!isProfileEditing} />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
