@@ -16,7 +16,7 @@ import {
   ChartConfig,
 } from "@/components/ui/chart";
 import { kpiData, salesData } from "@/lib/data";
-import { CreditCard, Package, DollarSign, TrendingUp } from "lucide-react";
+import { CreditCard, Package, IndianRupee, TrendingUp } from "lucide-react";
 
 const chartConfig = {
   sales: {
@@ -63,7 +63,7 @@ export default function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Average Daily Sales</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <IndianRupee className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">₹{storeKpis.averageDailySales.toLocaleString('en-IN')}</div>
