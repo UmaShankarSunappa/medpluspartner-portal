@@ -41,6 +41,7 @@ import {
   PenSquare,
   DollarSign,
   Calendar,
+  IndianRupee,
 } from "lucide-react";
 
 export const user = {
@@ -89,6 +90,19 @@ export const salesData = [
   { month: "Apr", sales: 480000, margin: 80000 },
   { month: "May", sales: 550000, margin: 92000 },
   { month: "Jun", sales: 530000, margin: 88000 },
+];
+
+export const cashDepositReportData = [
+    { date: "01-Oct-25", netSales: 16251.46, cashToBeDeposited: 12570.65 },
+    { date: "02-Oct-25", netSales: 7891.74, cashToBeDeposited: 6455.66 },
+    { date: "03-Oct-25", netSales: 14106.97, cashToBeDeposited: 11133.34 },
+    { date: "04-Oct-25", netSales: 15389.52, cashToBeDeposited: 12219.88 },
+    { date: "05-Oct-25", netSales: 18387.22, cashToBeDeposited: 14164.62 },
+    { date: "06-Oct-25", netSales: 24739.23, cashToBeDeposited: 21107.69 },
+    { date: "07-Oct-25", netSales: 17330.08, cashToBeDeposited: 14776.97 },
+    { date: "08-Oct-25", netSales: 13029.01, cashToBeDeposited: 10910.66 },
+    { date: "09-Oct-25", netSales: 20226.13, cashToBeDeposited: 17660.44 },
+    { date: "10-Oct-25", netSales: 9515.42, cashToBeDeposited: 7939.92 },
 ];
 
 export type Order = {
@@ -936,6 +950,7 @@ export const stationeryItemsData: StationeryItem[] = [
     { code: "STAT0035", name: "Stapler Machine - No. 10", uom: "Number", example: 1},
 ];
   
+
 
 
 

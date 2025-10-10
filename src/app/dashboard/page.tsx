@@ -1,7 +1,6 @@
 
 "use client";
 
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
   Card,
   CardContent,
@@ -9,25 +8,24 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  ChartConfig,
-} from "@/components/ui/chart";
-import { kpiData, salesData } from "@/lib/data";
+import { kpiData, cashDepositReportData } from "@/lib/data";
 import { CreditCard, Package, IndianRupee, TrendingUp } from "lucide-react";
-
-const chartConfig = {
-  sales: {
-    label: "Sales",
-    color: "hsl(var(--primary))",
-  },
-  margin: {
-    label: "Margin",
-    color: "hsl(var(--accent))",
-  },
-} satisfies ChartConfig;
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 
 export default function DashboardPage() {
   const storeKpis = kpiData["store-01"];
@@ -89,32 +87,43 @@ export default function DashboardPage() {
       <div className="grid gap-6 md:grid-cols-1">
         <Card>
           <CardHeader>
-            <CardTitle className="font-headline">Sales & Margin Overview (Last 6 Months)</CardTitle>
-            <CardDescription>A summary of your store's financial performance.</CardDescription>
+            <CardTitle className="font-headline">Cash Deposit Report</CardTitle>
+             <div className="flex items-center gap-4 pt-4">
+                <Select defaultValue="oct-2025">
+                    <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Month" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="oct-2025">October 2025</SelectItem>
+                        <SelectItem value="sep-2025">September 2025</SelectItem>
+                        <SelectItem value="aug-2025">August 2025</SelectItem>
+                    </SelectContent>
+                </Select>
+                <Button>Search</Button>
+                <Button variant="outline">Reset</Button>
+            </div>
           </CardHeader>
           <CardContent>
-            <ChartContainer config={chartConfig} className="h-[350px] w-full">
-              <BarChart accessibilityLayer data={salesData}>
-                <CartesianGrid vertical={false} />
-                <XAxis
-                  dataKey="month"
-                  tickLine={false}
-                  tickMargin={10}
-                  axisLine={false}
-                  tickFormatter={(value) => value.slice(0, 3)}
-                />
-                 <YAxis 
-                    tickFormatter={(value) => `₹${Number(value) / 1000}k`}
-                />
-                <ChartTooltip
-                  content={<ChartTooltipContent 
-                    formatter={(value, name) => `₹${(Number(value)).toLocaleString('en-IN')}`}
-                  />}
-                />
-                <Bar dataKey="sales" fill="var(--color-sales)" radius={4} />
-                <Bar dataKey="margin" fill="var(--color-margin)" radius={4} />
-              </BarChart>
-            </ChartContainer>
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>Date</TableHead>
+                        <TableHead className="text-right">Net Sales</TableHead>
+                        <TableHead className="text-right">Cash to be deposited</TableHead>
+                        <TableHead className="text-right">Difference (Profit)</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {cashDepositReportData.map((row) => (
+                        <TableRow key={row.date}>
+                            <TableCell>{row.date}</TableCell>
+                            <TableCell className="text-right">₹{row.netSales.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
+                            <TableCell className="text-right">₹{row.cashToBeDeposited.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
+                            <TableCell className="text-right font-medium">₹{(row.netSales - row.cashToBeDeposited).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
           </CardContent>
         </Card>
       </div>
