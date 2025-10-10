@@ -609,8 +609,8 @@ export const navLinks = {
     { href: "/dashboard/gst-reports", label: "GST Reports", icon: FileText },
     { href: "/dashboard/invoices", label: "Invoices", icon: FileClock },
     { href: "/dashboard/complaints", label: "Complaints", icon: ShieldQuestion },
-    { href: "/dashboard/field-visit-reports", label: "Field Visit Reports", icon: ClipboardList },
     { href: "/dashboard/stationery-orders", label: "Stationery Orders", icon: PenSquare },
+    { href: "/dashboard/field-visit-reports", label: "Field Visit Reports", icon: ClipboardList },
   ],
   footer: {
     company: [
@@ -928,4 +928,5 @@ export const stationeryItemsData: StationeryItem[] = [
     { code: "STAT0035", name: "Stapler Machine - No. 10", uom: "Number", example: 1},
 ];
   
+
 
