@@ -109,7 +109,7 @@ export default function ReportsPage() {
                     {report.fileType}
                   </TableCell>
                   <TableCell>
-                    {report.actionRequired ? (
+                    {report.actionRequired && (report.name === "Expiry Products List" || report.name === "Slow-Moving Products") ? (
                         <div className="flex items-center gap-2">
                             <Badge variant="warning">Awaiting Confirmation</Badge>
                              <Button variant="outline" size="sm">
