@@ -47,11 +47,16 @@ const chartConfigBase = {
   margin: { label: "Margin", color: "hsl(var(--secondary))" },
   branded: { label: "Branded", color: "hsl(var(--primary))" },
   pl: { label: "PL+SIP", color: "hsl(var(--secondary))" },
-  pharma: { label: "Pharma", color: "hsl(var(--chart-1))" },
-  general: { label: "General", color: "hsl(var(--chart-2))" },
-  pl_pharma: { label: "PL Pharma", color: "hsl(var(--chart-3))" },
-  pl_general: { label: "PL General", color: "hsl(var(--chart-4))" },
-  surgical: { label: "Surgical", color: "hsl(var(--chart-5))" },
+  pharma_sale: { label: "Pharma Sale", color: "hsl(var(--chart-1))" },
+  pharma_margin: { label: "Pharma Margin", color: "hsl(var(--chart-2))" },
+  general_sale: { label: "General Sale", color: "hsl(var(--chart-3))" },
+  general_margin: { label: "General Margin", color: "hsl(var(--chart-4))" },
+  pl_pharma_sale: { label: "PL Pharma Sale", color: "hsl(var(--chart-5))" },
+  pl_pharma_margin: { label: "PL Pharma Margin", color: "hsl(var(--chart-1))" },
+  pl_general_sale: { label: "PL General Sale", color: "hsl(var(--chart-2))" },
+  pl_general_margin: { label: "PL General Margin", color: "hsl(var(--chart-3))" },
+  surgical_sale: { label: "Surgical Sale", color: "hsl(var(--chart-4))" },
+  surgical_margin: { label: "Surgical Margin", color: "hsl(var(--chart-5))" },
   salesOrders: { label: "Sales Orders", color: "hsl(var(--chart-1))" },
   webOrders: { label: "Web Orders", color: "hsl(var(--chart-3))" },
   abv: { label: "Avg Bill Value", color: "hsl(var(--primary))" },
@@ -153,7 +158,7 @@ export default function PerformancePage() {
          <Card className="lg:col-span-2">
            <CardHeader>
             <div className="flex justify-between items-center">
-                <CardTitle>Detailed Sales & Margin by Category</CardTitle>
+                <CardTitle>Detailed Sales &amp; Margin by Category</CardTitle>
                 <Select value={category} onValueChange={setCategory}>
                     <SelectTrigger className="w-[180px]">
                         <SelectValue placeholder="Select category" />
@@ -176,7 +181,8 @@ export default function PerformancePage() {
                  <YAxis />
                  <ChartTooltip content={<ChartTooltipContent />} />
                  <Legend />
-                 <Bar dataKey={category} fill={`var(--color-${category})`} radius={4} name={chartConfigBase[category as keyof typeof chartConfigBase]?.label} />
+                 <Bar dataKey={`${category}_sale`} fill={`var(--color-${category}_sale)`} radius={4} name={chartConfigBase[`${category}_sale` as keyof typeof chartConfigBase]?.label} />
+                  <Bar dataKey={`${category}_margin`} fill={`var(--color-${category}_margin)`} radius={4} name={chartConfigBase[`${category}_margin` as keyof typeof chartConfigBase]?.label} />
                </BarChart>
              </ChartContainer>
            </CardContent>
@@ -199,7 +205,7 @@ export default function PerformancePage() {
         
         <Card>
           <CardHeader>
-            <CardTitle>Sale & Web Orders Count</CardTitle>
+            <CardTitle>Sale &amp; Web Orders Count</CardTitle>
           </CardHeader>
           <CardContent>
             <ChartContainer config={chartConfigBase} className="h-[300px] w-full">
@@ -248,10 +254,10 @@ export default function PerformancePage() {
                     <YAxis />
                     <ChartTooltip content={<ChartTooltipContent />} />
                     <Legend />
-                    <Line type="monotone" dataKey="<200" stroke="var(--color-bills_lt_200)" name={chartConfigBase['bills_lt_200'].label} />
-                    <Line type="monotone" dataKey="200-500" stroke="var(--color-bills_200_500)" name={chartConfigBase['bills_200_500'].label} />
-                    <Line type="monotone" dataKey="500-999" stroke="var(--color-bills_500_999)" name={chartConfigBase['bills_500_999'].label} />
-                    <Line type="monotone" dataKey=">1000" stroke="var(--color-bills_gt_1000)" name={chartConfigBase['bills_gt_1000'].label} />
+                    <Line type="monotone" dataKey="bills_lt_200" stroke="var(--color-bills_lt_200)" name="&lt; 200" />
+                    <Line type="monotone" dataKey="bills_200_500" stroke="var(--color-bills_200_500)" name="200-500" />
+                    <Line type="monotone" dataKey="bills_500_999" stroke="var(--color-bills_500_999)" name="500-999" />
+                    <Line type="monotone" dataKey="bills_gt_1000" stroke="var(--color-bills_gt_1000)" name="&gt; 1000" />
                 </LineChart>
             </ChartContainer>
           </CardContent>

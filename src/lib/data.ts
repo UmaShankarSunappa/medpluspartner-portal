@@ -178,7 +178,7 @@ export const ordersData: Order[] = [
     type: "Standard",
     products: [],
     trackingHistory: [
-       { status: 'Cancelled', date: '2023-10-18 13:00', location: 'Hyderabad Warehouse' },
+       { status: 'Cancelled', date: '203-10-18 13:00', location: 'Hyderabad Warehouse' },
     ]
   },
 ];
@@ -517,9 +517,9 @@ export const fieldVisitReportsData: FieldVisitReport[] = [
 export const navLinks = {
   public: [
     { href: "/about-us", label: "About Us" },
-    { href: "#", label: "News & Updates" },
+    { href: "#", label: "News &amp; Updates" },
     { href: "/faq", label: "FAQs" },
-    { href: "#", label: "Resources & Training" },
+    { href: "#", label: "Resources &amp; Training" },
     { href: "/contact-us", label: "Contact Us" },
   ],
   dashboard: [
@@ -535,6 +535,7 @@ export const navLinks = {
     { href: "/dashboard/invoices", label: "Invoices", icon: FileClock },
     { href: "/dashboard/complaints", label: "Complaints", icon: ShieldQuestion },
     { href: "/dashboard/field-visit-reports", label: "Field Visit Reports", icon: ClipboardList },
+    { href: "/dashboard/account", label: "Account Profile", icon: User },
   ],
   footer: {
     company: [
@@ -602,7 +603,7 @@ export const successStories = [
 export const faqs = [
     {
         question: "Q1. What documents are required before signing the franchise agreement?",
-        answer: "A: You will need to submit KYC documents (PAN, Aadhaar, GST Registration, Shop & Establishment License, and Drug License for pharmacy operations)."
+        answer: "A: You will need to submit KYC documents (PAN, Aadhaar, GST Registration, Shop &amp; Establishment License, and Drug License for pharmacy operations)."
     },
     {
         question: "Q2. What is the minimum investment required to start a MedPlus franchise?",
@@ -661,24 +662,24 @@ export const performanceData = {
       { month: "Jun", branded: 350000, pl: 180000 },
     ],
     salesByCategory: [
-      { month: "Jan", pharma: 200000, general: 100000, pl_pharma: 100000, pl_general: 50000, surgical: 50000 },
-      { month: "Feb", pharma: 190000, general: 90000, pl_pharma: 90000, pl_general: 40000, surgical: 40000 },
-      { month: "Mar", pharma: 220000, general: 120000, pl_pharma: 120000, pl_general: 60000, surgical: 60000 },
-      { month: "Apr", pharma: 210000, general: 110000, pl_pharma: 110000, pl_general: 55000, surgical: 55000 },
-      { month: "May", pharma: 240000, general: 130000, pl_pharma: 130000, pl_general: 65000, surgical: 65000 },
-      { month: "Jun", pharma: 230000, general: 125000, pl_pharma: 125000, pl_general: 60000, surgical: 60000 },
+      { month: "Jan", pharma_sale: 200000, pharma_margin: 30000, general_sale: 100000, general_margin: 20000, pl_pharma_sale: 100000, pl_pharma_margin: 40000, pl_general_sale: 50000, pl_general_margin: 25000, surgical_sale: 50000, surgical_margin: 10000 },
+      { month: "Feb", pharma_sale: 190000, pharma_margin: 28000, general_sale: 90000, general_margin: 18000, pl_pharma_sale: 90000, pl_pharma_margin: 36000, pl_general_sale: 40000, pl_general_margin: 20000, surgical_sale: 40000, surgical_margin: 8000 },
+      { month: "Mar", pharma_sale: 220000, pharma_margin: 35000, general_sale: 120000, general_margin: 24000, pl_pharma_sale: 120000, pl_pharma_margin: 48000, pl_general_sale: 60000, pl_general_margin: 30000, surgical_sale: 60000, surgical_margin: 12000 },
+      { month: "Apr", pharma_sale: 210000, pharma_margin: 32000, general_sale: 110000, general_margin: 22000, pl_pharma_sale: 110000, pl_pharma_margin: 44000, pl_general_sale: 55000, pl_general_margin: 27500, surgical_sale: 55000, surgical_margin: 11000 },
+      { month: "May", pharma_sale: 240000, pharma_margin: 40000, general_sale: 130000, general_margin: 26000, pl_pharma_sale: 130000, pl_pharma_margin: 52000, pl_general_sale: 65000, pl_general_margin: 32500, surgical_sale: 65000, surgical_margin: 13000 },
+      { month: "Jun", pharma_sale: 230000, pharma_margin: 38000, general_sale: 125000, general_margin: 25000, pl_pharma_sale: 125000, pl_pharma_margin: 50000, pl_general_sale: 60000, pl_general_margin: 30000, surgical_sale: 60000, surgical_margin: 12000 },
     ],
     offlineVsOnline: [
-      { name: "Offline", value: 2400000, fill: "var(--color-sales)" },
-      { name: "Online", value: 384000, fill: "var(--color-margin)" },
+      { name: "Offline", value: 2400000, fill: "hsl(var(--chart-1))" },
+      { name: "Online", value: 384000, fill: "hsl(var(--chart-2))" },
     ],
     ordersCount: [
       { month: "Jan", salesOrders: 1500, webOrders: 300 },
       { month: "Feb", salesOrders: 1400, webOrders: 280 },
       { month: "Mar", salesOrders: 1600, webOrders: 320 },
-      { month_of_year: "Apr", salesOrders: 1550, webOrders: 310 },
-      { month_of_year: "May", salesOrders: 1700, webOrders: 340 },
-      { month_of_year: "Jun", salesOrders: 1650, webOrders: 330 },
+      { month: "Apr", salesOrders: 1550, webOrders: 310 },
+      { month: "May", salesOrders: 1700, webOrders: 340 },
+      { month: "Jun", salesOrders: 1650, webOrders: 330 },
     ],
     avgBillValue: [
         { month: "Jan", abv: 300, bills: 1500 },
@@ -689,12 +690,12 @@ export const performanceData = {
         { month: "Jun", abv: 321, bills: 1650 },
     ],
     billsBySlab: [
-        { month: "Jan", "<200": 300, "200-500": 600, "500-999": 450, ">1000": 150 },
-        { month: "Feb", "<200": 280, "200-500": 560, "500-999": 420, ">1000": 140 },
-        { month: "Mar", "<200": 320, "200-500": 640, "500-999": 480, ">1000": 160 },
-        { month: "Apr", "<200": 310, "200-500": 620, "500-999": 465, ">1000": 155 },
-        { month: "May", "<200": 340, "200-500": 680, "500-999": 510, ">1000": 170 },
-        { month: "Jun", "<200": 330, "200-500": 660, "500-999": 495, ">1000": 165 },
+        { month: "Jan", bills_lt_200: 300, bills_200_500: 600, bills_500_999: 450, bills_gt_1000: 150 },
+        { month: "Feb", bills_lt_200: 280, bills_200_500: 560, bills_500_999: 420, bills_gt_1000: 140 },
+        { month: "Mar", bills_lt_200: 320, bills_200_500: 640, bills_500_999: 480, bills_gt_1000: 160 },
+        { month: "Apr", bills_lt_200: 310, bills_200_500: 620, bills_500_999: 465, bills_gt_1000: 155 },
+        { month: "May", bills_lt_200: 340, bills_200_500: 680, bills_500_999: 510, bills_gt_1000: 170 },
+        { month: "Jun", bills_lt_200: 330, bills_200_500: 660, bills_500_999: 495, bills_gt_1000: 165 },
     ]
   },
   day: {
@@ -717,17 +718,17 @@ export const performanceData = {
       { day: "Sun", branded: 13000, pl: 5000 },
     ],
     salesByCategory: [
-      { day: "Mon", pharma: 10000, general: 5000, pl_pharma: 3000, pl_general: 2000, surgical: 1000 },
-      { day: "Tue", pharma: 11000, general: 5500, pl_pharma: 3500, pl_general: 2000, surgical: 1000 },
-      { day: "Wed", pharma: 10500, general: 5200, pl_pharma: 3300, pl_general: 2000, surgical: 1000 },
-      { day: "Thu", pharma: 12000, general: 6000, pl_pharma: 4000, pl_general: 2000, surgical: 1000 },
-      { day: "Fri", pharma: 12500, general: 6500, pl_pharma: 4000, pl_general: 2000, surgical: 1000 },
-      { day: "Sat", pharma: 14000, general: 7000, pl_pharma: 4500, pl_general: 2500, surgical: 1000 },
-      { day: "Sun", pharma: 9000, general: 4000, pl_pharma: 3000, pl_general: 2000, surgical: 1000 },
+      { day: "Mon", pharma_sale: 10000, pharma_margin: 1500, general_sale: 5000, general_margin: 1000, pl_pharma_sale: 3000, pl_pharma_margin: 1200, pl_general_sale: 2000, pl_general_margin: 1000, surgical_sale: 1000, surgical_margin: 200 },
+      { day: "Tue", pharma_sale: 11000, pharma_margin: 1650, general_sale: 5500, general_margin: 1100, pl_pharma_sale: 3500, pl_pharma_margin: 1400, pl_general_sale: 2000, pl_general_margin: 1000, surgical_sale: 1000, surgical_margin: 200 },
+      { day: "Wed", pharma_sale: 10500, pharma_margin: 1575, general_sale: 5200, general_margin: 1040, pl_pharma_sale: 3300, pl_pharma_margin: 1320, pl_general_sale: 2000, pl_general_margin: 1000, surgical_sale: 1000, surgical_margin: 200 },
+      { day: "Thu", pharma_sale: 12000, pharma_margin: 1800, general_sale: 6000, general_margin: 1200, pl_pharma_sale: 4000, pl_pharma_margin: 1600, pl_general_sale: 2000, pl_general_margin: 1000, surgical_sale: 1000, surgical_margin: 200 },
+      { day: "Fri", pharma_sale: 12500, pharma_margin: 1875, general_sale: 6500, general_margin: 1300, pl_pharma_sale: 4000, pl_pharma_margin: 1600, pl_general_sale: 2000, pl_general_margin: 1000, surgical_sale: 1000, surgical_margin: 200 },
+      { day: "Sat", pharma_sale: 14000, pharma_margin: 2100, general_sale: 7000, general_margin: 1400, pl_pharma_sale: 4500, pl_pharma_margin: 1800, pl_general_sale: 2500, pl_general_margin: 1250, surgical_sale: 1000, surgical_margin: 200 },
+      { day: "Sun", pharma_sale: 9000, pharma_margin: 1350, general_sale: 4000, general_margin: 800, pl_pharma_sale: 3000, pl_pharma_margin: 1200, pl_general_sale: 2000, pl_general_margin: 1000, surgical_sale: 1000, surgical_margin: 200 },
     ],
     offlineVsOnline: [
-      { name: "Offline", value: 120000, fill: "var(--color-sales)" },
-      { name: "Online", value: 20000, fill: "var(--color-margin)" },
+      { name: "Offline", value: 120000, fill: "hsl(var(--chart-1))" },
+      { name: "Online", value: 20000, fill: "hsl(var(--chart-2))" },
     ],
     ordersCount: [
       { day: "Mon", salesOrders: 50, webOrders: 10 },
@@ -748,13 +749,13 @@ export const performanceData = {
         { day: "Sun", abv: 400, bills: 45 },
     ],
     billsBySlab: [
-        { day: "Mon", "<200": 10, "200-500": 20, "500-999": 15, ">1000": 5 },
-        { day: "Tue", "<200": 11, "200-500": 22, "500-999": 16, ">1000": 6 },
-        { day: "Wed", "<200": 10, "200-500": 21, "500-999": 15, ">1000": 6 },
-        { day: "Thu", "<200": 12, "200-500": 24, "500-999": 18, ">1000": 6 },
-        { day: "Fri", "<200": 12, "200-500": 25, "500-999": 19, ">1000": 6 },
-        { day: "Sat", "<200": 14, "200-500": 28, "500-999": 21, ">1000": 7 },
-        { day: "Sun", "<200": 9, "200-500": 18, "500-999": 13, ">1000": 5 },
+        { day: "Mon", bills_lt_200: 10, bills_200_500: 20, bills_500_999: 15, bills_gt_1000: 5 },
+        { day: "Tue", bills_lt_200: 11, bills_200_500: 22, bills_500_999: 16, bills_gt_1000: 6 },
+        { day: "Wed", bills_lt_200: 10, bills_200_500: 21, bills_500_999: 15, bills_gt_1000: 6 },
+        { day: "Thu", bills_lt_200: 12, bills_200_500: 24, bills_500_999: 18, bills_gt_1000: 6 },
+        { day: "Fri", bills_lt_200: 12, bills_200_500: 25, bills_500_999: 19, bills_gt_1000: 6 },
+        { day: "Sat", bills_lt_200: 14, bills_200_500: 28, bills_500_999: 21, bills_gt_1000: 7 },
+        { day: "Sun", bills_lt_200: 9, bills_200_500: 18, bills_500_999: 13, bills_gt_1000: 5 },
     ]
   }
 };
@@ -766,6 +767,7 @@ export const performanceData = {
 
 
     
+
 
 
 
