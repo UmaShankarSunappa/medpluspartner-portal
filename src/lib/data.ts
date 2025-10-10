@@ -35,6 +35,7 @@ import {
   Landmark,
   ShieldQuestion,
   ClipboardList,
+  Truck,
 } from "lucide-react";
 
 export const user = {
@@ -315,6 +316,65 @@ export const returnsData: Return[] = [
   },
 ];
 
+export type PurchaseReturn = {
+  returnId: string;
+  fromStoreId: string;
+  toStoreId: string;
+  totalCost: number;
+  createdBy: string;
+  dateCreated: string;
+  status: "In Transit" | "Received" | "Pending";
+  products: {
+    sku: string;
+    name: string;
+    quantity: number;
+    cost: number;
+  }[];
+  trackingHistory: {
+    status: string;
+    date: string;
+    location: string;
+  }[];
+};
+
+export const purchaseReturnsData: PurchaseReturn[] = [
+  {
+    returnId: "935171",
+    fromStoreId: "INTGHYD50057",
+    toStoreId: "INAPHYD00384",
+    totalCost: 24.23,
+    createdBy: "BNSTG00009",
+    dateCreated: "2025-10-01 15:23:27.0",
+    status: "In Transit",
+    products: [
+      { sku: "PROD-A", name: "Product A", quantity: 1, cost: 24.23 }
+    ],
+    trackingHistory: [
+      { status: "In Transit", date: "2025-10-01 18:00", location: "Hyderabad Hub" },
+      { status: "Pending", date: "2025-10-01 15:23", location: "INTGHYD50057" },
+    ]
+  },
+  {
+    returnId: "935172",
+    fromStoreId: "INTGHYD50057",
+    toStoreId: "INAPHYD00384",
+    totalCost: 150.75,
+    createdBy: "BNSTG00009",
+    dateCreated: "2025-09-28 11:05:11.0",
+    status: "Received",
+    products: [
+      { sku: "PROD-B", name: "Product B", quantity: 5, cost: 100.50 },
+      { sku: "PROD-C", name: "Product C", quantity: 2, cost: 50.25 },
+    ],
+    trackingHistory: [
+      { status: "Received", date: "2025-09-29 14:00", location: "INAPHYD00384" },
+      { status: "In Transit", date: "2025-09-28 13:00", location: "Hyderabad Hub" },
+      { status: "Pending", date: "2025-09-28 11:05", location: "INTGHYD50057" },
+    ]
+  }
+];
+
+
 export const monthlyReports = [
     { id: "REP-001", name: "Net Sale vs. Margin", period: "Sep 2025", fileType: "Excel", actionRequired: false },
     { id: "REP-002", name: "Rental Invoices", period: "Sep 2025", fileType: "PDF", actionRequired: false },
@@ -527,6 +587,7 @@ export const navLinks = {
     { href: "/dashboard/financials", label: "Account Balance", icon: Landmark },
     { href: "/dashboard/payments", label: "Payments", icon: Banknote },
     { href: "/dashboard/returns", label: "Returns", icon: Undo2 },
+    { href: "/dashboard/purchase-return", label: "Purchase Return", icon: Truck },
     { href: "/dashboard/provisional-indent", label: "Provisional Indent", icon: ClipboardList },
     { href: "/dashboard/performance", label: "Performance", icon: BarChart },
     { href: "/dashboard/reports", label: "Monthly Reports", icon: FileSliders },
@@ -762,13 +823,6 @@ export const indianStates = [
     "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal"
 ];
 
-export const districts = {
-    "Maharashtra": ["Mumbai", "Pune", "Nagpur", "Thane", "Nashik"],
-    "Karnataka": ["Bengaluru Urban", "Mysuru", "Mangaluru", "Belagavi", "Hubballi-Dharwad"],
-    "Telangana": ["Hyderabad", "Warangal", "Nizamabad", "Karimnagar", "Ranga Reddy"],
-    "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai", "Tiruchirappalli", "Salem"],
-};
-
 export const franchiseReasons = [
     "Strong Brand Reputation and Customer Trust",
     "High Demand for Organized Pharmacy Chains",
@@ -780,3 +834,6 @@ export const franchiseReasons = [
 ];
 
 
+
+
+  
