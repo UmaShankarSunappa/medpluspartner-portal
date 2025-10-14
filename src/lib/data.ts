@@ -142,7 +142,7 @@ export const ordersData: Order[] = [
     date: "1/18/2024", 
     total: 32000.0, 
     status: "Dispatched", 
-    type: "Manual",
+    type: "Indent",
     products: [
       { sku: 'MOOV', name: 'Moov Ointment', quantity: 40, price: 4800 },
       { sku: 'VOLINI', name: 'Volini Spray', quantity: 30, price: 4500 },
@@ -173,7 +173,7 @@ export const ordersData: Order[] = [
     date: "2023-10-21", 
     total: 8990.0, 
     status: "Order Placed", 
-    type: "Emergency",
+    type: "Web Order",
     products: [
       { sku: 'INSULIN-G', name: 'Glargine Insulin', quantity: 10, price: 3500 },
       { sku: 'TEST-STRIP', name: 'Glucose Test Strips', quantity: 5, price: 2500 },
@@ -187,7 +187,7 @@ export const ordersData: Order[] = [
     date: "2023-10-20", 
     total: 21350.0, 
     status: "Replenished", 
-    type: "Provisional",
+    type: "Indent",
     products: [
       { sku: 'ASPIRIN75', name: 'Aspirin 75mg', quantity: 200, price: 1000 },
       { sku: 'ATORVA10', name: 'Atorvastatin 10mg', quantity: 150, price: 2250 },
@@ -203,7 +203,7 @@ export const ordersData: Order[] = [
     date: "2023-10-18", 
     total: 5400.0, 
     status: "Cancelled", 
-    type: "Standard",
+    type: "Indent",
     products: [],
     trackingHistory: [
        { status: 'Cancelled', date: '203-10-18 13:00', location: 'Franchisee Portal' },
@@ -981,3 +981,5 @@ export const stationeryItemsData: StationeryItem[] = [
     { code: "STAT0035", name: "Stapler Machine - No. 10", uom: "Number", example: 1},
 ];
   
+
+    
