@@ -7,6 +7,7 @@ import { DashboardSidebar } from "@/components/dashboard/sidebar";
 import { DashboardHeader } from "@/components/dashboard/header";
 import { useUser } from "@/firebase";
 import { Loader2 } from "lucide-react";
+import { IndentProvider } from "@/context/IndentContext";
 
 export default function DashboardLayout({
   children,
@@ -48,24 +49,26 @@ export default function DashboardLayout({
   }
 
   return (
-    <SidebarProvider>
-      <DashboardSidebar />
-      <SidebarInset>
-        <div className="flex flex-col h-screen">
-          <DashboardHeader />
-          <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
-            {isPageLoading ? (
-              <div className="flex h-full w-full items-center justify-center">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-              </div>
-            ) : (
-              <div key={pathname} className="page-transition">
-                {children}
-              </div>
-            )}
-          </main>
-        </div>
-      </SidebarInset>
-    </SidebarProvider>
+    <IndentProvider>
+      <SidebarProvider>
+        <DashboardSidebar />
+        <SidebarInset>
+          <div className="flex flex-col h-screen">
+            <DashboardHeader />
+            <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
+              {isPageLoading ? (
+                <div className="flex h-full w-full items-center justify-center">
+                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                </div>
+              ) : (
+                <div key={pathname} className="page-transition">
+                  {children}
+                </div>
+              )}
+            </main>
+          </div>
+        </SidebarInset>
+      </SidebarProvider>
+    </IndentProvider>
   );
 }

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useMemo } from "react";
@@ -22,16 +21,13 @@ import {
 import { Search, Trash2, Image as ImageIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { products as mockProducts, type Product } from "@/lib/indent-data";
-
-type OrderItem = Product & {
-  ordQty: number;
-};
+import { useIndent } from "@/context/IndentContext";
 
 export default function IndentPage() {
   const { toast } = useToast();
+  const { orderItems, addToIndent, removeFromIndent, updateQuantity, clearIndent } = useIndent();
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<Product[]>([]);
-  const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
   const [searchQuantities, setSearchQuantities] = useState<{ [key: string]: number }>({});
 
   const handleSearch = () => {
@@ -64,23 +60,13 @@ export default function IndentPage() {
       });
       return;
     }
-    setOrderItems((prev) => [...prev, { ...product, ordQty: quantity }]);
+    addToIndent({ ...product, ordQty: quantity });
     setSearchTerm("");
     setSearchResults([]);
     toast({
       title: "Product Added",
       description: `${quantity} x ${product.name} has been added to your indent.`,
     });
-  };
-
-  const handleRemoveItem = (productId: string) => {
-    setOrderItems((prev) => prev.filter((item) => item.id !== productId));
-  };
-  
-  const handleQuantityChange = (productId: string, newQty: number) => {
-    setOrderItems(prev => prev.map(item => 
-      item.id === productId ? { ...item, ordQty: Math.max(0, newQty) } : item
-    ));
   };
 
   const grandTotal = useMemo(() => {
@@ -93,7 +79,7 @@ export default function IndentPage() {
 
   const handlePlaceOrder = () => {
     alert("Order Placed Successfully!");
-    setOrderItems([]);
+    clearIndent();
   };
 
   return (
@@ -213,7 +199,7 @@ export default function IndentPage() {
                         type="number"
                         min="1"
                         value={item.ordQty}
-                        onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value))}
+                        onChange={(e) => updateQuantity(item.id, parseInt(e.target.value))}
                         className="text-center"
                       />
                     </TableCell>
@@ -226,7 +212,7 @@ export default function IndentPage() {
                       <Button
                         variant="destructive"
                         size="icon"
-                        onClick={() => handleRemoveItem(item.id)}
+                        onClick={() => removeFromIndent(item.id)}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
