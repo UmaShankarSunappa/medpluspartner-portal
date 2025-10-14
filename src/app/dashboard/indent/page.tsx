@@ -32,6 +32,7 @@ export default function IndentPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<Product[]>([]);
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
+  const [searchQuantities, setSearchQuantities] = useState<{ [key: string]: number }>({});
 
   const handleSearch = () => {
     if (!searchTerm.trim()) {
@@ -44,23 +45,31 @@ export default function IndentPage() {
         p.id.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setSearchResults(results);
+    // Reset quantities for new search
+    setSearchQuantities({});
   };
+  
+  const handleSearchQuantityChange = (productId: string, quantity: number) => {
+    setSearchQuantities(prev => ({...prev, [productId]: Math.max(1, quantity)}));
+  }
 
   const handleAddProduct = (product: Product) => {
+    const quantity = searchQuantities[product.id] || 1;
+
     if (orderItems.some((item) => item.id === product.id)) {
       toast({
         variant: "destructive",
         title: "Product Already Added",
-        description: `${product.name} is already in your order.`,
+        description: `${product.name} is already in your order. You can adjust the quantity in the table below.`,
       });
       return;
     }
-    setOrderItems((prev) => [...prev, { ...product, ordQty: 1 }]);
+    setOrderItems((prev) => [...prev, { ...product, ordQty: quantity }]);
     setSearchTerm("");
     setSearchResults([]);
     toast({
       title: "Product Added",
-      description: `${product.name} has been added to your indent.`,
+      description: `${quantity} x ${product.name} has been added to your indent.`,
     });
   };
 
@@ -117,22 +126,42 @@ export default function IndentPage() {
             </Button>
           </div>
           {searchResults.length > 0 && (
-            <div className="mt-4 border rounded-md max-h-48 overflow-y-auto">
-              {searchResults.map((product) => (
-                <div
-                  key={product.id}
-                  className="flex items-center justify-between p-3 border-b last:border-b-0"
-                >
-                  <p>{product.name}</p>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => handleAddProduct(product)}
-                  >
-                    Add
-                  </Button>
-                </div>
-              ))}
+            <div className="mt-4 border rounded-md max-h-60 overflow-y-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Product</TableHead>
+                    <TableHead className="w-[100px] text-center">Quantity</TableHead>
+                    <TableHead className="w-[80px] text-right">Action</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {searchResults.map((product) => (
+                    <TableRow key={product.id}>
+                      <TableCell className="font-medium">{product.name}</TableCell>
+                      <TableCell>
+                        <Input
+                          type="number"
+                          min="1"
+                          placeholder="1"
+                          className="text-center"
+                          value={searchQuantities[product.id] || ''}
+                          onChange={(e) => handleSearchQuantityChange(product.id, parseInt(e.target.value))}
+                        />
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleAddProduct(product)}
+                        >
+                          Add
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </div>
           )}
         </CardContent>
