@@ -110,7 +110,7 @@ export default function DashboardPage() {
                         <TableHead>Date</TableHead>
                         <TableHead className="text-right">Net Sales</TableHead>
                         <TableHead className="text-right">Cash to be deposited</TableHead>
-                        <TableHead className="text-right">Difference (Profit)</TableHead>
+                        <TableHead className="text-right">Tentative Margin</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
