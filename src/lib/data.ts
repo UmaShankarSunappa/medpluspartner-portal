@@ -123,7 +123,7 @@ export const ordersData: Order[] = [
     orderId: "ORD-2024-001", 
     date: "1/15/2024", 
     total: 45000.0, 
-    status: "Delivered", 
+    status: "Replenished", 
     type: "Auto",
     products: [
       { sku: 'PARA500', name: 'Paracetamol 500mg', quantity: 100, price: 1500 },
@@ -131,70 +131,71 @@ export const ordersData: Order[] = [
       { sku: 'BAND-AID', name: 'Band-Aid Assorted', quantity: 200, price: 4000 },
     ],
     trackingHistory: [
-      { status: 'Delivered', date: '2024-01-15 14:30', location: 'Koramangala, Bangalore' },
-      { status: 'Out for Delivery', date: '2024-01-15 09:00', location: 'Bangalore Hub' },
-      { status: 'Shipped', date: '2024-01-14 18:00', location: 'Hyderabad Warehouse' },
-      { status: 'Processing', date: '2024-01-14 10:00', location: 'Hyderabad Warehouse' },
+      { status: 'Replenished', date: '2024-01-15 14:30', location: 'Koramangala, Bangalore' },
+      { status: 'Dispatched', date: '2024-01-14 18:00', location: 'Hyderabad Warehouse' },
+      { status: 'Order Received', date: '2024-01-14 10:00', location: 'Hyderabad Warehouse' },
+      { status: 'Order Placed', date: '2024-01-13 20:00', location: 'Franchisee Portal' },
     ]
   },
   { 
     orderId: "ORD-2024-002", 
     date: "1/18/2024", 
     total: 32000.0, 
-    status: "In Transit", 
+    status: "Dispatched", 
     type: "Manual",
     products: [
       { sku: 'MOOV', name: 'Moov Ointment', quantity: 40, price: 4800 },
       { sku: 'VOLINI', name: 'Volini Spray', quantity: 30, price: 4500 },
     ],
      trackingHistory: [
-      { status: 'In Transit', date: '2024-01-18 11:00', location: 'On its way to Bangalore' },
-      { status: 'Shipped', date: '2024-01-17 17:30', location: 'Hyderabad Warehouse' },
-      { status: 'Processing', date: '2024-01-17 09:00', location: 'Hyderabad Warehouse' },
+      { status: 'Dispatched', date: '2024-01-17 17:30', location: 'On its way to Bangalore' },
+      { status: 'Order Received', date: '2024-01-17 09:00', location: 'Hyderabad Warehouse' },
+      { status: 'Order Placed', date: '2024-01-16 18:00', location: 'Franchisee Portal' },
     ]
   },
   { 
     orderId: "ORD-2024-003", 
     date: "1/20/2024", 
     total: 58000.0, 
-    status: "Processing", 
+    status: "Order Received", 
     type: "Auto",
     products: [
       { sku: 'CETZINE', name: 'Cetirizine 10mg', quantity: 300, price: 3000 },
       { sku: 'ELECTRAL', name: 'Electral Powder', quantity: 500, price: 10000 },
     ],
      trackingHistory: [
-      { status: 'Processing', date: '2024-01-20 12:00', location: 'Hyderabad Warehouse' },
+      { status: 'Order Received', date: '2024-01-20 12:00', location: 'Hyderabad Warehouse' },
+      { status: 'Order Placed', date: '2024-01-19 21:00', location: 'Franchisee Portal' },
     ]
   },
   { 
     orderId: "ORD75641", 
     date: "2023-10-21", 
     total: 8990.0, 
-    status: "Processing", 
+    status: "Order Placed", 
     type: "Emergency",
     products: [
       { sku: 'INSULIN-G', name: 'Glargine Insulin', quantity: 10, price: 3500 },
       { sku: 'TEST-STRIP', name: 'Glucose Test Strips', quantity: 5, price: 2500 },
     ],
     trackingHistory: [
-      { status: 'Processing', date: '2023-10-21 10:00', location: 'Hyderabad Warehouse' },
+      { status: 'Order Placed', date: '2023-10-21 10:00', location: 'Franchisee Portal' },
     ]
   },
   { 
     orderId: "ORD75642", 
     date: "2023-10-20", 
     total: 21350.0, 
-    status: "Delivered", 
+    status: "Replenished", 
     type: "Provisional",
     products: [
       { sku: 'ASPIRIN75', name: 'Aspirin 75mg', quantity: 200, price: 1000 },
       { sku: 'ATORVA10', name: 'Atorvastatin 10mg', quantity: 150, price: 2250 },
     ],
     trackingHistory: [
-      { status: 'Delivered', date: '2023-10-20 15:00', location: 'Indiranagar, Bangalore' },
-      { status: 'Out for Delivery', date: '2023-10-20 09:30', location: 'Bangalore Hub' },
-      { status: 'Shipped', date: '2023-10-19 19:00', location: 'Hyderabad Warehouse' },
+      { status: 'Replenished', date: '2023-10-20 15:00', location: 'Indiranagar, Bangalore' },
+      { status: 'Dispatched', date: '2023-10-19 19:00', location: 'Hyderabad Warehouse' },
+      { status: 'Order Received', date: '2023-10-19 09:30', location: 'Hyderabad Warehouse' },
     ]
   },
   { 
@@ -205,7 +206,7 @@ export const ordersData: Order[] = [
     type: "Standard",
     products: [],
     trackingHistory: [
-       { status: 'Cancelled', date: '203-10-18 13:00', location: 'Hyderabad Warehouse' },
+       { status: 'Cancelled', date: '203-10-18 13:00', location: 'Franchisee Portal' },
     ]
   },
 ];
