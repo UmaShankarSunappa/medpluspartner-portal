@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -34,29 +34,15 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 export default function IndentPage() {
   const { toast } = useToast();
   const { orderItems, addToIndent, removeFromIndent, updateQuantity, clearIndent } = useIndent();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchResults, setSearchResults] = useState<Product[]>([]);
+  const [open, setOpen] = useState(false);
   const [searchQuantities, setSearchQuantities] = useState<{ [key: string]: number }>({});
 
-  const handleSearch = () => {
-    if (!searchTerm.trim()) {
-      setSearchResults([]);
-      return;
-    }
-    const results = mockProducts.filter(
-      (p) =>
-        p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.id.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setSearchResults(results);
-    // Reset quantities for new search
-    setSearchQuantities({});
-  };
-  
   const handleSearchQuantityChange = (productId: string, quantity: number) => {
     setSearchQuantities(prev => ({...prev, [productId]: Math.max(1, quantity)}));
   }
@@ -73,8 +59,7 @@ export default function IndentPage() {
       return;
     }
     addToIndent({ ...product, ordQty: quantity });
-    setSearchTerm("");
-    setSearchResults([]);
+    setOpen(false); // Close the popover
     toast({
       title: "Product Added",
       description: `${quantity} x ${product.name} has been added to your indent.`,
@@ -111,60 +96,62 @@ export default function IndentPage() {
         <CardHeader>
           <CardTitle>Product Search</CardTitle>
           <CardDescription>
-            Search for products by name or ID to add them to your order.
+            Click the search bar to see all available products and add them to your order.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex gap-2">
-            <Input
-              placeholder="Search by product name or ID..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-            />
-            <Button onClick={handleSearch}>
-              <Search className="mr-2" /> Search
-            </Button>
-          </div>
-          {searchResults.length > 0 && (
-            <div className="mt-4 border rounded-md max-h-60 overflow-y-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Product</TableHead>
-                    <TableHead className="w-[100px] text-center">Quantity</TableHead>
-                    <TableHead className="w-[80px] text-right">Action</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {searchResults.map((product) => (
-                    <TableRow key={product.id}>
-                      <TableCell className="font-medium">{product.name}</TableCell>
-                      <TableCell>
-                        <Input
-                          type="number"
-                          min="1"
-                          placeholder="1"
-                          className="text-center"
-                          value={searchQuantities[product.id] || ''}
-                          onChange={(e) => handleSearchQuantityChange(product.id, parseInt(e.target.value))}
-                        />
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handleAddProduct(product)}
+          <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+              <Button variant="outline" role="combobox" aria-expanded={open} className="w-full justify-start">
+                  <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+                  Search for a product...
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
+                <Command>
+                  <CommandInput placeholder="Search by product name or ID..." />
+                  <CommandList>
+                    <CommandEmpty>No product found.</CommandEmpty>
+                    <CommandGroup>
+                      {mockProducts.map((product) => (
+                        <CommandItem
+                          key={product.id}
+                          value={`${product.name} ${product.id}`}
+                          onSelect={(currentValue) => {
+                            // This onSelect is for filtering, we handle adding with our button
+                            // setOpen(false) might be useful here if selection closes popover
+                          }}
+                          className="flex items-center justify-between p-3 border-b last:border-b-0"
                         >
-                          Add
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          )}
+                            <span className="flex-1 font-medium">{product.name}</span>
+                            <div className="flex items-center gap-2">
+                                <Input
+                                    type="number"
+                                    min="1"
+                                    placeholder="1"
+                                    className="h-8 w-20 text-center"
+                                    value={searchQuantities[product.id] || ''}
+                                    onChange={(e) => handleSearchQuantityChange(product.id, parseInt(e.target.value))}
+                                    onClick={(e) => e.stopPropagation()} // Prevent CommandItem from closing
+                                />
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleAddProduct(product);
+                                    }}
+                                >
+                                    Add
+                                </Button>
+                            </div>
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+            </PopoverContent>
+          </Popover>
         </CardContent>
       </Card>
 
@@ -277,3 +264,5 @@ export default function IndentPage() {
     </div>
   );
 }
+
+    
