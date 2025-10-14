@@ -1,4 +1,5 @@
 
+
 import {
   Activity,
   Banknote,
@@ -291,13 +292,14 @@ export type Return = {
   total: number;
   receivedDate: string;
   returnNoteId: string | null;
-  status: "Approved" | "Pending" | "Rejected";
+  status: "Approved" | "Pending" | "Rejected" | "In Transit" | "Partial Rejected";
   products: {
     sku: string;
     name: string;
     batch: string;
     quantity: number;
     value: number;
+    rejectionReason?: string;
   }[];
   trackingHistory?: { status: string; date: string; location: string }[];
 };
@@ -330,11 +332,12 @@ export const returnsData: Return[] = [
     total: 1250.0,
     receivedDate: "2023-10-18",
     returnNoteId: null,
-    status: "Pending",
+    status: "In Transit",
     products: [
         { sku: "MOOV", name: "Moov Ointment", batch: "M789", quantity: 10, value: 1200 }
     ],
     trackingHistory: [
+        { status: 'TO Handover to Driver', date: '2023-10-26 10:00', location: 'Bangalore Hub' },
         { status: 'TO Generated', date: '2023-10-25 12:00', location: 'System' },
     ]
   },
@@ -347,10 +350,27 @@ export const returnsData: Return[] = [
     returnNoteId: null,
     status: "Rejected",
     products: [
-        { sku: "VOLINI", name: "Volini Spray", batch: "VO101", quantity: 5, value: 750 }
+        { sku: "VOLINI", name: "Volini Spray", batch: "VO101", quantity: 5, value: 750, rejectionReason: "Documentation Issue" }
     ],
      trackingHistory: [
         { status: 'Rejected', date: '2023-10-22 15:00', location: 'Documentation Issue' },
+    ]
+  },
+   { 
+    returnId: "RET-0126", 
+    taxInvoice: "TINV-993",
+    createdBy: "Anand Sharma",
+    total: 1500.0,
+    receivedDate: "2023-10-28",
+    returnNoteId: null,
+    status: "Partial Rejected",
+    products: [
+        { sku: "DETTOL-AS", name: "Dettol Antiseptic", batch: "D202", quantity: 10, value: 500 },
+        { sku: "SAVALON", name: "Savlon Antiseptic", batch: "S303", quantity: 5, value: 250, rejectionReason: "Expired Product" }
+    ],
+     trackingHistory: [
+        { status: 'Partial rejection processed', date: '2023-10-29 11:00', location: 'Warehouse' },
+        { status: 'Stock Received at Warehouse', date: '2023-10-28 14:00', location: 'Hyderabad Warehouse' }
     ]
   },
 ];
@@ -952,6 +972,7 @@ export const stationeryItemsData: StationeryItem[] = [
     { code: "STAT0035", name: "Stapler Machine - No. 10", uom: "Number", example: 1},
 ];
   
+
 
 
 

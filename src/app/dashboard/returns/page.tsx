@@ -27,16 +27,18 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { returnsData, type Return } from "@/lib/data";
-import { Eye, Search, Truck, CheckCircle, Package } from "lucide-react";
+import { Eye, Search, Truck, CheckCircle, Package, AlertCircle } from "lucide-react";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
-const statusVariant: { [key: string]: "default" | "secondary" | "destructive" | "outline" } = {
+const statusVariant: { [key: string]: "default" | "secondary" | "destructive" | "outline" | "info" | "warning" } = {
     "Approved": "default",
     "Pending": "secondary",
     "Rejected": "destructive",
+    "In Transit": "info",
+    "Partial Rejected": "warning",
 };
 
 export default function ReturnsPage() {
@@ -155,7 +157,7 @@ export default function ReturnsPage() {
 
             {/* View Return Modal */}
             <Dialog open={isViewModalOpen} onOpenChange={setIsViewModalOpen}>
-                <DialogContent className="sm:max-w-2xl">
+                <DialogContent className="sm:max-w-3xl">
                 <DialogHeader>
                     <DialogTitle>Return Details</DialogTitle>
                     <DialogDescription>
@@ -171,6 +173,7 @@ export default function ReturnsPage() {
                                 <TableHead>Batch</TableHead>
                                 <TableHead className="text-center">Quantity</TableHead>
                                 <TableHead className="text-right">Value</TableHead>
+                                {selectedReturn?.status === "Partial Rejected" && <TableHead>Rejection Reason</TableHead>}
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -181,6 +184,25 @@ export default function ReturnsPage() {
                                     <TableCell>{product.batch}</TableCell>
                                     <TableCell className="text-center">{product.quantity}</TableCell>
                                     <TableCell className="text-right">₹{product.value.toLocaleString('en-IN')}</TableCell>
+                                    {selectedReturn?.status === "Partial Rejected" && (
+                                        <TableCell>
+                                            {product.rejectionReason && (
+                                                <TooltipProvider>
+                                                    <Tooltip>
+                                                        <TooltipTrigger>
+                                                            <div className="flex items-center text-destructive">
+                                                                <AlertCircle className="h-4 w-4 mr-1"/>
+                                                                <span>Rejected</span>
+                                                            </div>
+                                                        </TooltipTrigger>
+                                                        <TooltipContent>
+                                                            <p>{product.rejectionReason}</p>
+                                                        </TooltipContent>
+                                                    </Tooltip>
+                                                </TooltipProvider>
+                                            )}
+                                        </TableCell>
+                                    )}
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -203,7 +225,7 @@ export default function ReturnsPage() {
                         {selectedReturn?.trackingHistory?.map((event, index) => (
                             <div key={index} className="relative flex items-start gap-4 mb-6">
                                 <div className="z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                                    {event.status === 'Received' ? <CheckCircle className="h-5 w-5" /> : <Package className="h-5 w-5" />}
+                                    {event.status === 'Received' || event.status === 'Credit Note Received' ? <CheckCircle className="h-5 w-5" /> : <Package className="h-5 w-5" />}
                                 </div>
                                 <div className="mt-1">
                                     <p className="font-semibold">{event.status}</p>
