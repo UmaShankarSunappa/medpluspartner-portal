@@ -32,23 +32,24 @@ export function LandingHeader() {
           <Link
             key={link.label}
             href={link.href}
-            className="text-sm font-medium hover:underline underline-offset-4"
+            className="text-sm font-medium relative group"
             prefetch={false}
           >
             {link.label}
+             <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
           </Link>
         ))}
       </nav>
       <div className="ml-auto flex items-center gap-2">
-        <Button asChild variant="ghost" className="hidden lg:inline-flex">
+        <Button asChild variant="secondary" size="sm" className="hidden lg:inline-flex rounded-full">
             <Link href="/login">Sign In</Link>
         </Button>
-        <Button asChild className="hidden lg:inline-flex">
+        <Button asChild size="sm" className="hidden lg:inline-flex rounded-full">
             <Link href="/signup">Sign Up</Link>
         </Button>
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="outline" size="icon" className={cn("lg:hidden", isHomePage ? "bg-transparent border-white/50 hover:bg-white/10" : "")}>
+            <Button variant="outline" size="icon" className={cn("lg:hidden rounded-full", isHomePage ? "bg-transparent border-white/50 hover:bg-white/10" : "")}>
               <Menu className="h-6 w-6" />
               <span className="sr-only">Toggle navigation menu</span>
             </Button>
