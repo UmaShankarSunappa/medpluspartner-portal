@@ -87,7 +87,7 @@ export default function DashboardPage() {
       <div className="grid gap-6 md:grid-cols-1">
         <Card>
           <CardHeader>
-            <CardTitle className="font-headline">Cash Deposit Report</CardTitle>
+            <CardTitle className="font-headline">Sales vs Cash deposit (Tentative)</CardTitle>
              <div className="flex items-center gap-4 pt-4">
                 <Select defaultValue="oct-2025">
                     <SelectTrigger className="w-[180px]">
