@@ -316,9 +316,11 @@ export const returnsData: Return[] = [
         { sku: "VICKS-AC", name: "Vicks Action 500", batch: "V456", quantity: 5, value: 200 },
     ],
     trackingHistory: [
-        { status: 'Received', date: '2023-10-20 14:30', location: 'Hyderabad Warehouse' },
-        { status: 'In Transit', date: '2023-10-18 09:00', location: 'Bangalore Hub' },
-        { status: 'Picked Up', date: '2023-10-17 18:00', location: 'Koramangala, Bangalore' },
+        { status: 'Credit Note Received', date: '2023-10-22 11:00', location: 'Finance Department' },
+        { status: 'Stock Replenished', date: '2023-10-21 16:00', location: 'Inventory System' },
+        { status: 'Stock Received at Warehouse', date: '2023-10-20 14:30', location: 'Hyderabad Warehouse' },
+        { status: 'TO Handover to Driver', date: '2023-10-18 09:00', location: 'Bangalore Hub' },
+        { status: 'TO Generated', date: '2023-10-17 18:00', location: 'System' },
     ]
   },
   { 
@@ -333,7 +335,7 @@ export const returnsData: Return[] = [
         { sku: "MOOV", name: "Moov Ointment", batch: "M789", quantity: 10, value: 1200 }
     ],
     trackingHistory: [
-        { status: 'Pending Pickup', date: '2023-10-25 12:00', location: 'Koramangala, Bangalore' },
+        { status: 'TO Generated', date: '2023-10-25 12:00', location: 'System' },
     ]
   },
   { 
@@ -950,6 +952,7 @@ export const stationeryItemsData: StationeryItem[] = [
     { code: "STAT0035", name: "Stapler Machine - No. 10", uom: "Number", example: 1},
 ];
   
+
 
 
 
