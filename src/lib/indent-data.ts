@@ -22,4 +22,9 @@ export const products: Product[] = [
   { id: "DETTOL-AS", name: "Dettol Antiseptic Liquid", price: 80.00, packSize: "200ml", availQty: 1000, gstRate: 0.18 },
   { id: "SAVALON", name: "Savlon Antiseptic Liquid", price: 75.00, packSize: "200ml", availQty: 1100, gstRate: 0.18 },
   { id: "GLUCON-D", name: "Glucon-D Instant Energy", price: 150.00, packSize: "500g", availQty: 800, gstRate: 0.05 },
+  { id: "TELMA40", name: "Telmisartan 40mg", price: 70.00, packSize: "15s", availQty: 1200, gstRate: 0.12 },
+  { id: "ROSU10", name: "Rosuvastatin 10mg", price: 90.00, packSize: "10s", availQty: 850, gstRate: 0.12 },
+  { id: "METF500", name: "Metformin 500mg", price: 25.00, packSize: "20s", availQty: 2500, gstRate: 0.12 },
+  { id: "ATOR10", name: "Atorvastatin 10mg", price: 55.00, packSize: "15s", availQty: 1800, gstRate: 0.12 },
 ];
+
