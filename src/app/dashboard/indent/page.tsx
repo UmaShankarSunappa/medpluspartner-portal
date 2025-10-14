@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useMemo } from "react";
@@ -22,6 +23,17 @@ import { Search, Trash2, Image as ImageIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { products as mockProducts, type Product } from "@/lib/indent-data";
 import { useIndent } from "@/context/IndentContext";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export default function IndentPage() {
   const { toast } = useToast();
@@ -78,7 +90,10 @@ export default function IndentPage() {
   }, [orderItems]);
 
   const handlePlaceOrder = () => {
-    alert("Order Placed Successfully!");
+    toast({
+        title: "Order Placed Successfully!",
+        description: "Your indent has been submitted."
+    });
     clearIndent();
   };
 
@@ -236,13 +251,28 @@ export default function IndentPage() {
           <p className="text-muted-foreground">Grand Total</p>
           <p className="text-2xl font-bold">₹{grandTotal.toFixed(2)}</p>
         </div>
-        <Button
-          size="lg"
-          onClick={handlePlaceOrder}
-          disabled={orderItems.length === 0}
-        >
-          Place Order
-        </Button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button
+              size="lg"
+              disabled={orderItems.length === 0}
+            >
+              Place Order
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action will submit your indent. You cannot undo this action.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handlePlaceOrder}>Confirm Order</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );
