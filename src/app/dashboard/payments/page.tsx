@@ -2,7 +2,7 @@
 "use client";
 
 import { useState } from "react";
-import { PlusCircle, Search } from "lucide-react";
+import { PlusCircle, Search, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -49,6 +49,37 @@ const statusVariant: { [key: string]: "default" | "secondary" } = {
 
 export default function PaymentsPage() {
     const [isCreatePaymentOpen, setIsCreatePaymentOpen] = useState(false);
+
+    const handleExport = () => {
+        const headers = ["Payment ID", "Name", "Created Date", "Approved Date", "Status", "Amount", "Mode of Payment"];
+        const csvRows = [
+            headers.join(','),
+            ...paymentsData.map(p => 
+                [
+                    `"${p.paymentId}"`,
+                    `"${p.name}"`,
+                    `"${p.createdDate}"`,
+                    `"${p.approvedDate || 'N/A'}"`,
+                    `"${p.status}"`,
+                    p.amount,
+                    `"${p.mode}"`
+                ].join(',')
+            )
+        ];
+        
+        const csvContent = csvRows.join('\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', 'payment-history.csv');
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
@@ -150,9 +181,15 @@ export default function PaymentsPage() {
         </Card>
 
       <Card>
-        <CardHeader>
-          <CardTitle>Payment History</CardTitle>
-          <CardDescription>Last 30 days of payments</CardDescription>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle>Payment History</CardTitle>
+            <CardDescription>Last 30 days of payments</CardDescription>
+          </div>
+          <Button variant="outline" onClick={handleExport}>
+            <Download className="mr-2 h-4 w-4" />
+            Export
+          </Button>
         </CardHeader>
         <CardContent className="overflow-x-auto">
           <Table>
