@@ -43,6 +43,7 @@ import {
   DollarSign,
   Calendar,
   IndianRupee,
+  BookMarked,
 } from "lucide-react";
 
 export const user = {
@@ -655,6 +656,7 @@ export const navLinks = {
     { href: "/dashboard/complaints", label: "Complaints", icon: ShieldQuestion },
     { href: "/dashboard/stationery-orders", label: "Stationery Orders", icon: PenSquare },
     { href: "/dashboard/field-visit-reports", label: "Field Visit Reports", icon: ClipboardList },
+    { href: "/dashboard/indent", label: "Indent", icon: BookMarked },
   ],
   footer: {
     company: [
@@ -972,6 +974,7 @@ export const stationeryItemsData: StationeryItem[] = [
     { code: "STAT0035", name: "Stapler Machine - No. 10", uom: "Number", example: 1},
 ];
   
+
 
 
 
