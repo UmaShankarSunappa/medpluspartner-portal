@@ -239,47 +239,53 @@ export const financialSummary = {
 };
 
 export const transactions = [
-    { 
-        dateTime: "2023-10-26 14:30", 
-        billId: "INV-1024", 
-        billType: "Payment", 
-        amount: 12450.0,
-        billingPlace: "Bangalore",
-        transactionType: "Dr"
-    },
-    { 
-        dateTime: "2023-10-25 11:00", 
-        billId: "CN-056", 
-        billType: "Credit Note", 
-        amount: 2300.0,
-        billingPlace: "Hyderabad",
-        transactionType: "Cr"
-    },
-    { 
-        dateTime: "2023-10-21 10:15", 
-        billId: "PUR-5678", 
-        billType: "Purchases", 
-        amount: 32000.0,
-        billingPlace: "Hyderabad",
-        transactionType: "Dr"
-    },
-    { 
-        dateTime: "2023-10-20 18:00", 
-        billId: "INV-1022", 
-        billType: "Payment", 
-        amount: 8990.0,
-        billingPlace: "Bangalore",
-        transactionType: "Dr"
-    },
-    { 
-        dateTime: "2023-09-30 20:00", 
-        billId: "COMM-0923", 
-        billType: "Commission", 
-        amount: 35000.0,
-        billingPlace: "Corporate",
-        transactionType: "Cr"
-    }
+  {
+    dateTime: "2023-10-28 10:00",
+    billId: "DN-001",
+    billType: "Debit Note",
+    description: "Rent",
+    amount: 50000.0,
+    billingPlace: "Bangalore",
+    transactionType: "Dr",
+  },
+  {
+    dateTime: "2023-10-26 14:30",
+    billId: "INV-1024",
+    billType: "Payment",
+    description: "Initial Stock Transfer",
+    amount: 12450.0,
+    billingPlace: "Bangalore",
+    transactionType: "Cr",
+  },
+  {
+    dateTime: "2023-10-25 11:00",
+    billId: "CN-056",
+    billType: "Credit Note",
+    description: "Returns",
+    amount: 2300.0,
+    billingPlace: "Hyderabad",
+    transactionType: "Cr",
+  },
+  {
+    dateTime: "2023-10-21 10:15",
+    billId: "PUR-5678",
+    billType: "Purchases",
+    description: "Min-Max Stock",
+    amount: 32000.0,
+    billingPlace: "Hyderabad",
+    transactionType: "Dr",
+  },
+  {
+    dateTime: "2023-10-15 12:00",
+    billId: "SR-005",
+    billType: "Sale Return",
+    description: "Warehouse Returns",
+    amount: 1500.0,
+    billingPlace: "Hyderabad",
+    transactionType: "Cr",
+  },
 ];
+
 
 export const paymentsData = [
   { paymentId: "PAY-2024-001", name: "Monthly Payment", createdDate: "1/15/2024", approvedDate: "1/16/2024", status: "Approved", amount: 30000, mode: "NEFT" },
@@ -974,10 +980,3 @@ export const stationeryItemsData: StationeryItem[] = [
     { code: "STAT0035", name: "Stapler Machine - No. 10", uom: "Number", example: 1},
 ];
   
-
-
-
-
-
-
-

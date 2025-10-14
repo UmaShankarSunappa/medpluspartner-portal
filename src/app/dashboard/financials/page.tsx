@@ -29,7 +29,7 @@ export default function FinancialsPage() {
     const availableCredit = financialSummary.creditLimit - financialSummary.outstanding;
 
     const handleExport = () => {
-        const headers = ["Date & Time", "Bill ID", "Bill Type", "Billing Place", "Dr/Cr", "Amount"];
+        const headers = ["Date & Time", "Bill ID", "Bill Type", "Description", "Billing Place", "Dr/Cr", "Amount"];
         const csvRows = [
             headers.join(','),
             ...transactions.map(tx => 
@@ -37,6 +37,7 @@ export default function FinancialsPage() {
                     `"${tx.dateTime}"`,
                     `"${tx.billId}"`,
                     `"${tx.billType}"`,
+                    `"${tx.description}"`,
                     `"${tx.billingPlace}"`,
                     `"${tx.transactionType}"`,
                     tx.amount
@@ -122,6 +123,7 @@ export default function FinancialsPage() {
                 <TableHead>Date & Time</TableHead>
                 <TableHead>Bill ID</TableHead>
                 <TableHead>Bill Type</TableHead>
+                <TableHead>Description</TableHead>
                 <TableHead>Billing Place</TableHead>
                 <TableHead>Dr/Cr</TableHead>
                 <TableHead className="text-right">Amount</TableHead>
@@ -135,6 +137,7 @@ export default function FinancialsPage() {
                   <TableCell>
                     <Badge variant="outline">{tx.billType}</Badge>
                   </TableCell>
+                  <TableCell>{tx.description}</TableCell>
                   <TableCell>{tx.billingPlace}</TableCell>
                   <TableCell>
                     <span className={tx.transactionType === 'Cr' ? 'text-green-600' : 'text-red-600'}>
