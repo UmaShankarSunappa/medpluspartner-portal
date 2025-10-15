@@ -2,7 +2,7 @@
 "use client"
 
 import * as React from "react"
-import { format } from "date-fns"
+import { format, addDays } from "date-fns"
 import { Calendar as CalendarIcon } from "lucide-react"
 import { DateRange } from "react-day-picker"
 
@@ -15,9 +15,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
+interface DateRangePickerProps extends React.HTMLAttributes<HTMLDivElement> {
+  max?: number;
+}
+
 export function DateRangePicker({
   className,
-}: React.HTMLAttributes<HTMLDivElement>) {
+  max
+}: DateRangePickerProps) {
   const [date, setDate] = React.useState<DateRange | undefined>()
 
   return (
@@ -55,6 +60,7 @@ export function DateRangePicker({
             selected={date}
             onSelect={setDate}
             numberOfMonths={2}
+            max={max}
           />
         </PopoverContent>
       </Popover>
