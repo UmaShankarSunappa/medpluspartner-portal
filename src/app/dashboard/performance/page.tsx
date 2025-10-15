@@ -45,9 +45,9 @@ import { useToast } from "@/hooks/use-toast";
 
 const chartConfigBase = {
   netSale: { label: "Net Sale", color: "hsl(var(--primary))" },
-  margin: { label: "Margin", color: "hsl(var(--secondary))" },
+  margin: { label: "Margin", color: "hsl(var(--chart-2))" },
   branded: { label: "Branded", color: "hsl(var(--primary))" },
-  pl: { label: "PL+SIP", color: "hsl(var(--secondary))" },
+  pl: { label: "PL+SIP", color: "hsl(var(--chart-2))" },
   pharma_sale: { label: "Pharma Sale", color: "hsl(var(--chart-1))" },
   pharma_margin: { label: "Pharma Margin", color: "hsl(var(--chart-2))" },
   general_sale: { label: "General Sale", color: "hsl(var(--chart-3))" },
