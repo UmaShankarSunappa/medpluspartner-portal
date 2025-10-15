@@ -25,6 +25,24 @@ export function DateRangePicker({
 }: DateRangePickerProps) {
   const [date, setDate] = React.useState<DateRange | undefined>()
 
+  const handleSelect = (selectedRange: DateRange | undefined) => {
+    if (max && selectedRange?.from && selectedRange?.to) {
+        const dayCount = (selectedRange.to.getTime() - selectedRange.from.getTime()) / (1000 * 60 * 60 * 24) + 1;
+        if (dayCount > max) {
+            setDate({ from: selectedRange.from, to: undefined });
+            return;
+        }
+    }
+    setDate(selectedRange);
+  }
+
+  const disabledDays = React.useMemo(() => {
+    if (max && date?.from && !date.to) {
+      return { after: addDays(date.from, max - 1) };
+    }
+    return {};
+  }, [date, max]);
+
   return (
     <div className={cn("grid gap-2", className)}>
       <Popover>
@@ -58,9 +76,9 @@ export function DateRangePicker({
             mode="range"
             defaultMonth={date?.from}
             selected={date}
-            onSelect={setDate}
+            onSelect={handleSelect}
             numberOfMonths={2}
-            max={max}
+            disabled={disabledDays}
           />
         </PopoverContent>
       </Popover>
