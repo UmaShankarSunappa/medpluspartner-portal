@@ -17,29 +17,26 @@ import {
 
 interface DateRangePickerProps extends React.HTMLAttributes<HTMLDivElement> {
   max?: number;
+  onMaxRangeError?: (max: number) => void;
 }
 
 export function DateRangePicker({
   className,
-  max
+  max,
+  onMaxRangeError,
 }: DateRangePickerProps) {
   const [date, setDate] = React.useState<DateRange | undefined>()
 
   const handleSelect = (selectedRange: DateRange | undefined) => {
-    if (selectedRange) {
-        if (max && selectedRange.from && selectedRange.to) {
-            const days = differenceInDays(selectedRange.to, selectedRange.from);
-            if (days >= max) {
-                // If the selected range is greater than or equal to `max`, 
-                // reset the selection to only the start date.
-                setDate({ from: selectedRange.from, to: undefined });
-                return;
-            }
-        }
-        setDate(selectedRange);
-    } else {
-        setDate(undefined);
+    if (selectedRange?.from && selectedRange?.to && max) {
+      const days = differenceInDays(selectedRange.to, selectedRange.from);
+      if (days >= max) {
+        onMaxRangeError?.(max);
+        // Do not update the date state if range is invalid
+        return;
+      }
     }
+    setDate(selectedRange);
   }
 
   const disabledDays = React.useMemo(() => {

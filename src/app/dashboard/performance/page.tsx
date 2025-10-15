@@ -41,6 +41,7 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { performanceData } from "@/lib/data";
+import { useToast } from "@/hooks/use-toast";
 
 const chartConfigBase = {
   netSale: { label: "Net Sale", color: "hsl(var(--primary))" },
@@ -71,6 +72,15 @@ export default function PerformancePage() {
   const [view, setView] = useState<"mom" | "day">("mom");
   const data = performanceData[view];
   const [category, setCategory] = useState("pharma");
+  const { toast } = useToast();
+
+  const handleMaxRangeError = (max: number) => {
+    toast({
+      variant: "destructive",
+      title: "Invalid Date Range",
+      description: `The maximum allowed date range is ${max} days.`,
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -111,7 +121,7 @@ export default function PerformancePage() {
                         <SelectItem value="current_month">Current Month</SelectItem>
                     </SelectContent>
                 </Select>
-            ) : <DateRangePicker />}
+            ) : <DateRangePicker max={7} onMaxRangeError={handleMaxRangeError} />}
           </div>
         </CardContent>
       </Card>
