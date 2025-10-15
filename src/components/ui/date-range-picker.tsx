@@ -2,7 +2,7 @@
 "use client"
 
 import * as React from "react"
-import { format, addDays } from "date-fns"
+import { format, addDays, differenceInDays } from "date-fns"
 import { Calendar as CalendarIcon } from "lucide-react"
 import { DateRange } from "react-day-picker"
 
@@ -26,21 +26,28 @@ export function DateRangePicker({
   const [date, setDate] = React.useState<DateRange | undefined>()
 
   const handleSelect = (selectedRange: DateRange | undefined) => {
-    if (max && selectedRange?.from && selectedRange?.to) {
-        const dayCount = (selectedRange.to.getTime() - selectedRange.from.getTime()) / (1000 * 60 * 60 * 24) + 1;
-        if (dayCount > max) {
-            setDate({ from: selectedRange.from, to: undefined });
-            return;
+    if (selectedRange) {
+        if (max && selectedRange.from && selectedRange.to) {
+            const days = differenceInDays(selectedRange.to, selectedRange.from);
+            if (days >= max) {
+                // If the selected range is greater than or equal to `max`, 
+                // reset the selection to only the start date.
+                setDate({ from: selectedRange.from, to: undefined });
+                return;
+            }
         }
+        setDate(selectedRange);
+    } else {
+        setDate(undefined);
     }
-    setDate(selectedRange);
   }
 
   const disabledDays = React.useMemo(() => {
     if (max && date?.from && !date.to) {
+      // If a start date is selected, disable all dates after `max` days.
       return { after: addDays(date.from, max - 1) };
     }
-    return {};
+    return undefined;
   }, [date, max]);
 
   return (
