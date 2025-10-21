@@ -179,7 +179,28 @@ export default function PerformancePage() {
                 <CartesianGrid vertical={false} />
                 <XAxis dataKey={view === 'mom' ? 'month' : 'day'} tickLine={false} axisLine={false} />
                 <YAxis />
-                <ChartTooltip content={<ChartTooltipContent />} />
+                <ChartTooltip
+                  content={
+                    <ChartTooltipContent
+                      formatter={(value, name, props) => {
+                        const { payload } = props;
+                        const percentage = name === 'branded' ? payload.brandedPercentage : payload.plPercentage;
+                        return (
+                          <div className="flex flex-col">
+                            <span>
+                              {`₹${value.toLocaleString()}`}
+                              {percentage && (
+                                <span className="ml-2 text-muted-foreground">
+                                  ({percentage.toFixed(2)}%)
+                                </span>
+                              )}
+                            </span>
+                          </div>
+                        );
+                      }}
+                    />
+                  }
+                />
                 <Legend />
                 <Bar dataKey="branded" fill="var(--color-branded)" radius={4} />
                 <Bar dataKey="pl" fill="var(--color-pl)" radius={4} />
@@ -302,3 +323,5 @@ export default function PerformancePage() {
     </div>
   );
 }
+
+  

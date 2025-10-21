@@ -775,6 +775,40 @@ export const faqs = [
     }
 ];
 
+const momBrandedVsPl = [
+  { month: "Jan", branded: 300000, pl: 150000 },
+  { month: "Feb", branded: 280000, pl: 140000 },
+  { month: "Mar", branded: 340000, pl: 170000 },
+  { month: "Apr", branded: 320000, pl: 160000 },
+  { month: "May", branded: 360000, pl: 190000 },
+  { month: "Jun", branded: 350000, pl: 180000 },
+].map(item => {
+    const total = item.branded + item.pl;
+    return {
+        ...item,
+        brandedPercentage: (item.branded / total) * 100,
+        plPercentage: (item.pl / total) * 100,
+    }
+});
+
+const dayBrandedVsPl = [
+  { day: "1-Oct", branded: 15000, pl: 5000 },
+  { day: "2-Oct", branded: 16000, pl: 6000 },
+  { day: "3-Oct", branded: 15500, pl: 5500 },
+  { day: "4-Oct", branded: 18000, pl: 6000 },
+  { day: "5-Oct", branded: 19000, pl: 6000 },
+  { day: "6-Oct", branded: 21000, pl: 7000 },
+  { day: "7-Oct", branded: 13000, pl: 5000 },
+].map(item => {
+    const total = item.branded + item.pl;
+    return {
+        ...item,
+        brandedPercentage: (item.branded / total) * 100,
+        plPercentage: (item.pl / total) * 100,
+    }
+});
+
+
 export const performanceData = {
   mom: {
     netSalesMargin: [
@@ -785,14 +819,7 @@ export const performanceData = {
       { month: "May", netSale: 550000, margin: 92000, marginPercentage: (92000 / 550000) * 100 },
       { month: "Jun", netSale: 530000, margin: 88000, marginPercentage: (88000 / 530000) * 100 },
     ],
-    brandedVsPl: [
-      { month: "Jan", branded: 300000, pl: 150000 },
-      { month: "Feb", branded: 280000, pl: 140000 },
-      { month: "Mar", branded: 340000, pl: 170000 },
-      { month: "Apr", branded: 320000, pl: 160000 },
-      { month: "May", branded: 360000, pl: 190000 },
-      { month: "Jun", branded: 350000, pl: 180000 },
-    ],
+    brandedVsPl: momBrandedVsPl,
     salesByCategory: [
       { month: "Jan", pharma_sale: 200000, pharma_margin: 30000, general_sale: 100000, general_margin: 20000, pl_pharma_sale: 100000, pl_pharma_margin: 40000, pl_general_sale: 50000, pl_general_margin: 25000, surgical_sale: 50000, surgical_margin: 10000 },
       { month: "Feb", pharma_sale: 190000, pharma_margin: 28000, general_sale: 90000, general_margin: 18000, pl_pharma_sale: 90000, pl_pharma_margin: 36000, pl_general_sale: 40000, pl_general_margin: 20000, surgical_sale: 40000, surgical_margin: 8000 },
@@ -840,15 +867,7 @@ export const performanceData = {
       { day: "6-Oct", netSale: 28000, margin: 4800, marginPercentage: (4800 / 28000) * 100 },
       { day: "7-Oct", netSale: 18000, margin: 2800, marginPercentage: (2800 / 18000) * 100 },
     ],
-    brandedVsPl: [
-      { day: "1-Oct", branded: 15000, pl: 5000 },
-      { day: "2-Oct", branded: 16000, pl: 6000 },
-      { day: "3-Oct", branded: 15500, pl: 5500 },
-      { day: "4-Oct", branded: 18000, pl: 6000 },
-      { day: "5-Oct", branded: 19000, pl: 6000 },
-      { day: "6-Oct", branded: 21000, pl: 7000 },
-      { day: "7-Oct", branded: 13000, pl: 5000 },
-    ],
+    brandedVsPl: dayBrandedVsPl,
     salesByCategory: [
       { day: "1-Oct", pharma_sale: 10000, pharma_margin: 1500, general_sale: 5000, general_margin: 1000, pl_pharma_sale: 3000, pl_pharma_margin: 1200, pl_general_sale: 2000, pl_general_margin: 1000, surgical_sale: 1000, surgical_margin: 200 },
       { day: "2-Oct", pharma_sale: 11000, pharma_margin: 1650, general_sale: 5500, general_margin: 1100, pl_pharma_sale: 3500, pl_pharma_margin: 1400, pl_general_sale: 2000, pl_general_margin: 1000, surgical_sale: 1000, surgical_margin: 200 },
@@ -992,3 +1011,5 @@ export const stationeryItemsData: StationeryItem[] = [
   
 
     
+
+  
