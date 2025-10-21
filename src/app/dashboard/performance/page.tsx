@@ -13,6 +13,9 @@ import {
   Tooltip,
   XAxis,
   YAxis,
+  Pie,
+  PieChart,
+  Cell,
 } from "recharts";
 import { Button } from "@/components/ui/button";
 import {
@@ -246,16 +249,26 @@ export default function PerformancePage() {
           <CardHeader>
             <CardTitle>Offline vs. Online Sale</CardTitle>
           </CardHeader>
-          <CardContent>
-             <ChartContainer config={chartConfigBase} className="h-[300px] w-full">
-                <BarChart data={data.offlineVsOnline} layout="vertical">
-                    <CartesianGrid horizontal={false} />
-                    <XAxis type="number" />
-                    <YAxis dataKey="name" type="category" tickLine={false} axisLine={false} />
-                    <ChartTooltip content={<ChartTooltipContent />} />
-                    <Legend />
-                    <Bar dataKey="value" fill="var(--color-online)" radius={4} />
-                </BarChart>
+          <CardContent className="flex items-center justify-center">
+            <ChartContainer config={chartConfigBase} className="h-[250px] w-[250px]">
+              <PieChart>
+                <ChartTooltip
+                  cursor={false}
+                  content={<ChartTooltipContent hideLabel />}
+                />
+                <Pie
+                  data={data.offlineVsOnline}
+                  dataKey="value"
+                  nameKey="name"
+                  innerRadius={60}
+                  strokeWidth={5}
+                >
+                  {data.offlineVsOnline.map((entry) => (
+                     <Cell key={entry.name} fill={entry.fill} className="focus:outline-none" />
+                  ))}
+                </Pie>
+                <Legend />
+              </PieChart>
             </ChartContainer>
           </CardContent>
         </Card>
