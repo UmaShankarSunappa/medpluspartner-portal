@@ -111,7 +111,7 @@ export type Order = {
   orderId: string;
   date: string;
   total: number;
-  status: "Order Created" | "Order Received" | "Order Picked" | "Order Dispatched" | "Order Delivered" | "Order Replenished" | "Cancelled";
+  status: "Order Created" | "Order Picked" | "Order Dispatched" | "Order Delivered" | "Order Replenished" | "Cancelled";
   type: "Auto" | "Indent" | "Web Order" | "Sale Order";
   products?: { sku: string; name: string; quantity: number; price: number }[];
   trackingHistory?: { status: string; date: string; location: string }[];
@@ -135,7 +135,6 @@ export const ordersData: Order[] = [
       { status: 'Order Delivered', date: '2024-01-15 11:00', location: 'Local Hub' },
       { status: 'Order Dispatched', date: '2024-01-14 18:00', location: 'Hyderabad Warehouse' },
       { status: 'Order Picked', date: '2024-01-14 14:00', location: 'Hyderabad Warehouse' },
-      { status: 'Order Received', date: '2024-01-14 10:00', location: 'Hyderabad Warehouse' },
       { status: 'Order Created', date: '2024-01-13 20:00', location: 'Franchisee Portal' },
     ]
   },
@@ -152,7 +151,6 @@ export const ordersData: Order[] = [
      trackingHistory: [
       { status: 'Order Dispatched', date: '2024-01-17 17:30', location: 'On its way to Bangalore' },
       { status: 'Order Picked', date: '2024-01-17 14:30', location: 'Hyderabad Warehouse' },
-      { status: 'Order Received', date: '2024-01-17 09:00', location: 'Hyderabad Warehouse' },
       { status: 'Order Created', date: '2024-01-16 18:00', location: 'Franchisee Portal' },
     ]
   },
@@ -160,14 +158,13 @@ export const ordersData: Order[] = [
     orderId: "ORD-2024-003", 
     date: "1/20/2024", 
     total: 58000.0, 
-    status: "Order Received", 
+    status: "Order Created", 
     type: "Auto",
     products: [
       { sku: 'CETZINE', name: 'Cetirizine 10mg', quantity: 300, price: 3000 },
       { sku: 'ELECTRAL', name: 'Electral Powder', quantity: 500, price: 10000 },
     ],
      trackingHistory: [
-      { status: 'Order Received', date: '2024-01-20 12:00', location: 'Hyderabad Warehouse' },
       { status: 'Order Created', date: '2024-01-19 21:00', location: 'Franchisee Portal' },
     ]
   },
@@ -200,7 +197,6 @@ export const ordersData: Order[] = [
       { status: 'Order Delivered', date: '2023-10-20 12:00', location: 'Indiranagar, Bangalore' },
       { status: 'Order Dispatched', date: '2023-10-19 19:00', location: 'Hyderabad Warehouse' },
       { status: 'Order Picked', date: '2023-10-19 16:00', location: 'Hyderabad Warehouse' },
-      { status: 'Order Received', date: '2023-10-19 09:30', location: 'Hyderabad Warehouse' },
       { status: 'Order Created', date: '2023-10-18 22:00', location: 'System' },
     ]
   },
@@ -217,6 +213,7 @@ export const ordersData: Order[] = [
     ]
   },
 ];
+
 
 export const accountProfile = {
   personalDetails: {
@@ -781,12 +778,12 @@ export const faqs = [
 export const performanceData = {
   mom: {
     netSalesMargin: [
-      { month: "Jan", netSale: 450000, margin: 75000 },
-      { month: "Feb", netSale: 420000, margin: 70000 },
-      { month: "Mar", netSale: 510000, margin: 85000 },
-      { month: "Apr", netSale: 480000, margin: 80000 },
-      { month: "May", netSale: 550000, margin: 92000 },
-      { month: "Jun", netSale: 530000, margin: 88000 },
+      { month: "Jan", netSale: 450000, margin: 75000, marginPercentage: (75000 / 450000) * 100 },
+      { month: "Feb", netSale: 420000, margin: 70000, marginPercentage: (70000 / 420000) * 100 },
+      { month: "Mar", netSale: 510000, margin: 85000, marginPercentage: (85000 / 510000) * 100 },
+      { month: "Apr", netSale: 480000, margin: 80000, marginPercentage: (80000 / 480000) * 100 },
+      { month: "May", netSale: 550000, margin: 92000, marginPercentage: (92000 / 550000) * 100 },
+      { month: "Jun", netSale: 530000, margin: 88000, marginPercentage: (88000 / 530000) * 100 },
     ],
     brandedVsPl: [
       { month: "Jan", branded: 300000, pl: 150000 },
@@ -835,13 +832,13 @@ export const performanceData = {
   },
   day: {
     netSalesMargin: [
-      { day: "1-Oct", netSale: 20000, margin: 3000 },
-      { day: "2-Oct", netSale: 22000, margin: 3500 },
-      { day: "3-Oct", netSale: 21000, margin: 3200 },
-      { day: "4-Oct", netSale: 24000, margin: 4000 },
-      { day: "5-Oct", netSale: 25000, margin: 4200 },
-      { day: "6-Oct", netSale: 28000, margin: 4800 },
-      { day: "7-Oct", netSale: 18000, margin: 2800 },
+      { day: "1-Oct", netSale: 20000, margin: 3000, marginPercentage: (3000 / 20000) * 100 },
+      { day: "2-Oct", netSale: 22000, margin: 3500, marginPercentage: (3500 / 22000) * 100 },
+      { day: "3-Oct", netSale: 21000, margin: 3200, marginPercentage: (3200 / 21000) * 100 },
+      { day: "4-Oct", netSale: 24000, margin: 4000, marginPercentage: (4000 / 24000) * 100 },
+      { day: "5-Oct", netSale: 25000, margin: 4200, marginPercentage: (4200 / 25000) * 100 },
+      { day: "6-Oct", netSale: 28000, margin: 4800, marginPercentage: (4800 / 28000) * 100 },
+      { day: "7-Oct", netSale: 18000, margin: 2800, marginPercentage: (2800 / 18000) * 100 },
     ],
     brandedVsPl: [
       { day: "1-Oct", branded: 15000, pl: 5000 },

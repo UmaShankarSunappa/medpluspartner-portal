@@ -137,7 +137,30 @@ export default function PerformancePage() {
                 <CartesianGrid vertical={false} />
                 <XAxis dataKey={view === 'mom' ? 'month' : 'day'} tickLine={false} axisLine={false} />
                 <YAxis />
-                <ChartTooltip content={<ChartTooltipContent />} />
+                <ChartTooltip
+                  content={
+                    <ChartTooltipContent
+                      formatter={(value, name, props) => {
+                        const { payload } = props;
+                        if (name === "margin") {
+                          return (
+                            <div className="flex flex-col">
+                              <span>
+                                {`₹${value.toLocaleString()}`}
+                                {payload.marginPercentage && (
+                                  <span className="ml-2 text-muted-foreground">
+                                    ({payload.marginPercentage.toFixed(2)}%)
+                                  </span>
+                                )}
+                              </span>
+                            </div>
+                          );
+                        }
+                        return `₹${Number(value).toLocaleString()}`;
+                      }}
+                    />
+                  }
+                />
                 <Legend />
                 <Bar dataKey="netSale" fill="var(--color-netSale)" radius={4} />
                 <Bar dataKey="margin" fill="var(--color-margin)" radius={4} />
