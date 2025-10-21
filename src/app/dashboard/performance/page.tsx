@@ -9,8 +9,6 @@ import {
   Legend,
   Line,
   LineChart,
-  Pie,
-  PieChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -66,6 +64,8 @@ const chartConfigBase = {
   "bills_200_500": { label: "200-500", color: "hsl(var(--chart-2))" },
   "bills_500_999": { label: "500-999", color: "hsl(var(--chart-3))" },
   "bills_gt_1000": { label: ">1000", color: "hsl(var(--chart-4))" },
+  offline: { label: "Offline", color: "hsl(var(--chart-1))" },
+  online: { label: "Online", color: "hsl(var(--chart-2))" },
 };
 
 export default function PerformancePage() {
@@ -121,7 +121,7 @@ export default function PerformancePage() {
                         <SelectItem value="current_month">Current Month</SelectItem>
                     </SelectContent>
                 </Select>
-            ) : <DateRangePicker max={7} onMaxRangeError={handleMaxRangeError} />}
+            ) : <DateRangePicker max={15} onMaxRangeError={handleMaxRangeError} />}
           </div>
         </CardContent>
       </Card>
@@ -202,13 +202,16 @@ export default function PerformancePage() {
           <CardHeader>
             <CardTitle>Offline vs. Online Sale</CardTitle>
           </CardHeader>
-          <CardContent className="flex items-center justify-center">
-            <ChartContainer config={chartConfigBase} className="h-[250px] w-full max-w-[250px]">
-                <PieChart>
-                    <ChartTooltip content={<ChartTooltipContent hideLabel />} />
-                    <Pie data={data.offlineVsOnline} dataKey="value" nameKey="name" innerRadius={60} />
-                    <Legend/>
-                </PieChart>
+          <CardContent>
+             <ChartContainer config={chartConfigBase} className="h-[300px] w-full">
+                <BarChart data={data.offlineVsOnline} layout="vertical">
+                    <CartesianGrid horizontal={false} />
+                    <XAxis type="number" />
+                    <YAxis dataKey="name" type="category" tickLine={false} axisLine={false} />
+                    <ChartTooltip content={<ChartTooltipContent />} />
+                    <Legend />
+                    <Bar dataKey="value" fill="var(--color-online)" radius={4} />
+                </BarChart>
             </ChartContainer>
           </CardContent>
         </Card>

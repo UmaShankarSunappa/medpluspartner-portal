@@ -88,7 +88,7 @@ export default function OrdersPage() {
         <Card>
             <CardHeader>
             <CardTitle>Search Orders</CardTitle>
-            <CardDescription>Filter orders by date range (maximum 7 days)</CardDescription>
+            <CardDescription>Filter orders by date range (maximum 15 days)</CardDescription>
             </CardHeader>
             <CardContent>
             <div className="flex flex-col md:flex-row gap-4 items-end">
@@ -98,7 +98,7 @@ export default function OrdersPage() {
                 </div>
                 <div className="grid gap-2">
                 <Label htmlFor="date-range">Date Range</Label>
-                <DateRangePicker max={7} />
+                <DateRangePicker max={15} />
                 </div>
                 <Button>
                 <Search className="mr-2 h-4 w-4" />
