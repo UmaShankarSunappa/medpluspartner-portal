@@ -187,18 +187,10 @@ export default function ProvisionalIndentPage() {
                         </TableBody>
                     </Table>
                 </div>
-                <DialogFooter className="flex-col sm:flex-row gap-4 sm:justify-between items-center bg-muted/50 p-4 rounded-b-lg">
+                <DialogFooter className="flex-col sm:flex-row gap-4 sm:justify-start items-center bg-muted/50 p-4 rounded-b-lg">
                     <div className="text-left">
                         <p className="text-sm text-muted-foreground">Grand Total</p>
                         <p className="text-2xl font-bold">₹{selectedIndent?.totalValue.toLocaleString('en-IN')}</p>
-                    </div>
-                    <div className="flex gap-2">
-                        <Button variant="destructive" onClick={() => setIsDeleteAlertOpen(true)}>
-                            <Trash2 className="mr-2 h-4 w-4" /> Delete
-                        </Button>
-                        <Button onClick={() => setIsConfirmAlertOpen(true)}>
-                            <CheckCircle className="mr-2 h-4 w-4" /> Confirm
-                        </Button>
                     </div>
                 </DialogFooter>
             </DialogContent>
