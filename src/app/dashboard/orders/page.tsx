@@ -41,6 +41,7 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Input } from "@/components/ui/input";
 
 const statusVariant: { [key: string]: "default" | "secondary" | "destructive" | "outline" | "success" | "warning" | "info" } = {
     "Order Replenished": "success",
@@ -91,6 +92,10 @@ export default function OrdersPage() {
             </CardHeader>
             <CardContent>
             <div className="flex flex-col md:flex-row gap-4 items-end">
+                <div className="grid gap-2">
+                    <Label htmlFor="order-id">Order ID</Label>
+                    <Input id="order-id" placeholder="Search by Order ID..."/>
+                </div>
                 <div className="grid gap-2">
                 <Label htmlFor="date-range">Date Range</Label>
                 <DateRangePicker max={7} />
