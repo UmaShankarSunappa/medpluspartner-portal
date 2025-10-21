@@ -44,6 +44,7 @@ import {
   Calendar,
   IndianRupee,
   BookMarked,
+  Receipt,
 } from "lucide-react";
 
 export const user = {
@@ -654,6 +655,7 @@ export const navLinks = {
   ],
   dashboard: [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/dashboard/sales-summary", label: "Sales Summary", icon: Receipt },
     { href: "/dashboard/orders", label: "Orders", icon: History },
     { href: "/dashboard/financials", label: "Account Balance", icon: Landmark },
     { href: "/dashboard/payments", label: "Payments", icon: Banknote },
@@ -878,13 +880,8 @@ export const performanceData = {
       { day: "7-Oct", pharma_sale: 9000, pharma_margin: 1350, general_sale: 4000, general_margin: 800, pl_pharma_sale: 3000, pl_pharma_margin: 1200, pl_general_sale: 2000, pl_general_margin: 1000, surgical_sale: 1000, surgical_margin: 200 },
     ],
     offlineVsOnline: [
-      { day: "1-Oct", offline: 18000, online: 2000 },
-      { day: "2-Oct", offline: 19800, online: 2200 },
-      { day: "3-Oct", offline: 18900, online: 2100 },
-      { day: "4-Oct", offline: 21600, online: 2400 },
-      { day: "5-Oct", offline: 22500, online: 2500 },
-      { day: "6-Oct", offline: 25200, online: 2800 },
-      { day: "7-Oct", offline: 16200, online: 1800 },
+      { name: 'Offline', value: 130200, fill: 'hsl(var(--chart-1))' },
+      { name: 'Online', value: 24600, fill: 'hsl(var(--chart-2))' },
     ],
     ordersCount: [
       { day: "1-Oct", salesOrders: 50, webOrders: 10 },
