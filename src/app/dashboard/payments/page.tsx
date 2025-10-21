@@ -112,9 +112,8 @@ export default function PaymentsPage() {
                                     <SelectValue placeholder="Select type" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="advance">Advance Payment</SelectItem>
-                                    <SelectItem value="due">Due Payment</SelectItem>
-                                    <SelectItem value="other">Other</SelectItem>
+                                    <SelectItem value="regular">Regular Payment</SelectItem>
+                                    <SelectItem value="sale-order">Sale Order Payment</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
