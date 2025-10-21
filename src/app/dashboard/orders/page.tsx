@@ -43,10 +43,12 @@ import {
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const statusVariant: { [key: string]: "default" | "secondary" | "destructive" | "outline" | "success" | "warning" | "info" } = {
-    "Replenished": "success",
-    "Dispatched": "info",
+    "Order Replenished": "success",
+    "Order Delivered": "success",
+    "Order Dispatched": "info",
+    "Order Picked": "info",
     "Order Received": "secondary",
-    "Order Placed": "secondary",
+    "Order Created": "secondary",
     "Cancelled": "destructive",
 };
 
@@ -223,7 +225,7 @@ export default function OrdersPage() {
                     {selectedOrder?.trackingHistory?.map((event, index) => (
                         <div key={index} className="relative flex items-start gap-4 mb-6">
                             <div className="z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                                {event.status === 'Replenished' ? <CheckCircle className="h-5 w-5" /> : <Package className="h-5 w-5" />}
+                                {event.status === 'Order Replenished' || event.status === 'Order Delivered' ? <CheckCircle className="h-5 w-5" /> : <Package className="h-5 w-5" />}
                             </div>
                             <div className="mt-1">
                                 <p className="font-semibold">{event.status}</p>

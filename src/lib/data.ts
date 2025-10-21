@@ -111,8 +111,8 @@ export type Order = {
   orderId: string;
   date: string;
   total: number;
-  status: string;
-  type: string;
+  status: "Order Created" | "Order Received" | "Order Picked" | "Order Dispatched" | "Order Delivered" | "Order Replenished" | "Cancelled";
+  type: "Auto" | "Indent" | "Web Order" | "Sale Order";
   products?: { sku: string; name: string; quantity: number; price: number }[];
   trackingHistory?: { status: string; date: string; location: string }[];
 };
@@ -123,7 +123,7 @@ export const ordersData: Order[] = [
     orderId: "ORD-2024-001", 
     date: "1/15/2024", 
     total: 45000.0, 
-    status: "Replenished", 
+    status: "Order Replenished", 
     type: "Auto",
     products: [
       { sku: 'PARA500', name: 'Paracetamol 500mg', quantity: 100, price: 1500 },
@@ -131,26 +131,29 @@ export const ordersData: Order[] = [
       { sku: 'BAND-AID', name: 'Band-Aid Assorted', quantity: 200, price: 4000 },
     ],
     trackingHistory: [
-      { status: 'Replenished', date: '2024-01-15 14:30', location: 'Koramangala, Bangalore' },
-      { status: 'Dispatched', date: '2024-01-14 18:00', location: 'Hyderabad Warehouse' },
+      { status: 'Order Replenished', date: '2024-01-15 14:30', location: 'Koramangala, Bangalore' },
+      { status: 'Order Delivered', date: '2024-01-15 11:00', location: 'Local Hub' },
+      { status: 'Order Dispatched', date: '2024-01-14 18:00', location: 'Hyderabad Warehouse' },
+      { status: 'Order Picked', date: '2024-01-14 14:00', location: 'Hyderabad Warehouse' },
       { status: 'Order Received', date: '2024-01-14 10:00', location: 'Hyderabad Warehouse' },
-      { status: 'Order Placed', date: '2024-01-13 20:00', location: 'Franchisee Portal' },
+      { status: 'Order Created', date: '2024-01-13 20:00', location: 'Franchisee Portal' },
     ]
   },
   { 
     orderId: "ORD-2024-002", 
     date: "1/18/2024", 
     total: 32000.0, 
-    status: "Dispatched", 
+    status: "Order Dispatched", 
     type: "Indent",
     products: [
       { sku: 'MOOV', name: 'Moov Ointment', quantity: 40, price: 4800 },
       { sku: 'VOLINI', name: 'Volini Spray', quantity: 30, price: 4500 },
     ],
      trackingHistory: [
-      { status: 'Dispatched', date: '2024-01-17 17:30', location: 'On its way to Bangalore' },
+      { status: 'Order Dispatched', date: '2024-01-17 17:30', location: 'On its way to Bangalore' },
+      { status: 'Order Picked', date: '2024-01-17 14:30', location: 'Hyderabad Warehouse' },
       { status: 'Order Received', date: '2024-01-17 09:00', location: 'Hyderabad Warehouse' },
-      { status: 'Order Placed', date: '2024-01-16 18:00', location: 'Franchisee Portal' },
+      { status: 'Order Created', date: '2024-01-16 18:00', location: 'Franchisee Portal' },
     ]
   },
   { 
@@ -165,37 +168,40 @@ export const ordersData: Order[] = [
     ],
      trackingHistory: [
       { status: 'Order Received', date: '2024-01-20 12:00', location: 'Hyderabad Warehouse' },
-      { status: 'Order Placed', date: '2024-01-19 21:00', location: 'Franchisee Portal' },
+      { status: 'Order Created', date: '2024-01-19 21:00', location: 'Franchisee Portal' },
     ]
   },
   { 
     orderId: "ORD75641", 
     date: "2023-10-21", 
     total: 8990.0, 
-    status: "Order Placed", 
+    status: "Order Created", 
     type: "Web Order",
     products: [
       { sku: 'INSULIN-G', name: 'Glargine Insulin', quantity: 10, price: 3500 },
       { sku: 'TEST-STRIP', name: 'Glucose Test Strips', quantity: 5, price: 2500 },
     ],
     trackingHistory: [
-      { status: 'Order Placed', date: '2023-10-21 10:00', location: 'Franchisee Portal' },
+      { status: 'Order Created', date: '2023-10-21 10:00', location: 'Franchisee Portal' },
     ]
   },
   { 
     orderId: "ORD75642", 
     date: "2023-10-20", 
     total: 21350.0, 
-    status: "Replenished", 
+    status: "Order Replenished", 
     type: "Sale Order",
     products: [
       { sku: 'ASPIRIN75', name: 'Aspirin 75mg', quantity: 200, price: 1000 },
       { sku: 'ATORVA10', name: 'Atorvastatin 10mg', quantity: 150, price: 2250 },
     ],
     trackingHistory: [
-      { status: 'Replenished', date: '2023-10-20 15:00', location: 'Indiranagar, Bangalore' },
-      { status: 'Dispatched', date: '2023-10-19 19:00', location: 'Hyderabad Warehouse' },
+      { status: 'Order Replenished', date: '2023-10-20 15:00', location: 'Indiranagar, Bangalore' },
+      { status: 'Order Delivered', date: '2023-10-20 12:00', location: 'Indiranagar, Bangalore' },
+      { status: 'Order Dispatched', date: '2023-10-19 19:00', location: 'Hyderabad Warehouse' },
+      { status: 'Order Picked', date: '2023-10-19 16:00', location: 'Hyderabad Warehouse' },
       { status: 'Order Received', date: '2023-10-19 09:30', location: 'Hyderabad Warehouse' },
+      { status: 'Order Created', date: '2023-10-18 22:00', location: 'System' },
     ]
   },
   { 
@@ -207,6 +213,7 @@ export const ordersData: Order[] = [
     products: [],
     trackingHistory: [
        { status: 'Cancelled', date: '203-10-18 13:00', location: 'Franchisee Portal' },
+       { status: 'Order Created', date: '203-10-18 12:00', location: 'Franchisee Portal' },
     ]
   },
 ];
@@ -855,8 +862,13 @@ export const performanceData = {
       { day: "7-Oct", pharma_sale: 9000, pharma_margin: 1350, general_sale: 4000, general_margin: 800, pl_pharma_sale: 3000, pl_pharma_margin: 1200, pl_general_sale: 2000, pl_general_margin: 1000, surgical_sale: 1000, surgical_margin: 200 },
     ],
     offlineVsOnline: [
-      { name: "Offline", value: 120000, fill: "hsl(var(--chart-1))" },
-      { name: "Online", value: 20000, fill: "hsl(var(--chart-2))" },
+      { day: "1-Oct", offline: 18000, online: 2000 },
+      { day: "2-Oct", offline: 19800, online: 2200 },
+      { day: "3-Oct", offline: 18900, online: 2100 },
+      { day: "4-Oct", offline: 21600, online: 2400 },
+      { day: "5-Oct", offline: 22500, online: 2500 },
+      { day: "6-Oct", offline: 25200, online: 2800 },
+      { day: "7-Oct", offline: 16200, online: 1800 },
     ],
     ordersCount: [
       { day: "1-Oct", salesOrders: 50, webOrders: 10 },
