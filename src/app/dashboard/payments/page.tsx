@@ -1,8 +1,8 @@
 
 "use client";
 
-import { useState } from "react";
-import { PlusCircle, Search, Download } from "lucide-react";
+import { useState, useMemo, useEffect } from "react";
+import { PlusCircle, Search, Download, Landmark, CreditCard, Signal, IndianRupee, BotMessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -40,15 +40,82 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
-import { paymentsData, accountProfile } from "@/lib/data";
+import { paymentsData, accountProfile, stores as mockStores } from "@/lib/data";
+import { cn } from "@/lib/utils";
+import { Separator } from "@/components/ui/separator";
 
 const statusVariant: { [key: string]: "default" | "secondary" } = {
     "Approved": "default",
     "Pending": "secondary",
 };
 
+type StoreAllocation = { [storeId: string]: { ratio: number; amount: number } };
+type ApplicationRatio = { [key: string]: number };
+
 export default function PaymentsPage() {
     const [isCreatePaymentOpen, setIsCreatePaymentOpen] = useState(false);
+    const [totalAmount, setTotalAmount] = useState<number>(0);
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string | null>(null);
+    const [storeAllocations, setStoreAllocations] = useState<StoreAllocation>(
+      mockStores.reduce((acc, store) => ({ ...acc, [store.id]: { ratio: 1, amount: 0 } }), {})
+    );
+    const [applicationRatios, setApplicationRatios] = useState<ApplicationRatio>({
+        'minMax': 1,
+        'sale': 1,
+        'web': 1,
+    });
+
+    useEffect(() => {
+        const totalRatio = Object.values(storeAllocations).reduce((sum, { ratio }) => sum + ratio, 0);
+        if (totalRatio === 0) return;
+
+        const newAllocations: StoreAllocation = {};
+        let allocatedSum = 0;
+        const storeIds = Object.keys(storeAllocations);
+
+        storeIds.forEach((storeId, index) => {
+            if (index === storeIds.length - 1) {
+                 newAllocations[storeId] = {
+                    ...storeAllocations[storeId],
+                    amount: totalAmount - allocatedSum,
+                };
+            } else {
+                const allocatedAmount = (storeAllocations[storeId].ratio / totalRatio) * totalAmount;
+                newAllocations[storeId] = {
+                    ...storeAllocations[storeId],
+                    amount: allocatedAmount
+                };
+                allocatedSum += allocatedAmount;
+            }
+        });
+        setStoreAllocations(newAllocations);
+    }, [totalAmount]);
+
+    const handleStoreRatioChange = (storeId: string, newRatio: number) => {
+        const updatedAllocations = {
+            ...storeAllocations,
+            [storeId]: { ...storeAllocations[storeId], ratio: newRatio },
+        };
+        
+        const totalRatio = Object.values(updatedAllocations).reduce((sum, { ratio }) => sum + ratio, 0);
+        if (totalRatio > 0) {
+             let allocatedSum = 0;
+             const storeIds = Object.keys(updatedAllocations);
+             storeIds.forEach((id, index) => {
+                 const store = updatedAllocations[id];
+                 if (index === storeIds.length - 1) {
+                     store.amount = totalAmount - allocatedSum;
+                 } else {
+                    store.amount = (store.ratio / totalRatio) * totalAmount;
+                    allocatedSum += store.amount;
+                 }
+             });
+        }
+
+        setStoreAllocations(updatedAllocations);
+    };
+
+    const isProceedDisabled = totalAmount <= 0 || !selectedPaymentMethod;
 
     const handleExport = () => {
         const headers = ["Payment ID", "Name", "Created Date", "Approved Date", "Status", "Amount", "Mode of Payment"];
@@ -96,68 +163,113 @@ export default function PaymentsPage() {
                     Create Payment
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-xl">
+            <DialogContent className="max-w-2xl">
                 <DialogHeader>
-                <DialogTitle>Create New Payment</DialogTitle>
-                <DialogDescription>
-                    Fill out the form to submit a new payment.
-                </DialogDescription>
+                    <DialogTitle>Create New Payment</DialogTitle>
+                    <DialogDescription>
+                        A guided process to submit and allocate your payments.
+                    </DialogDescription>
                 </DialogHeader>
-                <div className="grid gap-6 py-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                             <Label htmlFor="paymentType">Payment Type</Label>
-                            <Select>
-                                <SelectTrigger id="paymentType">
-                                    <SelectValue placeholder="Select type" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="regular">Regular Payment</SelectItem>
-                                    <SelectItem value="sale-order">Sale Order Payment</SelectItem>
-                                </SelectContent>
-                            </Select>
+
+                <div className="grid gap-6 py-4 max-h-[80vh] overflow-y-auto pr-4">
+                    {/* Step 1: Payment Details */}
+                    <div className="space-y-4">
+                        <h3 className="font-semibold text-lg flex items-center gap-2"><span className="flex items-center justify-center h-6 w-6 rounded-full bg-primary text-primary-foreground text-sm">1</span>Payment Details</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 rounded-lg border p-4">
+                            <div><Label>Customer ID:</Label><p className="text-sm font-medium">{accountProfile.licenseDetails.storeId}</p></div>
+                            <div><Label>Customer Name:</Label><p className="text-sm font-medium">{accountProfile.personalDetails.businessName}</p></div>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="amount">Total Amount (INR)</Label>
+                                <Input id="amount" type="number" placeholder="e.g., 60000" onChange={(e) => setTotalAmount(parseFloat(e.target.value) || 0)} />
+                            </div>
                         </div>
                         <div className="space-y-2">
-                             <Label htmlFor="paymentName">Payment Name</Label>
-                            <Input id="paymentName" placeholder="e.g. Monthly Dues"/>
+                            <Label htmlFor="remarks">Remarks</Label>
+                            <Textarea id="remarks" placeholder="Add any relevant notes here..."/>
                         </div>
                     </div>
-                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="customerId">Customer ID</Label>
-                            <Input id="customerId" defaultValue={accountProfile.licenseDetails.storeId} readOnly />
+                    <Separator />
+                    {/* Step 2: Payment Allocation */}
+                     <div className="space-y-4">
+                        <h3 className="font-semibold text-lg flex items-center gap-2"><span className="flex items-center justify-center h-6 w-6 rounded-full bg-primary text-primary-foreground text-sm">2</span>Payment Allocation</h3>
+                        {/* Part A: Store Ratio */}
+                        <div className="space-y-3">
+                            <h4 className="font-medium">Store Ratio Configuration</h4>
+                            <div className="space-y-2 rounded-lg border p-4">
+                                {mockStores.map(store => (
+                                    <div key={store.id} className="flex items-center justify-between gap-4">
+                                        <Label htmlFor={`ratio-${store.id}`} className="flex-1">{store.name}</Label>
+                                        <Input
+                                            id={`ratio-${store.id}`}
+                                            type="number"
+                                            min="0"
+                                            placeholder="Ratio"
+                                            className="w-24 text-center"
+                                            value={storeAllocations[store.id]?.ratio || ''}
+                                            onChange={(e) => handleStoreRatioChange(store.id, parseFloat(e.target.value) || 0)}
+                                        />
+                                        <div className="w-32 text-right font-semibold">
+                                            ₹ {storeAllocations[store.id]?.amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="customerName">Customer Name</Label>
-                            <Input id="customerName" defaultValue={accountProfile.personalDetails.businessName} readOnly />
-                        </div>
+                         {/* Part B: Application Ratio */}
+                         <div className="space-y-3">
+                             <h4 className="font-medium">Application Ratio Configuration</h4>
+                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 rounded-lg border p-4">
+                                 {Object.keys(applicationRatios).map(key => (
+                                     <div key={key} className="space-y-2">
+                                         <Label htmlFor={`app-ratio-${key}`} className="capitalize">{key.replace(/([A-Z])/g, ' $1')} Orders</Label>
+                                         <Input
+                                            id={`app-ratio-${key}`}
+                                            type="number"
+                                            min="0"
+                                            placeholder="Ratio"
+                                            value={applicationRatios[key]}
+                                            onChange={(e) => setApplicationRatios(prev => ({...prev, [key]: parseFloat(e.target.value) || 0}))}
+                                         />
+                                     </div>
+                                 ))}
+                             </div>
+                         </div>
                     </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="amount">Total Amount</Label>
-                        <Input id="amount" type="number" placeholder="Enter amount in INR" />
+                     <Separator />
+                    {/* Step 3: Payment Method */}
+                     <div className="space-y-4">
+                         <h3 className="font-semibold text-lg flex items-center gap-2"><span className="flex items-center justify-center h-6 w-6 rounded-full bg-primary text-primary-foreground text-sm">3</span>Select Payment Method</h3>
+                         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                             {['UPI', 'Credit Card', 'Debit Card', 'Net Banking'].map(method => (
+                                <Button key={method} variant={selectedPaymentMethod === method ? "default" : "outline"} className="h-20 flex-col gap-2" onClick={() => setSelectedPaymentMethod(method)}>
+                                    {method === 'UPI' && <Signal />}
+                                    {method === 'Credit Card' && <CreditCard />}
+                                    {method === 'Debit Card' && <Landmark />}
+                                    {method === 'Net Banking' && <BotMessageSquare />}
+                                    {method}
+                                </Button>
+                             ))}
+                         </div>
+                         {selectedPaymentMethod === 'UPI' && (
+                             <div className="p-4 bg-muted/50 rounded-lg">
+                                 <h4 className="font-medium mb-4 text-center">Pay with UPI App</h4>
+                                  <div className="flex justify-center gap-4">
+                                    <Button variant="outline" size="icon" className="h-16 w-16 rounded-full"><IndianRupee className="h-8 w-8" /></Button>
+                                    <Button variant="outline" size="icon" className="h-16 w-16 rounded-full"><CreditCard className="h-8 w-8" /></Button>
+                                    <Button variant="outline" size="icon" className="h-16 w-16 rounded-full"><Landmark className="h-8 w-8" /></Button>
+                                </div>
+                             </div>
+                         )}
                     </div>
-                     <div className="space-y-2">
-                        <Label htmlFor="remarks">Remarks</Label>
-                        <Textarea id="remarks" placeholder="Add any relevant notes here..."/>
-                    </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="paymentMode">Payment Mode</Label>
-                        <Select>
-                            <SelectTrigger id="paymentMode">
-                                <SelectValue placeholder="Select payment mode" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="neft">NEFT</SelectItem>
-                                <SelectItem value="rtgs">RTGS</SelectItem>
-                                <SelectItem value="upi">UPI</SelectItem>
-                                <SelectItem value="cheque">Cheque</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
+
                 </div>
                 <DialogFooter>
                     <Button variant="outline" onClick={() => setIsCreatePaymentOpen(false)}>Cancel</Button>
-                    <Button type="submit" onClick={() => setIsCreatePaymentOpen(false)}>Submit Payment</Button>
+                    <Button disabled={isProceedDisabled} onClick={() => setIsCreatePaymentOpen(false)}>
+                        Proceed to Pay (₹{totalAmount.toLocaleString('en-IN')})
+                    </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
