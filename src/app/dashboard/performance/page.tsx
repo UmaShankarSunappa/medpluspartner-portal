@@ -16,6 +16,7 @@ import {
   Pie,
   PieChart,
   Cell,
+  ComposedChart,
 } from "recharts";
 import { Button } from "@/components/ui/button";
 import {
@@ -298,7 +299,7 @@ export default function PerformancePage() {
           </CardHeader>
           <CardContent>
              <ChartContainer config={chartConfigBase} className="h-[300px] w-full">
-              <BarChart data={data.avgBillValue}>
+              <ComposedChart data={data.avgBillValue}>
                 <CartesianGrid vertical={false} />
                 <XAxis dataKey={view === 'mom' ? 'month' : 'day'} />
                 <YAxis yAxisId="left" orientation="left" stroke="var(--color-abv)" />
@@ -307,7 +308,7 @@ export default function PerformancePage() {
                 <Legend />
                 <Bar yAxisId="right" dataKey="bills" fill="var(--color-bills)" radius={4} />
                 <Line yAxisId="left" type="monotone" dataKey="abv" stroke="var(--color-abv)" strokeWidth={2} dot={false} />
-              </BarChart>
+              </ComposedChart>
             </ChartContainer>
           </CardContent>
         </Card>
@@ -336,5 +337,3 @@ export default function PerformancePage() {
     </div>
   );
 }
-
-  
