@@ -298,16 +298,16 @@ export default function PerformancePage() {
           </CardHeader>
           <CardContent>
              <ChartContainer config={chartConfigBase} className="h-[300px] w-full">
-              <LineChart data={data.avgBillValue}>
+              <BarChart data={data.avgBillValue}>
                 <CartesianGrid vertical={false} />
                 <XAxis dataKey={view === 'mom' ? 'month' : 'day'} />
-                <YAxis yAxisId="left" />
-                <YAxis yAxisId="right" orientation="right" />
+                <YAxis yAxisId="left" orientation="left" stroke="var(--color-abv)" />
+                <YAxis yAxisId="right" orientation="right" stroke="var(--color-bills)" />
                 <ChartTooltip content={<ChartTooltipContent />} />
                 <Legend />
-                <Line yAxisId="left" type="monotone" dataKey="abv" stroke="var(--color-abv)" />
-                <Line yAxisId="right" type="monotone" dataKey="bills" stroke="var(--color-bills)" />
-              </LineChart>
+                <Bar yAxisId="right" dataKey="bills" fill="var(--color-bills)" radius={4} />
+                <Line yAxisId="left" type="monotone" dataKey="abv" stroke="var(--color-abv)" strokeWidth={2} dot={false} />
+              </BarChart>
             </ChartContainer>
           </CardContent>
         </Card>
