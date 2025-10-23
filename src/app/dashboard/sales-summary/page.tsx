@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -30,7 +31,49 @@ export default function SalesSummaryPage() {
     setLastUpdated(new Date().toLocaleString('sv-SE'));
   }
 
-  const data = salesSummaryData.currentDay;
+  const currentDayData = salesSummaryData.currentDay;
+  const monthTillDateData = salesSummaryData.monthTillDate;
+
+  const SalesTable = ({ data }: { data: typeof currentDayData }) => (
+    <Table>
+        <TableHeader>
+            <TableRow>
+                <TableHead>Dates</TableHead>
+                <TableHead>Total Sales (Rs)</TableHead>
+                <TableHead>PL + SIP Sales (Rs)</TableHead>
+                <TableHead>PL + SIP Pharma Sales (Rs)</TableHead>
+                <TableHead>PL + SIP Others Sales (Rs)</TableHead>
+            </TableRow>
+        </TableHeader>
+        <TableBody>
+            {data.map((row) => (
+                <TableRow key={row.date}>
+                    <TableCell>{row.date}</TableCell>
+                    <TableCell>
+                        <div className={cn("p-2 rounded-md", row.totalSales.growth === 'de' ? 'bg-red-100' : row.totalSales.growth === 'gr' ? 'bg-green-100' : '')}>
+                            {row.totalSales.value.toFixed(2)}
+                        </div>
+                    </TableCell>
+                    <TableCell>
+                        <div className={cn("p-2 rounded-md", row.plSipSales.growth === 'de' ? 'bg-red-100' : row.plSipSales.growth === 'gr' ? 'bg-green-100' : '')}>
+                            {row.plSipSales.value.toFixed(2)}
+                        </div>
+                    </TableCell>
+                    <TableCell>
+                        <div className={cn("p-2 rounded-md", row.plSipPharmaSales.growth === 'de' ? 'bg-red-100' : row.plSipPharmaSales.growth === 'gr' ? 'bg-green-100' : '')}>
+                            {row.plSipPharmaSales.value.toFixed(2)}
+                        </div>
+                    </TableCell>
+                    <TableCell>
+                         <div className={cn("p-2 rounded-md", row.plSipOthersSales.growth === 'de' ? 'bg-red-100' : row.plSipOthersSales.growth === 'gr' ? 'bg-green-100' : '')}>
+                            {row.plSipOthersSales.value.toFixed(2)}
+                        </div>
+                    </TableCell>
+                </TableRow>
+            ))}
+        </TableBody>
+    </Table>
+  );
 
   return (
     <div className="space-y-6">
@@ -53,51 +96,14 @@ export default function SalesSummaryPage() {
         <TabsContent value="current_day">
             <Card>
                 <CardContent className="pt-6">
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Dates</TableHead>
-                                <TableHead>Total Sales (Rs)</TableHead>
-                                <TableHead>PL + SIP Sales (Rs)</TableHead>
-                                <TableHead>PL + SIP Pharma Sales (Rs)</TableHead>
-                                <TableHead>PL + SIP Others Sales (Rs)</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {data.map((row) => (
-                                <TableRow key={row.date}>
-                                    <TableCell>{row.date}</TableCell>
-                                    <TableCell>
-                                        <div className={cn("p-2 rounded-md", row.totalSales.growth === 'de' ? 'bg-red-200' : '')}>
-                                            {row.totalSales.value.toFixed(2)}
-                                        </div>
-                                    </TableCell>
-                                    <TableCell>
-                                        <div className={cn("p-2 rounded-md", row.plSipSales.growth === 'de' ? 'bg-red-200' : '')}>
-                                            {row.plSipSales.value.toFixed(2)}
-                                        </div>
-                                    </TableCell>
-                                    <TableCell>
-                                        <div className={cn("p-2 rounded-md", row.plSipPharmaSales.growth === 'de' ? 'bg-red-200' : '')}>
-                                            {row.plSipPharmaSales.value.toFixed(2)}
-                                        </div>
-                                    </TableCell>
-                                    <TableCell>
-                                         <div className={cn("p-2 rounded-md", row.plSipOthersSales.growth === 'gr' ? 'bg-green-200' : '')}>
-                                            {row.plSipOthersSales.value.toFixed(2)}
-                                        </div>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
+                    <SalesTable data={currentDayData} />
                      <div className="flex items-center gap-6 mt-4">
                         <div className="flex items-center gap-2">
-                            <div className="w-4 h-4 bg-green-500 rounded-sm"></div>
+                            <div className="w-4 h-4 bg-green-100 rounded-sm border border-green-200"></div>
                             <span className="text-sm">Growth</span>
                         </div>
                         <div className="flex items-center gap-2">
-                            <div className="w-4 h-4 bg-red-500 rounded-sm"></div>
+                            <div className="w-4 h-4 bg-red-100 rounded-sm border border-red-200"></div>
                             <span className="text-sm">Degrowth</span>
                         </div>
                     </div>
@@ -107,7 +113,17 @@ export default function SalesSummaryPage() {
          <TabsContent value="month_till_date">
             <Card>
                 <CardContent className="pt-6">
-                    <p className="text-muted-foreground">Month-till-date data would be displayed here.</p>
+                    <SalesTable data={monthTillDateData} />
+                     <div className="flex items-center gap-6 mt-4">
+                        <div className="flex items-center gap-2">
+                            <div className="w-4 h-4 bg-green-100 rounded-sm border border-green-200"></div>
+                            <span className="text-sm">Growth</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <div className="w-4 h-4 bg-red-100 rounded-sm border border-red-200"></div>
+                            <span className="text-sm">Degrowth</span>
+                        </div>
+                    </div>
                 </CardContent>
             </Card>
         </TabsContent>

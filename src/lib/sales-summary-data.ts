@@ -22,4 +22,27 @@ export const salesSummaryData = {
       plSipOthersSales: { value: 3954.9, growth: 'none' },
     },
   ],
+  monthTillDate: [
+    {
+        date: "Oct 2025 MTD",
+        totalSales: { value: 43210.88, growth: 'gr' },
+        plSipSales: { value: 18455.33, growth: 'gr' },
+        plSipPharmaSales: { value: 12999.50, growth: 'gr' },
+        plSipOthersSales: { value: 5455.83, growth: 'gr' },
+    },
+    {
+        date: "Sep 2025 MTD",
+        totalSales: { value: 41500.20, growth: 'none' },
+        plSipSales: { value: 17800.90, growth: 'none' },
+        plSipPharmaSales: { value: 11500.00, growth: 'none' },
+        plSipOthersSales: { value: 6300.90, growth: 'none' },
+    },
+    {
+        date: "Aug 2025 MTD",
+        totalSales: { value: 39800.00, growth: 'none' },
+        plSipSales: { value: 16900.00, growth: 'none' },
+        plSipPharmaSales: { value: 10800.00, growth: 'none' },
+        plSipOthersSales: { value: 6100.00, growth: 'none' },
+    },
+  ]
 };
