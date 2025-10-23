@@ -280,15 +280,15 @@ export default function PerformancePage() {
           </CardHeader>
           <CardContent>
             <ChartContainer config={chartConfigBase} className="h-[300px] w-full">
-              <LineChart data={data.ordersCount}>
+              <BarChart data={data.ordersCount}>
                 <CartesianGrid vertical={false} />
                 <XAxis dataKey={view === 'mom' ? 'month' : 'day'} />
                 <YAxis />
                 <ChartTooltip content={<ChartTooltipContent />} />
                 <Legend />
-                <Line type="monotone" dataKey="salesOrders" stroke="var(--color-salesOrders)" />
-                <Line type="monotone" dataKey="webOrders" stroke="var(--color-webOrders)" />
-              </LineChart>
+                <Bar dataKey="salesOrders" stackId="a" fill="var(--color-salesOrders)" />
+                <Bar dataKey="webOrders" stackId="a" fill="var(--color-webOrders)" radius={[4, 4, 0, 0]} />
+              </BarChart>
             </ChartContainer>
           </CardContent>
         </Card>
