@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { kpiData, cashDepositReportData } from "@/lib/data";
-import { CreditCard, Package, IndianRupee, TrendingUp } from "lucide-react";
+import { CreditCard, Package, IndianRupee, TrendingUp, TrendingDown } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -26,9 +26,21 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export default function DashboardPage() {
   const storeKpis = kpiData["store-01"];
+
+  const renderTrend = (trendValue: number) => {
+    const isPositive = trendValue > 0;
+    const TrendIcon = isPositive ? TrendingUp : TrendingDown;
+    return (
+      <p className={cn("text-xs text-muted-foreground flex items-center gap-1", isPositive ? "text-green-600" : "text-red-600")}>
+        <TrendIcon className="h-4 w-4" />
+        {Math.abs(trendValue)}% {isPositive ? "increase" : "decrease"} vs last month
+      </p>
+    );
+  };
 
   return (
     <div className="space-y-6">
@@ -65,9 +77,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">₹{storeKpis.averageDailySales.toLocaleString('en-IN')}</div>
-            <p className="text-xs text-muted-foreground">
-                {storeKpis.avgSalesTrend > 0 ? '↑' : '↓'} {Math.abs(storeKpis.avgSalesTrend)}% vs last month
-            </p>
+            {renderTrend(storeKpis.avgSalesTrend)}
           </CardContent>
         </Card>
         <Card>
@@ -77,9 +87,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">₹{storeKpis.mtdSales.toLocaleString('en-IN')}</div>
-            <p className="text-xs text-muted-foreground">
-                {storeKpis.mtdSalesTrend > 0 ? '+' : ''}{storeKpis.mtdSalesTrend}% from last month
-            </p>
+            {renderTrend(storeKpis.mtdSalesTrend)}
           </CardContent>
         </Card>
       </div>
