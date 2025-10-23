@@ -318,17 +318,17 @@ export default function PerformancePage() {
           </CardHeader>
           <CardContent>
             <ChartContainer config={chartConfigBase} className="h-[300px] w-full">
-                <LineChart data={data.billsBySlab}>
+                <BarChart data={data.billsBySlab}>
                     <CartesianGrid vertical={false} />
-                    <XAxis dataKey={view === 'mom' ? 'month' : 'day'} />
+                    <XAxis dataKey={view === 'mom' ? 'month' : 'day'} tickLine={false} axisLine={false} />
                     <YAxis />
                     <ChartTooltip content={<ChartTooltipContent />} />
                     <Legend />
-                    <Line type="monotone" dataKey="bills_lt_200" stroke="var(--color-bills_lt_200)" name="&lt; 200" />
-                    <Line type="monotone" dataKey="bills_200_500" stroke="var(--color-bills_200_500)" name="200-500" />
-                    <Line type="monotone" dataKey="bills_500_999" stroke="var(--color-bills_500_999)" name="500-999" />
-                    <Line type="monotone" dataKey="bills_gt_1000" stroke="var(--color-bills_gt_1000)" name="&gt; 1000" />
-                </LineChart>
+                    <Bar dataKey="bills_lt_200" stackId="a" fill="var(--color-bills_lt_200)" name="< 200" />
+                    <Bar dataKey="bills_200_500" stackId="a" fill="var(--color-bills_200_500)" name="200-500" />
+                    <Bar dataKey="bills_500_999" stackId="a" fill="var(--color-bills_500_999)" name="500-999" />
+                    <Bar dataKey="bills_gt_1000" stackId="a" fill="var(--color-bills_gt_1000)" name="> 1000" radius={[4, 4, 0, 0]} />
+                </BarChart>
             </ChartContainer>
           </CardContent>
         </Card>
