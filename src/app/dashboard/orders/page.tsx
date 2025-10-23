@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { ordersData, type Order } from "@/lib/data";
-import { Eye, RefreshCw, Search, Truck, CheckCircle, Package } from "lucide-react";
+import { Eye, RefreshCw, Search, Truck, CheckCircle, Package, Download } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
 import {
@@ -139,7 +139,7 @@ export default function OrdersPage() {
                     </TableCell>
                     <TableCell>{order.type}</TableCell>
                     <TableCell className="text-center">
-                        <div className="flex gap-2 justify-center">
+                        <div className="flex gap-1 justify-center">
                             <Tooltip>
                                 <TooltipTrigger asChild>
                                     <Button variant="ghost" size="icon" onClick={() => handleViewClick(order)}>
@@ -171,6 +171,17 @@ export default function OrdersPage() {
                                 </TooltipTrigger>
                                 <TooltipContent>
                                     <p>Track Order</p>
+                                </TooltipContent>
+                            </Tooltip>
+                             <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button variant="ghost" size="icon">
+                                        <Download className="h-4 w-4" />
+                                        <span className="sr-only">Download Invoice</span>
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>Download Invoice</p>
                                 </TooltipContent>
                             </Tooltip>
                         </div>
