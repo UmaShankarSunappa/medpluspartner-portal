@@ -273,7 +273,7 @@ export default function ProfitCalculatorPage() {
         </div>
 
         <div className="space-y-6">
-            <Card className="sticky top-20">
+            <Card>
                 <CardHeader>
                     <CardTitle>Calculation Summary</CardTitle>
                 </CardHeader>
