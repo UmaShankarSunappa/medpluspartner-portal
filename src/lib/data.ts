@@ -45,6 +45,7 @@ import {
   IndianRupee,
   BookMarked,
   Receipt,
+  Calculator,
 } from "lucide-react";
 
 export const user = {
@@ -662,6 +663,8 @@ export const navLinks = {
     { href: "/dashboard/returns", label: "Returns", icon: Undo2 },
     { href: "/dashboard/purchase-return", label: "Purchase Return", icon: Truck },
     { href: "/dashboard/provisional-indent", label: "Provisional Indent", icon: ClipboardList },
+    { href: "/dashboard/indent", label: "Manual Indent", icon: BookMarked },
+    { href: "/dashboard/profit-calculator", label: "Profit Calculator", icon: Calculator },
     { href: "/dashboard/performance", label: "Performance", icon: BarChart },
     { href: "/dashboard/reports", label: "Monthly Reports", icon: FileSliders },
     { href: "/dashboard/gst-reports", label: "GST Reports", icon: FileText },
@@ -669,7 +672,6 @@ export const navLinks = {
     { href: "/dashboard/complaints", label: "Complaints", icon: ShieldQuestion },
     { href: "/dashboard/stationery-orders", label: "Stationery Orders", icon: PenSquare },
     { href: "/dashboard/field-visit-reports", label: "Field Visit Reports", icon: ClipboardList },
-    { href: "/dashboard/indent", label: "Indent", icon: BookMarked },
   ],
   footer: {
     company: [
