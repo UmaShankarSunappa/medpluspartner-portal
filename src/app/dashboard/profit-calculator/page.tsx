@@ -37,7 +37,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Trash2, PlusCircle, Eye, Printer, PieChart as PieChartIcon } from "lucide-react";
+import { Trash2, PlusCircle, Eye, Printer, PieChart as PieChartIcon, Pencil } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 
 interface Expense {
@@ -74,6 +74,8 @@ export default function ProfitCalculatorPage() {
   const [expenses, setExpenses] = useState<Expense[]>(defaultExpenses);
   const [savedReports, setSavedReports] = useState<Report[]>([]);
   const [viewedReport, setViewedReport] = useState<Report | null>(null);
+  const [editingReportId, setEditingReportId] = useState<string | null>(null);
+
 
   useEffect(() => {
     try {
@@ -126,14 +128,23 @@ export default function ProfitCalculatorPage() {
     setYear(new Date().getFullYear());
     setTotalNetMargin(0);
     setExpenses(defaultExpenses);
+    setEditingReportId(null);
   };
     
   const getMonthIndex = (monthName: string) => {
     return new Date(Date.parse(monthName +" 1, 2012")).getMonth();
   };
 
+  const handleEditClick = (report: Report) => {
+    setEditingReportId(report.id);
+    setMonth(report.month);
+    setYear(report.year);
+    setTotalNetMargin(report.totalNetMargin);
+    setExpenses(report.expenses);
+  };
 
-  const handleSaveReport = () => {
+
+  const handleSaveOrUpdateReport = () => {
     if (totalNetMargin <= 0) {
       toast({
         variant: "destructive",
@@ -143,28 +154,46 @@ export default function ProfitCalculatorPage() {
       return;
     }
 
-    const newReport: Report = {
-      id: `${month}-${year}-${Date.now()}`,
-      month,
-      year,
-      totalNetMargin,
-      expenses,
-      totalExpenses,
-      netProfit,
-    };
+    let updatedReports;
+
+    if (editingReportId) {
+        // Update existing report
+        updatedReports = savedReports.map(report => 
+            report.id === editingReportId 
+            ? { ...report, month, year, totalNetMargin, expenses, totalExpenses, netProfit }
+            : report
+        );
+        toast({
+            title: "Report Updated!",
+            description: `Your profit report for ${month} ${year} has been updated.`,
+        });
+
+    } else {
+        // Save new report
+        const newReport: Report = {
+            id: `${month}-${year}-${Date.now()}`,
+            month,
+            year,
+            totalNetMargin,
+            expenses,
+            totalExpenses,
+            netProfit,
+        };
+        updatedReports = [newReport, ...savedReports];
+        toast({
+            title: "Report Saved!",
+            description: `Your profit report for ${month} ${year} has been saved.`,
+        });
+    }
     
-    const updatedReports = [newReport, ...savedReports].sort((a, b) => new Date(b.year, getMonthIndex(b.month)) - new Date(a.year, getMonthIndex(a.month)));
+    const sortedReports = updatedReports.sort((a, b) => new Date(b.year, getMonthIndex(b.month)) - new Date(a.year, getMonthIndex(a.month)));
 
     try {
       localStorage.setItem(
         "franchiseeProfitReports",
-        JSON.stringify(updatedReports)
+        JSON.stringify(sortedReports)
       );
-      setSavedReports(updatedReports);
-      toast({
-        title: "Report Saved!",
-        description: `Your profit report for ${month} ${year} has been saved.`,
-      });
+      setSavedReports(sortedReports);
       resetForm();
     } catch (error) {
        console.error("Failed to save report to localStorage:", error);
@@ -193,9 +222,9 @@ export default function ProfitCalculatorPage() {
         <div className="lg:col-span-2">
             <Card>
             <CardHeader>
-                <CardTitle>New Profit Report</CardTitle>
+                <CardTitle>{editingReportId ? `Editing Report for ${month} ${year}` : "New Profit Report"}</CardTitle>
                 <CardDescription>
-                Enter your monthly margin and expenses to calculate profit.
+                {editingReportId ? "Modify the details below and click 'Update Report'." : "Enter your monthly margin and expenses to calculate profit."}
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -294,9 +323,16 @@ export default function ProfitCalculatorPage() {
                     </span>
                 </CardFooter>
             </Card>
-            <Button size="lg" className="w-full" onClick={handleSaveReport}>
-              Calculate & Save Report
-            </Button>
+             <div className="flex flex-col gap-2">
+                <Button size="lg" className="w-full" onClick={handleSaveOrUpdateReport}>
+                {editingReportId ? 'Update Report' : 'Calculate & Save Report'}
+                </Button>
+                {editingReportId && (
+                    <Button variant="outline" onClick={resetForm}>
+                        Cancel Edit
+                    </Button>
+                )}
+            </div>
         </div>
       </div>
 
@@ -332,6 +368,9 @@ export default function ProfitCalculatorPage() {
                       ₹{report.netProfit.toLocaleString("en-IN")}
                     </TableCell>
                     <TableCell className="text-center">
+                      <Button variant="ghost" size="icon" onClick={() => handleEditClick(report)}>
+                        <Pencil className="h-4 w-4" />
+                      </Button>
                       <Button variant="ghost" size="icon" onClick={() => setViewedReport(report)}>
                         <Eye className="h-4 w-4" />
                       </Button>
