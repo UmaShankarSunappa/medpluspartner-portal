@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { ordersData, type Order, orderSummaryData } from "@/lib/data";
-import { Eye, RefreshCw, Search, Truck, CheckCircle, Package, Download, TrendingUp } from "lucide-react";
+import { Eye, RefreshCw, Truck, CheckCircle, Package, Download, TrendingUp, Filter } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
 import {
@@ -42,7 +42,9 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DateRange } from "react-day-picker";
+import { subDays } from "date-fns";
 
 const statusVariant: { [key: string]: "default" | "secondary" | "destructive" | "outline" | "success" | "warning" | "info" } = {
     "Order Replenished": "success",
@@ -54,7 +56,11 @@ const statusVariant: { [key: string]: "default" | "secondary" | "destructive" | 
     "Cancelled": "destructive",
 };
 
+const ALL_TYPES = ["Auto", "Indent", "Web Order", "Sale Order"];
+const ALL_STATUSES = ["Order Created", "Order Picked", "Order Dispatched", "Order Delivered", "Order Replenished", "Cancelled"];
+
 export default function OrdersPage() {
+    const [filteredOrders, setFilteredOrders] = useState<Order[]>(ordersData);
     const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
     const [isViewModalOpen, setIsViewModalOpen] = useState(false);
     const [isTrackModalOpen, setIsTrackModalOpen] = useState(false);
@@ -62,19 +68,38 @@ export default function OrdersPage() {
     
     // State for filters
     const [orderIdFilter, setOrderIdFilter] = useState("");
-    const [typeFilter, setTypeFilter] = useState("all");
-    const [statusFilter, setStatusFilter] = useState("all");
+    const [dateRange, setDateRange] = useState<DateRange | undefined>({ from: subDays(new Date(), 14), to: new Date() });
+    const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+    const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
 
-    const handleSearch = () => {
-        console.log("Searching with filters:");
-        if (orderIdFilter) {
-            console.log(`Rule 2: Order ID priority. Searching for Order ID: ${orderIdFilter}`);
-        } else {
-            console.log(`Rule 3: Combined filters. Type: ${typeFilter}, Status: ${statusFilter}`);
+    useEffect(() => {
+        let newFilteredOrders = ordersData;
+
+        // Date Range filter (always applied)
+        if (dateRange?.from && dateRange?.to) {
+            newFilteredOrders = newFilteredOrders.filter(order => {
+                const orderDate = new Date(order.date);
+                return orderDate >= dateRange.from! && orderDate <= dateRange.to!;
+            });
         }
-        // In a real app, you would filter `ordersData` here and update the state
-    };
 
+        // Order ID filter (overrides others if present)
+        if (orderIdFilter.trim()) {
+            newFilteredOrders = newFilteredOrders.filter(order => order.orderId.toLowerCase().includes(orderIdFilter.toLowerCase()));
+        } else {
+            // Type filter
+            if (selectedTypes.length > 0) {
+                newFilteredOrders = newFilteredOrders.filter(order => selectedTypes.includes(order.type));
+            }
+            // Status filter
+            if (selectedStatuses.length > 0) {
+                newFilteredOrders = newFilteredOrders.filter(order => selectedStatuses.includes(order.status));
+            }
+        }
+        
+        setFilteredOrders(newFilteredOrders);
+
+    }, [orderIdFilter, dateRange, selectedTypes, selectedStatuses]);
 
     const handleViewClick = (order: Order) => {
         setSelectedOrder(order);
@@ -89,6 +114,14 @@ export default function OrdersPage() {
     const handleReorderClick = (order: Order) => {
         setSelectedOrder(order);
         setIsReorderAlertOpen(true);
+    };
+
+    const handleTypeToggle = (type: string) => {
+        setSelectedTypes(prev => prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]);
+    };
+    
+    const handleStatusToggle = (status: string) => {
+        setSelectedStatuses(prev => prev.includes(status) ? prev.filter(s => s !== status) : [...prev, status]);
     };
 
 
@@ -142,48 +175,51 @@ export default function OrdersPage() {
             </CardHeader>
             <CardContent>
                 <div className="flex flex-col md:flex-row gap-2 items-end justify-between">
-                    <div className="grid gap-2">
+                     <div className="grid gap-2">
                         <Label>Date Range</Label>
                         <DateRangePicker max={15} />
                     </div>
-                    <div className="flex flex-col md:flex-row gap-2 items-end flex-grow md:flex-grow-0">
-                        <div className="grid gap-2 flex-grow">
+                     <div className="flex flex-col md:flex-row gap-2 items-end flex-grow md:flex-grow-0">
+                         <div className="grid gap-2 flex-grow">
                             <Label>Order ID</Label>
                             <Input placeholder="Search by Order ID..." value={orderIdFilter} onChange={(e) => setOrderIdFilter(e.target.value)} />
                         </div>
-                        <div className="grid gap-2">
-                            <Label>Type</Label>
-                            <Select value={typeFilter} onValueChange={setTypeFilter}>
-                                <SelectTrigger className="w-full md:w-[180px]">
-                                    <SelectValue placeholder="Filter by Type" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="all">All Types</SelectItem>
-                                    <SelectItem value="auto">Auto (Min/Max)</SelectItem>
-                                    <SelectItem value="sale">Sale Order</SelectItem>
-                                    <SelectItem value="web">Web Order</SelectItem>
-                                    <SelectItem value="offline-web">Offline Web Order</SelectItem>
-                                    <SelectItem value="indent">Indent</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div className="grid gap-2">
-                            <Label>Status</Label>
-                            <Select value={statusFilter} onValueChange={setStatusFilter}>
-                                <SelectTrigger className="w-full md:w-[180px]">
-                                    <SelectValue placeholder="Filter by Status" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="all">All Statuses</SelectItem>
-                                    <SelectItem value="delivered">Delivered</SelectItem>
-                                    <SelectItem value="in-transit">In Transit</SelectItem>
-                                    <SelectItem value="cancelled">Cancelled</SelectItem>
-                                    <SelectItem value="created">Order Created</SelectItem>
-                                    <SelectItem value="dispatched">Order Dispatched</SelectItem>
-                                    <SelectItem value="replenished">Order Replenished</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="outline">
+                                    <Filter className="mr-2 h-4 w-4" />
+                                    Filter
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="w-56">
+                                <DropdownMenuLabel>Filter by Type</DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                {ALL_TYPES.map(type => (
+                                    <DropdownMenuCheckboxItem
+                                        key={type}
+                                        checked={selectedTypes.includes(type)}
+                                        onSelect={(e) => e.preventDefault()}
+                                        onCheckedChange={() => handleTypeToggle(type)}
+                                    >
+                                        {type}
+                                    </DropdownMenuCheckboxItem>
+                                ))}
+
+                                <DropdownMenuSeparator />
+                                <DropdownMenuLabel>Filter by Status</DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                {ALL_STATUSES.map(status => (
+                                    <DropdownMenuCheckboxItem
+                                        key={status}
+                                        checked={selectedStatuses.includes(status)}
+                                        onSelect={(e) => e.preventDefault()}
+                                        onCheckedChange={() => handleStatusToggle(status)}
+                                    >
+                                        {status}
+                                    </DropdownMenuCheckboxItem>
+                                ))}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </div>
                 </div>
             </CardContent>
@@ -209,7 +245,7 @@ export default function OrdersPage() {
                 </TableRow>
                 </TableHeader>
                 <TableBody>
-                {ordersData.map((order) => (
+                {filteredOrders.map((order) => (
                     <TableRow key={order.orderId}>
                     <TableCell className="font-medium">{order.orderId}</TableCell>
                     <TableCell>WEB-{order.orderId.split('-')[1]}</TableCell>
@@ -356,9 +392,3 @@ export default function OrdersPage() {
     </TooltipProvider>
   );
 }
-
-    
-
-    
-
-    
