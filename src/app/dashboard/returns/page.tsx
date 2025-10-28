@@ -104,6 +104,7 @@ export default function ReturnsPage() {
                     <TableHead>Tax Invoice</TableHead>
                     <TableHead>Created By</TableHead>
                     <TableHead className="text-right">Total</TableHead>
+                    <TableHead>Return Type</TableHead>
                     <TableHead>Received Date</TableHead>
                     <TableHead>Return Note ID</TableHead>
                     <TableHead>Status</TableHead>
@@ -119,6 +120,7 @@ export default function ReturnsPage() {
                     <TableCell className="text-right">
                         ₹{ret.total.toLocaleString('en-IN')}
                     </TableCell>
+                    <TableCell>{ret.returnType}</TableCell>
                     <TableCell>{ret.receivedDate}</TableCell>
                     <TableCell>{ret.returnNoteId || 'N/A'}</TableCell>
                     <TableCell>

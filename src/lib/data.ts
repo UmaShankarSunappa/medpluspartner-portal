@@ -304,6 +304,7 @@ export type Return = {
   taxInvoice: string;
   createdBy: string;
   total: number;
+  returnType: "Expiry" | "Short Expiry" | "Slow Moving" | "Damage" | "Complaint" | "Cuttings" | "MRP Change" | "Emergency" | "Invoice Return Damaged" | "Invoice Return Expired";
   receivedDate: string;
   returnNoteId: string | null;
   status: "Approved" | "Pending" | "Rejected" | "In Transit" | "Partial Rejected";
@@ -324,6 +325,7 @@ export const returnsData: Return[] = [
     taxInvoice: "TINV-987",
     createdBy: "Anand Sharma",
     total: 2300.0,
+    returnType: "Expiry",
     receivedDate: "2023-10-15",
     returnNoteId: "CN-056",
     status: "Approved",
@@ -344,6 +346,7 @@ export const returnsData: Return[] = [
     taxInvoice: "TINV-991",
     createdBy: "Anand Sharma",
     total: 1250.0,
+    returnType: "Damage",
     receivedDate: "2023-10-18",
     returnNoteId: null,
     status: "In Transit",
@@ -360,6 +363,7 @@ export const returnsData: Return[] = [
     taxInvoice: "TINV-992",
     createdBy: "Anand Sharma",
     total: 800.0,
+    returnType: "Slow Moving",
     receivedDate: "2023-10-22",
     returnNoteId: null,
     status: "Rejected",
@@ -375,6 +379,7 @@ export const returnsData: Return[] = [
     taxInvoice: "TINV-993",
     createdBy: "Anand Sharma",
     total: 1500.0,
+    returnType: "MRP Change",
     receivedDate: "2023-10-28",
     returnNoteId: null,
     status: "Partial Rejected",
@@ -1012,3 +1017,4 @@ export const stationeryItemsData: StationeryItem[] = [
     
 
   
+
