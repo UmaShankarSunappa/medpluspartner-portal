@@ -59,6 +59,22 @@ export default function OrdersPage() {
     const [isViewModalOpen, setIsViewModalOpen] = useState(false);
     const [isTrackModalOpen, setIsTrackModalOpen] = useState(false);
     const [isReorderAlertOpen, setIsReorderAlertOpen] = useState(false);
+    
+    // State for filters
+    const [orderIdFilter, setOrderIdFilter] = useState("");
+    const [typeFilter, setTypeFilter] = useState("all");
+    const [statusFilter, setStatusFilter] = useState("all");
+
+    const handleSearch = () => {
+        console.log("Searching with filters:");
+        if (orderIdFilter) {
+            console.log(`Rule 2: Order ID priority. Searching for Order ID: ${orderIdFilter}`);
+        } else {
+            console.log(`Rule 3: Combined filters. Type: ${typeFilter}, Status: ${statusFilter}`);
+        }
+        // In a real app, you would filter `ordersData` here and update the state
+    };
+
 
     const handleViewClick = (order: Order) => {
         setSelectedOrder(order);
@@ -125,52 +141,54 @@ export default function OrdersPage() {
                 <CardDescription>Filter orders by date range, type, and status.</CardDescription>
             </CardHeader>
             <CardContent>
-                <div className="flex flex-col md:flex-row gap-2 items-end">
+                <div className="flex flex-col md:flex-row gap-2 items-end justify-between">
                     <div className="grid gap-2">
                         <Label>Date Range</Label>
                         <DateRangePicker max={15} />
                     </div>
-                    <div className="grid gap-2 flex-grow">
-                        <Label>Order ID</Label>
-                        <Input placeholder="Search by Order ID..." />
+                    <div className="flex flex-col md:flex-row gap-2 items-end flex-grow md:flex-grow-0">
+                        <div className="grid gap-2 flex-grow">
+                            <Label>Order ID</Label>
+                            <Input placeholder="Search by Order ID..." value={orderIdFilter} onChange={(e) => setOrderIdFilter(e.target.value)} />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label>Type</Label>
+                            <Select value={typeFilter} onValueChange={setTypeFilter}>
+                                <SelectTrigger className="w-full md:w-[180px]">
+                                    <SelectValue placeholder="Filter by Type" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="all">All Types</SelectItem>
+                                    <SelectItem value="auto">Auto (Min/Max)</SelectItem>
+                                    <SelectItem value="sale">Sale Order</SelectItem>
+                                    <SelectItem value="web">Web Order</SelectItem>
+                                    <SelectItem value="offline-web">Offline Web Order</SelectItem>
+                                    <SelectItem value="indent">Indent</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className="grid gap-2">
+                            <Label>Status</Label>
+                            <Select value={statusFilter} onValueChange={setStatusFilter}>
+                                <SelectTrigger className="w-full md:w-[180px]">
+                                    <SelectValue placeholder="Filter by Status" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="all">All Statuses</SelectItem>
+                                    <SelectItem value="delivered">Delivered</SelectItem>
+                                    <SelectItem value="in-transit">In Transit</SelectItem>
+                                    <SelectItem value="cancelled">Cancelled</SelectItem>
+                                    <SelectItem value="created">Order Created</SelectItem>
+                                    <SelectItem value="dispatched">Order Dispatched</SelectItem>
+                                    <SelectItem value="replenished">Order Replenished</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <Button onClick={handleSearch} size="icon" variant="outline">
+                            <Search className="h-4 w-4" />
+                            <span className="sr-only">Search</span>
+                        </Button>
                     </div>
-                    <div className="grid gap-2">
-                        <Label>Type</Label>
-                        <Select>
-                            <SelectTrigger className="w-full md:w-[180px]">
-                                <SelectValue placeholder="Filter by Type" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="all">All Types</SelectItem>
-                                <SelectItem value="auto">Auto (Min/Max)</SelectItem>
-                                <SelectItem value="sale">Sale Order</SelectItem>
-                                <SelectItem value="web">Web Order</SelectItem>
-                                <SelectItem value="offline-web">Offline Web Order</SelectItem>
-                                <SelectItem value="indent">Indent</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    <div className="grid gap-2">
-                        <Label>Status</Label>
-                        <Select>
-                            <SelectTrigger className="w-full md:w-[180px]">
-                                <SelectValue placeholder="Filter by Status" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="all">All Statuses</SelectItem>
-                                <SelectItem value="delivered">Delivered</SelectItem>
-                                <SelectItem value="in-transit">In Transit</SelectItem>
-                                <SelectItem value="cancelled">Cancelled</SelectItem>
-                                <SelectItem value="created">Order Created</SelectItem>
-                                <SelectItem value="dispatched">Order Dispatched</SelectItem>
-                                <SelectItem value="replenished">Order Replenished</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    <Button>
-                        <Search className="mr-2 h-4 w-4" />
-                        Search
-                    </Button>
                 </div>
             </CardContent>
         </Card>
@@ -342,7 +360,5 @@ export default function OrdersPage() {
     </TooltipProvider>
   );
 }
-
-    
 
     
