@@ -16,36 +16,49 @@ import {
 } from "@/components/ui/popover"
 
 interface DateRangePickerProps extends React.HTMLAttributes<HTMLDivElement> {
+  value?: DateRange;
+  onSelect?: (range?: DateRange) => void;
   max?: number;
   onMaxRangeError?: (max: number) => void;
 }
 
 export function DateRangePicker({
   className,
+  value,
+  onSelect,
   max,
   onMaxRangeError,
 }: DateRangePickerProps) {
-  const [date, setDate] = React.useState<DateRange | undefined>()
+  const [date, setDate] = React.useState<DateRange | undefined>(value)
+
+  React.useEffect(() => {
+    setDate(value);
+  }, [value]);
 
   const handleSelect = (selectedRange: DateRange | undefined) => {
+    if (onSelect) {
+        onSelect(selectedRange);
+    } else {
+        setDate(selectedRange);
+    }
+
     if (selectedRange?.from && selectedRange?.to && max) {
       const days = differenceInDays(selectedRange.to, selectedRange.from);
       if (days >= max) {
         onMaxRangeError?.(max);
-        // Do not update the date state if range is invalid
         return;
       }
     }
-    setDate(selectedRange);
   }
+  
+  const displayDate = onSelect ? value : date;
 
   const disabledDays = React.useMemo(() => {
-    if (max && date?.from && !date.to) {
-      // If a start date is selected, disable all dates after `max` days.
-      return { after: addDays(date.from, max - 1) };
+    if (max && displayDate?.from && !displayDate.to) {
+      return { after: addDays(displayDate.from, max - 1) };
     }
     return undefined;
-  }, [date, max]);
+  }, [displayDate, max]);
 
   return (
     <div className={cn("grid gap-2", className)}>
@@ -56,18 +69,18 @@ export function DateRangePicker({
             variant={"outline"}
             className={cn(
               "w-[300px] justify-start text-left font-normal",
-              !date && "text-muted-foreground"
+              !displayDate && "text-muted-foreground"
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
-            {date?.from ? (
-              date.to ? (
+            {displayDate?.from ? (
+              displayDate.to ? (
                 <>
-                  {format(date.from, "LLL dd, y")} -{" "}
-                  {format(date.to, "LLL dd, y")}
+                  {format(displayDate.from, "LLL dd, y")} -{" "}
+                  {format(displayDate.to, "LLL dd, y")}
                 </>
               ) : (
-                format(date.from, "LLL dd, y")
+                format(displayDate.from, "LLL dd, y")
               )
             ) : (
               <span>Pick a date range</span>
@@ -78,8 +91,8 @@ export function DateRangePicker({
           <Calendar
             initialFocus
             mode="range"
-            defaultMonth={date?.from}
-            selected={date}
+            defaultMonth={displayDate?.from}
+            selected={displayDate}
             onSelect={handleSelect}
             numberOfMonths={2}
             disabled={disabledDays}

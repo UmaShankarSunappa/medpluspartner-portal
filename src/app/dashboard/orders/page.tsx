@@ -68,14 +68,14 @@ export default function OrdersPage() {
     
     // State for filters
     const [orderIdFilter, setOrderIdFilter] = useState("");
-    const [dateRange, setDateRange] = useState<DateRange | undefined>({ from: subDays(new Date(), 14), to: new Date() });
+    const [dateRange, setDateRange] = useState<DateRange | undefined>();
     const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
     const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
 
     useEffect(() => {
         let newFilteredOrders = ordersData;
 
-        // Date Range filter (always applied)
+        // Date Range filter
         if (dateRange?.from && dateRange?.to) {
             newFilteredOrders = newFilteredOrders.filter(order => {
                 const orderDate = new Date(order.date);
@@ -177,7 +177,7 @@ export default function OrdersPage() {
                 <div className="flex flex-col md:flex-row gap-2 items-end justify-between">
                      <div className="grid gap-2">
                         <Label>Date Range</Label>
-                        <DateRangePicker max={15} />
+                        <DateRangePicker onSelect={setDateRange} value={dateRange} max={15} />
                     </div>
                      <div className="flex flex-col md:flex-row gap-2 items-end flex-grow md:flex-grow-0">
                          <div className="grid gap-2 flex-grow">
@@ -229,7 +229,7 @@ export default function OrdersPage() {
         <Card>
             <CardHeader>
             <CardTitle>Orders</CardTitle>
-            <CardDescription>Your order history and details (by default last 15 days orders will appear here)</CardDescription>
+            <CardDescription>Your order history and details</CardDescription>
             </CardHeader>
             <CardContent className="overflow-x-auto">
             <Table>
