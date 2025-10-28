@@ -50,7 +50,7 @@ export default function DashboardPage() {
       </div>
       
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
+        <Card className="rounded-2xl shadow-soft-diffused">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Active Orders</CardTitle>
             <Package className="h-4 w-4 text-muted-foreground" />
@@ -60,7 +60,7 @@ export default function DashboardPage() {
             <p className="text-xs text-muted-foreground">Orders currently being processed</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="rounded-2xl shadow-soft-diffused">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Available Credit</CardTitle>
             <CreditCard className="h-4 w-4 text-muted-foreground" />
@@ -70,7 +70,7 @@ export default function DashboardPage() {
             <p className="text-xs text-muted-foreground">Your current credit balance</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="rounded-2xl shadow-soft-diffused">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Average Daily Sales</CardTitle>
             <IndianRupee className="h-4 w-4 text-muted-foreground" />
@@ -80,7 +80,7 @@ export default function DashboardPage() {
             {renderTrend(storeKpis.avgSalesTrend)}
           </CardContent>
         </Card>
-        <Card>
+        <Card className="rounded-2xl shadow-soft-diffused">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">MTD Sales</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
