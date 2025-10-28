@@ -19,8 +19,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { ordersData, type Order } from "@/lib/data";
-import { Eye, RefreshCw, Search, Truck, CheckCircle, Package, Download } from "lucide-react";
+import { ordersData, type Order, orderSummaryData } from "@/lib/data";
+import { Eye, RefreshCw, Search, Truck, CheckCircle, Package, Download, TrendingUp } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
 import {
@@ -84,6 +84,39 @@ export default function OrdersPage() {
             <p className="text-muted-foreground">View and track all your orders</p>
             </div>
         </div>
+
+        <Card>
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-xl font-bold">
+                    <TrendingUp className="h-5 w-5" />
+                    Order Summary (Last 15 Days)
+                </CardTitle>
+            </CardHeader>
+            <CardContent>
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Order Type</TableHead>
+                            <TableHead>Total Orders</TableHead>
+                            <TableHead>Delivered</TableHead>
+                            <TableHead>In Transit</TableHead>
+                            <TableHead>Cancelled</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {orderSummaryData.map((summary, index) => (
+                            <TableRow key={summary.orderType} className={summary.orderType === 'All Orders' ? 'bg-muted/50' : ''}>
+                                <TableCell className={summary.orderType === 'All Orders' ? 'font-bold' : ''}>{summary.orderType}</TableCell>
+                                <TableCell className={summary.orderType === 'All Orders' ? 'font-bold' : ''}>{summary.totalOrders}</TableCell>
+                                <TableCell className={summary.orderType === 'All Orders' ? 'font-bold' : ''}>{summary.delivered}</TableCell>
+                                <TableCell className={summary.orderType === 'All Orders' ? 'font-bold' : ''}>{summary.inTransit}</TableCell>
+                                <TableCell className={summary.orderType === 'All Orders' ? 'font-bold' : ''}>{summary.cancelled}</TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </CardContent>
+        </Card>
 
         <Card>
             <CardHeader>
@@ -275,3 +308,5 @@ export default function OrdersPage() {
     </TooltipProvider>
   );
 }
+
+    
