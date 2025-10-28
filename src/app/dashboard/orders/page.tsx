@@ -42,6 +42,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const statusVariant: { [key: string]: "default" | "secondary" | "destructive" | "outline" | "success" | "warning" | "info" } = {
     "Order Replenished": "success",
@@ -120,24 +121,57 @@ export default function OrdersPage() {
 
         <Card>
             <CardHeader>
-            <CardTitle>Search Orders</CardTitle>
-            <CardDescription>Filter orders by date range (maximum 15 days)</CardDescription>
+                <CardTitle>Search Orders</CardTitle>
+                <CardDescription>Filter orders by date range, type, and status.</CardDescription>
             </CardHeader>
             <CardContent>
-            <div className="flex flex-col md:flex-row gap-4 items-end">
-                <div className="grid gap-2">
-                    <Label htmlFor="order-id">Order ID</Label>
-                    <Input id="order-id" placeholder="Search by Order ID..."/>
+                <div className="flex flex-col md:flex-row gap-2 items-end">
+                    <div className="grid gap-2">
+                        <Label>Date Range</Label>
+                        <DateRangePicker max={15} />
+                    </div>
+                    <div className="grid gap-2 flex-grow">
+                        <Label>Order ID</Label>
+                        <Input placeholder="Search by Order ID..." />
+                    </div>
+                    <div className="grid gap-2">
+                        <Label>Type</Label>
+                        <Select>
+                            <SelectTrigger className="w-full md:w-[180px]">
+                                <SelectValue placeholder="Filter by Type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">All Types</SelectItem>
+                                <SelectItem value="auto">Auto (Min/Max)</SelectItem>
+                                <SelectItem value="sale">Sale Order</SelectItem>
+                                <SelectItem value="web">Web Order</SelectItem>
+                                <SelectItem value="offline-web">Offline Web Order</SelectItem>
+                                <SelectItem value="indent">Indent</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div className="grid gap-2">
+                        <Label>Status</Label>
+                        <Select>
+                            <SelectTrigger className="w-full md:w-[180px]">
+                                <SelectValue placeholder="Filter by Status" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">All Statuses</SelectItem>
+                                <SelectItem value="delivered">Delivered</SelectItem>
+                                <SelectItem value="in-transit">In Transit</SelectItem>
+                                <SelectItem value="cancelled">Cancelled</SelectItem>
+                                <SelectItem value="created">Order Created</SelectItem>
+                                <SelectItem value="dispatched">Order Dispatched</SelectItem>
+                                <SelectItem value="replenished">Order Replenished</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <Button>
+                        <Search className="mr-2 h-4 w-4" />
+                        Search
+                    </Button>
                 </div>
-                <div className="grid gap-2">
-                <Label htmlFor="date-range">Date Range</Label>
-                <DateRangePicker max={15} />
-                </div>
-                <Button>
-                <Search className="mr-2 h-4 w-4" />
-                Search
-                </Button>
-            </div>
             </CardContent>
         </Card>
 
@@ -308,5 +342,7 @@ export default function OrdersPage() {
     </TooltipProvider>
   );
 }
+
+    
 
     
