@@ -123,7 +123,7 @@ export type Order = {
 export const ordersData: Order[] = [
   { 
     orderId: "ORD-2024-001", 
-    date: "1/15/2024", 
+    date: "2024-10-15", 
     total: 45000.0, 
     status: "Order Replenished", 
     type: "Auto",
@@ -133,16 +133,16 @@ export const ordersData: Order[] = [
       { sku: 'BAND-AID', name: 'Band-Aid Assorted', quantity: 200, price: 4000 },
     ],
     trackingHistory: [
-      { status: 'Order Replenished', date: '2024-01-15 14:30', location: 'Koramangala, Bangalore' },
-      { status: 'Order Delivered', date: '2024-01-15 11:00', location: 'Local Hub' },
-      { status: 'Order Dispatched', date: '2024-01-14 18:00', location: 'Hyderabad Warehouse' },
-      { status: 'Order Picked', date: '2024-01-14 14:00', location: 'Hyderabad Warehouse' },
-      { status: 'Order Created', date: '2024-01-13 20:00', location: 'Franchisee Portal' },
+      { status: 'Order Replenished', date: '2024-10-15 14:30', location: 'Koramangala, Bangalore' },
+      { status: 'Order Delivered', date: '2024-10-15 11:00', location: 'Local Hub' },
+      { status: 'Order Dispatched', date: '2024-10-14 18:00', location: 'Hyderabad Warehouse' },
+      { status: 'Order Picked', date: '2024-10-14 14:00', location: 'Hyderabad Warehouse' },
+      { status: 'Order Created', date: '2024-10-13 20:00', location: 'Franchisee Portal' },
     ]
   },
   { 
     orderId: "ORD-2024-002", 
-    date: "1/18/2024", 
+    date: "2024-10-12", 
     total: 32000.0, 
     status: "Order Dispatched", 
     type: "Indent",
@@ -151,14 +151,14 @@ export const ordersData: Order[] = [
       { sku: 'VOLINI', name: 'Volini Spray', quantity: 30, price: 4500 },
     ],
      trackingHistory: [
-      { status: 'Order Dispatched', date: '2024-01-17 17:30', location: 'On its way to Bangalore' },
-      { status: 'Order Picked', date: '2024-01-17 14:30', location: 'Hyderabad Warehouse' },
-      { status: 'Order Created', date: '2024-01-16 18:00', location: 'Franchisee Portal' },
+      { status: 'Order Dispatched', date: '2024-10-11 17:30', location: 'On its way to Bangalore' },
+      { status: 'Order Picked', date: '2024-10-11 14:30', location: 'Hyderabad Warehouse' },
+      { status: 'Order Created', date: '2024-10-10 18:00', location: 'Franchisee Portal' },
     ]
   },
   { 
     orderId: "ORD-2024-003", 
-    date: "1/20/2024", 
+    date: "2024-10-10", 
     total: 58000.0, 
     status: "Order Created", 
     type: "Auto",
@@ -167,12 +167,12 @@ export const ordersData: Order[] = [
       { sku: 'ELECTRAL', name: 'Electral Powder', quantity: 500, price: 10000 },
     ],
      trackingHistory: [
-      { status: 'Order Created', date: '2024-01-19 21:00', location: 'Franchisee Portal' },
+      { status: 'Order Created', date: '2024-10-09 21:00', location: 'Franchisee Portal' },
     ]
   },
   { 
     orderId: "ORD75641", 
-    date: "2023-10-21", 
+    date: "2024-10-08", 
     total: 8990.0, 
     status: "Order Created", 
     type: "Web Order",
@@ -181,12 +181,12 @@ export const ordersData: Order[] = [
       { sku: 'TEST-STRIP', name: 'Glucose Test Strips', quantity: 5, price: 2500 },
     ],
     trackingHistory: [
-      { status: 'Order Created', date: '2023-10-21 10:00', location: 'Franchisee Portal' },
+      { status: 'Order Created', date: '2024-10-08 10:00', location: 'Franchisee Portal' },
     ]
   },
   { 
     orderId: "ORD75642", 
-    date: "2023-10-20", 
+    date: "2024-10-05", 
     total: 21350.0, 
     status: "Order Replenished", 
     type: "Sale Order",
@@ -195,23 +195,23 @@ export const ordersData: Order[] = [
       { sku: 'ATORVA10', name: 'Atorvastatin 10mg', quantity: 150, price: 2250 },
     ],
     trackingHistory: [
-      { status: 'Order Replenished', date: '2023-10-20 15:00', location: 'Indiranagar, Bangalore' },
-      { status: 'Order Delivered', date: '2023-10-20 12:00', location: 'Indiranagar, Bangalore' },
-      { status: 'Order Dispatched', date: '2023-10-19 19:00', location: 'Hyderabad Warehouse' },
-      { status: 'Order Picked', date: '2023-10-19 16:00', location: 'Hyderabad Warehouse' },
-      { status: 'Order Created', date: '2023-10-18 22:00', location: 'System' },
+      { status: 'Order Replenished', date: '2024-10-05 15:00', location: 'Indiranagar, Bangalore' },
+      { status: 'Order Delivered', date: '2024-10-05 12:00', location: 'Indiranagar, Bangalore' },
+      { status: 'Order Dispatched', date: '2024-10-04 19:00', location: 'Hyderabad Warehouse' },
+      { status: 'Order Picked', date: '2024-10-04 16:00', location: 'Hyderabad Warehouse' },
+      { status: 'Order Created', date: '2024-10-03 22:00', location: 'System' },
     ]
   },
   { 
     orderId: "ORD75643", 
-    date: "2023-10-18", 
+    date: "2024-10-02", 
     total: 5400.0, 
     status: "Cancelled", 
     type: "Indent",
     products: [],
     trackingHistory: [
-       { status: 'Cancelled', date: '203-10-18 13:00', location: 'Franchisee Portal' },
-       { status: 'Order Created', date: '203-10-18 12:00', location: 'Franchisee Portal' },
+       { status: 'Cancelled', date: '2024-10-02 13:00', location: 'Franchisee Portal' },
+       { status: 'Order Created', date: '2024-10-01 12:00', location: 'Franchisee Portal' },
     ]
   },
 ];
@@ -1028,5 +1028,7 @@ export const orderSummaryData = [
   
 
 
+
+    
 
     
