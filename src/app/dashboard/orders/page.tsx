@@ -184,10 +184,6 @@ export default function OrdersPage() {
                                 </SelectContent>
                             </Select>
                         </div>
-                        <Button onClick={handleSearch} size="icon" variant="outline">
-                            <Search className="h-4 w-4" />
-                            <span className="sr-only">Search</span>
-                        </Button>
                     </div>
                 </div>
             </CardContent>
@@ -360,5 +356,7 @@ export default function OrdersPage() {
     </TooltipProvider>
   );
 }
+
+    
 
     
