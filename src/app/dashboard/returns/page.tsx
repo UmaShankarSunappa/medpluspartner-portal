@@ -60,7 +60,7 @@ export default function ReturnsPage() {
     <TooltipProvider>
         <div className="space-y-6">
         <div>
-            <h1 className="font-headline text-3xl font-bold">Returns Management</h1>
+            <h1 className="font-headline text-3xl font-bold">Purchase Returns</h1>
             <p className="text-muted-foreground">
             Track and manage your product return requests.
             </p>
