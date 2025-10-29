@@ -394,92 +394,46 @@ export const returnsData: Return[] = [
   },
 ];
 
-export type PurchaseReturn = {
-  returnId: string;
-  fromStoreId: string;
-  toStoreId: string;
-  totalCost: number;
-  createdBy: string;
-  dateCreated: string;
-  status: "In Transit" | "Received" | "Pending";
-  products: {
-    sku: string;
-    name: string;
-    quantity: number;
-    cost: number;
-  }[];
-  trackingHistory: {
-    status: string;
-    date: string;
-    location: string;
-  }[];
-};
-
-export const purchaseReturnsData: PurchaseReturn[] = [
-  {
-    returnId: "935171",
-    fromStoreId: "INTGHYD50057",
-    toStoreId: "INAPHYD00384",
-    totalCost: 24.23,
-    createdBy: "BNSTG00009",
-    dateCreated: "2025-10-01 15:23:27.0",
-    status: "In Transit",
-    products: [
-      { sku: "PROD-A", name: "Product A", quantity: 1, cost: 24.23 }
-    ],
-    trackingHistory: [
-      { status: "In Transit", date: "2025-10-01 18:00", location: "Hyderabad Hub" },
-      { status: "Pending", date: "2025-10-01 15:23", location: "INTGHYD50057" },
-    ]
-  },
-  {
-    returnId: "935172",
-    fromStoreId: "INTGHYD50057",
-    toStoreId: "INAPHYD00384",
-    totalCost: 150.75,
-    createdBy: "BNSTG00009",
-    dateCreated: "2025-09-28 11:05:11.0",
-    status: "Received",
-    products: [
-      { sku: "PROD-B", name: "Product B", quantity: 5, cost: 100.50 },
-      { sku: "PROD-C", name: "Product C", quantity: 2, cost: 50.25 },
-    ],
-    trackingHistory: [
-      { status: "Received", date: "2025-09-29 14:00", location: "INAPHYD00384" },
-      { status: "In Transit", date: "2025-09-28 13:00", location: "Hyderabad Hub" },
-      { status: "Pending", date: "2025-09-28 11:05", location: "INTGHYD50057" },
-    ]
-  }
-];
-
 export type MonthlyReport = {
   id: string;
   name: string;
   period: string;
   month: string;
-  financialYear: string; // e.g., "FY 2024-25"
+  financialYear: string;
   fileType: "Excel" | "PDF";
-  actionRequired: boolean;
+  status: "Updated" | "Not Updated";
 };
 
 export const monthlyReports: MonthlyReport[] = [
-    // FY 2025-26
-    { id: "REP-001", name: "Net Sale vs. Margin", period: "Sep 2025", month: "September", financialYear: "FY 2025-26", fileType: "Excel", actionRequired: false },
-    { id: "REP-002", name: "Rental Invoices", period: "Sep 2025", month: "September", financialYear: "FY 2025-26", fileType: "PDF", actionRequired: false },
-    { id: "REP-003", name: "Expiry Products List", period: "Aug 2025", month: "August", financialYear: "FY 2025-26", fileType: "Excel", actionRequired: true },
-    { id: "REP-004", name: "Slow-Moving Products", period: "Aug 2025", month: "August", financialYear: "FY 2025-26", fileType: "Excel", actionRequired: true },
-    { id: "REP-005", name: "Credit Note", period: "Jul 2025", month: "July", financialYear: "FY 2025-26", fileType: "Excel", actionRequired: false },
-    { id: "REP-006", name: "Royalty Fee Invoice", period: "Jul 2025", month: "July", financialYear: "FY 2025-26", fileType: "PDF", actionRequired: false },
-    { id: "REP-007", name: "GST Reports", period: "Jun 2025", month: "June", financialYear: "FY 2025-26", fileType: "Excel", actionRequired: false },
-    { id: "REP-008", name: "Net Sale vs. Margin", period: "May 2025", month: "May", financialYear: "FY 2025-26", fileType: "Excel", actionRequired: false },
-    // FY 2024-25
-    { id: "REP-009", name: "GST Reports", period: "Mar 2025", month: "March", financialYear: "FY 2024-25", fileType: "Excel", actionRequired: false },
-    { id: "REP-010", name: "Rental Invoices", period: "Mar 2025", month: "March", financialYear: "FY 2024-25", fileType: "PDF", actionRequired: false },
-    { id: "REP-011", name: "Net Sale vs. Margin", period: "Feb 2025", month: "February", financialYear: "FY 2024-25", fileType: "Excel", actionRequired: false },
-    { id: "REP-012", name: "Credit Note", period: "Jan 2025", month: "January", financialYear: "FY 2024-25", fileType: "Excel", actionRequired: false },
-    // FY 2023-24
-    { id: "REP-013", name: "Royalty Fee Invoice", period: "Dec 2023", month: "December", financialYear: "FY 2023-24", fileType: "PDF", actionRequired: false },
-    { id: "REP-014", name: "Slow-Moving Products", period: "Nov 2023", month: "November", financialYear: "FY 2023-24", fileType: "Excel", actionRequired: true },
+    // --- FY 2025-26 ---
+    // October
+    { id: "REP-OCT-1", name: "Net Sale vs. Margin", period: "Oct 2025", month: "October", financialYear: "FY 2025-26", fileType: "Excel", status: "Updated" },
+    { id: "REP-OCT-2", name: "Royalty Fee Invoice", period: "Oct 2025", month: "October", financialYear: "FY 2025-26", fileType: "PDF", status: "Not Updated" },
+    // September
+    { id: "REP-SEP-1", name: "Net Sale vs. Margin", period: "Sep 2025", month: "September", financialYear: "FY 2025-26", fileType: "Excel", status: "Updated" },
+    { id: "REP-SEP-2", name: "Rental Invoices", period: "Sep 2025", month: "September", financialYear: "FY 2025-26", fileType: "PDF", status: "Updated" },
+    { id: "REP-SEP-3", name: "GST Reports", period: "Sep 2025", month: "September", financialYear: "FY 2025-26", fileType: "Excel", status: "Not Updated" },
+    // August
+    { id: "REP-AUG-1", name: "Expiry Products List", period: "Aug 2025", month: "August", financialYear: "FY 2025-26", fileType: "Excel", status: "Updated" },
+    { id: "REP-AUG-2", name: "Slow-Moving Products", period: "Aug 2025", month: "August", financialYear: "FY 2025-26", fileType: "Excel", status: "Updated" },
+    // July
+    { id: "REP-JUL-1", name: "Credit Note", period: "Jul 2025", month: "July", financialYear: "FY 2025-26", fileType: "Excel", status: "Updated" },
+    { id: "REP-JUL-2", name: "Royalty Fee Invoice", period: "Jul 2025", month: "July", financialYear: "FY 2025-26", fileType: "PDF", status: "Updated" },
+    // June
+    { id: "REP-JUN-1", name: "GST Reports", period: "Jun 2025", month: "June", financialYear: "FY 2025-26", fileType: "Excel", status: "Updated" },
+    { id: "REP-JUN-2", name: "Net Sale vs. Margin", period: "Jun 2025", month: "June", financialYear: "FY 2025-26", fileType: "Excel", status: "Not Updated" },
+    // May
+    { id: "REP-MAY-1", name: "Net Sale vs. Margin", period: "May 2025", month: "May", financialYear: "FY 2025-26", fileType: "Excel", status: "Updated" },
+    
+    // --- FY 2024-25 ---
+    { id: "REP-MAR-1", name: "GST Reports", period: "Mar 2025", month: "March", financialYear: "FY 2024-25", fileType: "Excel", status: "Updated" },
+    { id: "REP-MAR-2", name: "Rental Invoices", period: "Mar 2025", month: "March", financialYear: "FY 2024-25", fileType: "PDF", status: "Updated" },
+    { id: "REP-FEB-1", name: "Net Sale vs. Margin", period: "Feb 2025", month: "February", financialYear: "FY 2024-25", fileType: "Excel", status: "Updated" },
+    { id: "REP-JAN-1", name: "Credit Note", period: "Jan 2025", month: "January", financialYear: "FY 2024-25", fileType: "Excel", status: "Updated" },
+
+    // --- FY 2023-24 ---
+    { id: "REP-DEC-1", name: "Royalty Fee Invoice", period: "Dec 2023", month: "December", financialYear: "FY 2023-24", fileType: "PDF", status: "Updated" },
+    { id: "REP-NOV-1", name: "Slow-Moving Products", period: "Nov 2023", month: "November", financialYear: "FY 2023-24", fileType: "Excel", status: "Updated" },
 ];
 
 

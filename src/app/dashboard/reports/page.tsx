@@ -37,6 +37,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChevronsUpDown } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 // --- Helper Functions ---
 const financialYearMonths = [
@@ -236,10 +237,12 @@ export default function ReportsPage() {
                         {report.fileType}
                     </TableCell>
                     <TableCell>
-                        <span>-</span>
+                        <Badge variant={report.status === 'Updated' ? 'success' : 'secondary'}>
+                            {report.status}
+                        </Badge>
                     </TableCell>
                     <TableCell className="text-right">
-                        <Button variant="ghost" size="icon">
+                        <Button variant="ghost" size="icon" disabled={report.status === 'Not Updated'}>
                             <Download className="h-4 w-4" />
                             <span className="sr-only">Download</span>
                         </Button>
