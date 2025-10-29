@@ -409,31 +409,23 @@ export const monthlyReports: MonthlyReport[] = [
     // October
     { id: "REP-OCT-1", name: "Net Sale vs. Margin", period: "Oct 2025", month: "October", financialYear: "FY 2025-26", fileType: "Excel", status: "Updated" },
     { id: "REP-OCT-2", name: "Royalty Fee Invoice", period: "Oct 2025", month: "October", financialYear: "FY 2025-26", fileType: "PDF", status: "Not Updated" },
+    { id: "REP-OCT-3", name: "Rental Invoices", period: "Oct 2025", month: "October", financialYear: "FY 2025-26", fileType: "PDF", status: "Updated" },
+    { id: "REP-OCT-4", name: "GST Reports", period: "Oct 2025", month: "October", financialYear: "FY 2025-26", fileType: "Excel", status: "Not Updated" },
+    { id: "REP-OCT-5", name: "Expiry Products List", period: "Oct 2025", month: "October", financialYear: "FY 2025-26", fileType: "Excel", status: "Updated" },
+    { id: "REP-OCT-6", name: "Slow-Moving Products", period: "Oct 2025", month: "October", financialYear: "FY 2025-26", fileType: "Excel", status: "Not Updated" },
+    { id: "REP-OCT-7", name: "Credit Note", period: "Oct 2025", month: "October", financialYear: "FY 2025-26", fileType: "Excel", status: "Updated" },
+    
     // September
     { id: "REP-SEP-1", name: "Net Sale vs. Margin", period: "Sep 2025", month: "September", financialYear: "FY 2025-26", fileType: "Excel", status: "Updated" },
-    { id: "REP-SEP-2", name: "Rental Invoices", period: "Sep 2025", month: "September", financialYear: "FY 2025-26", fileType: "PDF", status: "Updated" },
-    { id: "REP-SEP-3", name: "GST Reports", period: "Sep 2025", month: "September", financialYear: "FY 2025-26", fileType: "Excel", status: "Not Updated" },
-    // August
-    { id: "REP-AUG-1", name: "Expiry Products List", period: "Aug 2025", month: "August", financialYear: "FY 2025-26", fileType: "Excel", status: "Updated" },
-    { id: "REP-AUG-2", name: "Slow-Moving Products", period: "Aug 2025", month: "August", financialYear: "FY 2025-26", fileType: "Excel", status: "Updated" },
-    // July
-    { id: "REP-JUL-1", name: "Credit Note", period: "Jul 2025", month: "July", financialYear: "FY 2025-26", fileType: "Excel", status: "Updated" },
-    { id: "REP-JUL-2", name: "Royalty Fee Invoice", period: "Jul 2025", month: "July", financialYear: "FY 2025-26", fileType: "PDF", status: "Updated" },
-    // June
-    { id: "REP-JUN-1", name: "GST Reports", period: "Jun 2025", month: "June", financialYear: "FY 2025-26", fileType: "Excel", status: "Updated" },
-    { id: "REP-JUN-2", name: "Net Sale vs. Margin", period: "Jun 2025", month: "June", financialYear: "FY 2025-26", fileType: "Excel", status: "Not Updated" },
-    // May
-    { id: "REP-MAY-1", name: "Net Sale vs. Margin", period: "May 2025", month: "May", financialYear: "FY 2025-26", fileType: "Excel", status: "Updated" },
+    { id: "REP-SEP-2", name: "Royalty Fee Invoice", period: "Sep 2025", month: "September", financialYear: "FY 2025-26", fileType: "PDF", status: "Updated" },
+    { id: "REP-SEP-3", name: "Rental Invoices", period: "Sep 2025", month: "September", financialYear: "FY 2025-26", fileType: "PDF", status: "Not Updated" },
+    { id: "REP-SEP-4", name: "GST Reports", period: "Sep 2025", month: "September", financialYear: "FY 2025-26", fileType: "Excel", status: "Updated" },
+    { id: "REP-SEP-5", name: "Expiry Products List", period: "Sep 2025", month: "September", financialYear: "FY 2025-26", fileType: "Excel", status: "Not Updated" },
+    { id: "REP-SEP-6", name: "Slow-Moving Products", period: "Sep 2025", month: "September", financialYear: "FY 2025-26", fileType: "Excel", status: "Updated" },
+    { id: "REP-SEP-7", name: "Credit Note", period: "Sep 2025", month: "September", financialYear: "FY 2025-26", fileType: "Excel", status: "Updated" },
     
     // --- FY 2024-25 ---
     { id: "REP-MAR-1", name: "GST Reports", period: "Mar 2025", month: "March", financialYear: "FY 2024-25", fileType: "Excel", status: "Updated" },
-    { id: "REP-MAR-2", name: "Rental Invoices", period: "Mar 2025", month: "March", financialYear: "FY 2024-25", fileType: "PDF", status: "Updated" },
-    { id: "REP-FEB-1", name: "Net Sale vs. Margin", period: "Feb 2025", month: "February", financialYear: "FY 2024-25", fileType: "Excel", status: "Updated" },
-    { id: "REP-JAN-1", name: "Credit Note", period: "Jan 2025", month: "January", financialYear: "FY 2024-25", fileType: "Excel", status: "Updated" },
-
-    // --- FY 2023-24 ---
-    { id: "REP-DEC-1", name: "Royalty Fee Invoice", period: "Dec 2023", month: "December", financialYear: "FY 2023-24", fileType: "PDF", status: "Updated" },
-    { id: "REP-NOV-1", name: "Slow-Moving Products", period: "Nov 2023", month: "November", financialYear: "FY 2023-24", fileType: "Excel", status: "Updated" },
 ];
 
 
@@ -1004,4 +996,5 @@ export const orderSummaryData = [
     
 
     
+
 
