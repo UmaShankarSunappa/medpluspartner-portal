@@ -160,10 +160,10 @@ export default function RoiAnalysisPage() {
                 </div>
             </div>
 
-            {/* Fixed Expenses */}
+            {/* Configured Expenses */}
             <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                    <h3 className="font-semibold text-lg border-b pb-2">Fixed Expenses</h3>
+                    <h3 className="font-semibold text-lg border-b pb-2">Configured Expenses</h3>
                     <Button variant="outline" size="sm">Configure Fixed Expenses</Button>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-4 p-4 border rounded-lg">
