@@ -633,7 +633,7 @@ export const navLinks = {
     { href: "/dashboard/returns", label: "Purchase Returns", icon: Undo2 },
     { href: "/dashboard/provisional-indent", label: "Provisional Indent", icon: ClipboardList },
     { href: "/dashboard/indent", label: "Manual Indent", icon: BookMarked },
-    { href: "/dashboard/profit-calculator", label: "Profit Calculator", icon: Calculator },
+    { href: "/dashboard/roi-analysis", label: "ROI Analysis", icon: Activity },
     { href: "/dashboard/performance", label: "Performance", icon: BarChart },
     { href: "/dashboard/reports", label: "Monthly Reports", icon: FileSliders },
     { href: "/dashboard/gst-reports", label: "GST Reports", icon: FileText },
@@ -996,5 +996,6 @@ export const orderSummaryData = [
     
 
     
+
 
 
