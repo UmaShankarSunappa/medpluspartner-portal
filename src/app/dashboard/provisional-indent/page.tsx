@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { provisionalIndentsData, type ProvisionalIndent } from "@/lib/data";
-import { Eye, CheckCircle, Trash2, CreditCard, Package } from "lucide-react";
+import { Eye, CheckCircle, Trash2, CreditCard, Package, IndianRupee } from "lucide-react";
 import {
     Dialog,
     DialogContent,
@@ -92,7 +92,7 @@ export default function ProvisionalIndentPage() {
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">₹100000</div>
+            <div className="text-2xl font-bold">10,00,000</div>
             <p className="text-xs text-muted-foreground">Your monthly inventory plan target</p>
           </CardContent>
         </Card>
@@ -102,7 +102,7 @@ export default function ProvisionalIndentPage() {
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">₹9,33,000</div>
+            <div className="text-2xl font-bold">9,33,000</div>
             <p className="text-xs text-muted-foreground">Current value of all on-hand stock</p>
           </CardContent>
         </Card>
@@ -112,7 +112,7 @@ export default function ProvisionalIndentPage() {
             <CreditCard className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">₹{totalIndentValue.toLocaleString('en-IN')}</div>
+            <div className="text-2xl font-bold">{totalIndentValue.toLocaleString('en-IN')}</div>
             <p className="text-xs text-muted-foreground">Combined value of all pending indents</p>
           </CardContent>
         </Card>
@@ -122,7 +122,7 @@ export default function ProvisionalIndentPage() {
             <CreditCard className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">₹{availableCredit.toLocaleString('en-IN')}</div>
+            <div className="text-2xl font-bold text-green-600">{availableCredit.toLocaleString('en-IN')}</div>
             <p className="text-xs text-muted-foreground">Your current available credit</p>
           </CardContent>
         </Card>
