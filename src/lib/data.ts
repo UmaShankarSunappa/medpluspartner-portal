@@ -452,15 +452,34 @@ export const purchaseReturnsData: PurchaseReturn[] = [
   }
 ];
 
+export type MonthlyReport = {
+  id: string;
+  name: string;
+  period: string;
+  month: string;
+  financialYear: string; // e.g., "FY 2024-25"
+  fileType: "Excel" | "PDF";
+  actionRequired: boolean;
+};
 
-export const monthlyReports = [
-    { id: "REP-001", name: "Net Sale vs. Margin", period: "Sep 2025", fileType: "Excel", actionRequired: false },
-    { id: "REP-002", name: "Rental Invoices", period: "Sep 2025", fileType: "PDF", actionRequired: false },
-    { id: "REP-003", name: "Expiry Products List", period: "Sep 2025", fileType: "Excel", actionRequired: true },
-    { id: "REP-004", name: "Slow-Moving Products", period: "Sep 2025", fileType: "Excel", actionRequired: true },
-    { id: "REP-005", name: "Credit Note", period: "Sep 2025", fileType: "Excel", actionRequired: false },
-    { id: "REP-006", name: "Royalty Fee Invoice", period: "Sep 2025", fileType: "PDF", actionRequired: false },
-    { id: "REP-007", name: "GST Reports", period: "Sep 2025", fileType: "Excel", actionRequired: false },
+export const monthlyReports: MonthlyReport[] = [
+    // FY 2025-26
+    { id: "REP-001", name: "Net Sale vs. Margin", period: "Sep 2025", month: "September", financialYear: "FY 2025-26", fileType: "Excel", actionRequired: false },
+    { id: "REP-002", name: "Rental Invoices", period: "Sep 2025", month: "September", financialYear: "FY 2025-26", fileType: "PDF", actionRequired: false },
+    { id: "REP-003", name: "Expiry Products List", period: "Aug 2025", month: "August", financialYear: "FY 2025-26", fileType: "Excel", actionRequired: true },
+    { id: "REP-004", name: "Slow-Moving Products", period: "Aug 2025", month: "August", financialYear: "FY 2025-26", fileType: "Excel", actionRequired: true },
+    { id: "REP-005", name: "Credit Note", period: "Jul 2025", month: "July", financialYear: "FY 2025-26", fileType: "Excel", actionRequired: false },
+    { id: "REP-006", name: "Royalty Fee Invoice", period: "Jul 2025", month: "July", financialYear: "FY 2025-26", fileType: "PDF", actionRequired: false },
+    { id: "REP-007", name: "GST Reports", period: "Jun 2025", month: "June", financialYear: "FY 2025-26", fileType: "Excel", actionRequired: false },
+    { id: "REP-008", name: "Net Sale vs. Margin", period: "May 2025", month: "May", financialYear: "FY 2025-26", fileType: "Excel", actionRequired: false },
+    // FY 2024-25
+    { id: "REP-009", name: "GST Reports", period: "Mar 2025", month: "March", financialYear: "FY 2024-25", fileType: "Excel", actionRequired: false },
+    { id: "REP-010", name: "Rental Invoices", period: "Mar 2025", month: "March", financialYear: "FY 2024-25", fileType: "PDF", actionRequired: false },
+    { id: "REP-011", name: "Net Sale vs. Margin", period: "Feb 2025", month: "February", financialYear: "FY 2024-25", fileType: "Excel", actionRequired: false },
+    { id: "REP-012", name: "Credit Note", period: "Jan 2025", month: "January", financialYear: "FY 2024-25", fileType: "Excel", actionRequired: false },
+    // FY 2023-24
+    { id: "REP-013", name: "Royalty Fee Invoice", period: "Dec 2023", month: "December", financialYear: "FY 2023-24", fileType: "PDF", actionRequired: false },
+    { id: "REP-014", name: "Slow-Moving Products", period: "Nov 2023", month: "November", financialYear: "FY 2023-24", fileType: "Excel", actionRequired: true },
 ];
 
 
@@ -1031,3 +1050,4 @@ export const orderSummaryData = [
     
 
     
+
