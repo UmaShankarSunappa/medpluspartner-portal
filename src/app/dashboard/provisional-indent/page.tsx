@@ -86,7 +86,7 @@ export default function ProvisionalIndentPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
+        <Card className="rounded-2xl shadow-soft-diffused">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Max. Inventory Plan Value</CardTitle>
             <Package className="h-4 w-4 text-muted-foreground" />
@@ -96,7 +96,7 @@ export default function ProvisionalIndentPage() {
             <p className="text-xs text-muted-foreground">Your monthly inventory plan target</p>
           </CardContent>
         </Card>
-         <Card>
+         <Card className="rounded-2xl shadow-soft-diffused">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Current Inventory Value</CardTitle>
             <Package className="h-4 w-4 text-muted-foreground" />
@@ -106,7 +106,7 @@ export default function ProvisionalIndentPage() {
             <p className="text-xs text-muted-foreground">Current value of all on-hand stock</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="rounded-2xl shadow-soft-diffused">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Provisional Indent Value</CardTitle>
             <CreditCard className="h-4 w-4 text-muted-foreground" />
@@ -116,7 +116,7 @@ export default function ProvisionalIndentPage() {
             <p className="text-xs text-muted-foreground">Combined value of all pending indents</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="rounded-2xl shadow-soft-diffused">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Available Credit Limit</CardTitle>
             <CreditCard className="h-4 w-4 text-muted-foreground" />
