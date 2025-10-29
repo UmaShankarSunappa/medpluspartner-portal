@@ -29,6 +29,22 @@ const fixedExpenseCategories = [
   "Adjustment/Misc",
 ];
 
+const mockExpensesData = {
+  "Rent": 50000,
+  "Salaries": 25000,
+  "Infra Rent": 5000,
+  "Electricity": 8000,
+  "Communication": 2000,
+  "Stationery": 1000,
+  "Card Commission": 3500,
+  "Insurance": 1500,
+  "Bank Charges": 500,
+  "R&M": 2500,
+  "Rates & Taxes": 1000,
+  "Adjustment/Misc": 500
+};
+
+
 // Mock function to simulate fetching sales data for a given period
 const fetchSalesData = (month: string, year: number) => {
   // In a real app, this would be an API call.
@@ -55,14 +71,20 @@ export default function RoiAnalysisPage() {
   }, [month, year]);
 
   useEffect(() => {
-    // Load fixed expenses from localStorage on initial render
+    // Load fixed expenses from localStorage or set mock data on initial render
     try {
       const storedExpenses = localStorage.getItem("franchiseeFixedExpenses");
       if (storedExpenses) {
         setFixedExpenses(JSON.parse(storedExpenses));
+      } else {
+        // If no data in localStorage, set and store mock data
+        setFixedExpenses(mockExpensesData);
+        localStorage.setItem("franchiseeFixedExpenses", JSON.stringify(mockExpensesData));
       }
     } catch (error) {
-      console.error("Failed to parse fixed expenses from localStorage:", error);
+      console.error("Failed to parse/set fixed expenses in localStorage:", error);
+      // Fallback to mock data in case of any error
+      setFixedExpenses(mockExpensesData);
     }
   }, []);
 
