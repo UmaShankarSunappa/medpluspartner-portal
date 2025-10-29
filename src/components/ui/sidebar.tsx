@@ -99,7 +99,7 @@ export const DesktopSidebar = ({
       onMouseLeave={() => setOpen(false)}
       {...props}
     >
-      {children}
+        <div className="flex-shrink-0">{children}</div>
     </motion.div>
   );
 };
