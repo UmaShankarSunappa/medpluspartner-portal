@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -21,38 +21,75 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { stationeryItemsData, accountProfile } from "@/lib/data";
-import { ArrowLeft, Search } from "lucide-react";
+import { stationeryItemsData as mockItems, type StationeryItem } from "@/lib/data";
+import { ArrowLeft, Search, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useStationeryOrder } from "@/context/StationeryOrderContext";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export default function CreateStationeryOrderPage() {
     const router = useRouter();
     const { toast } = useToast();
-    const [orderQuantities, setOrderQuantities] = useState<{ [key: string]: number }>({});
-    const currentDate = new Date().toLocaleDateString('en-CA');
+    const { orderItems, addToOrder, removeFromOrder, updateQuantity, clearOrder } = useStationeryOrder();
+    
+    const [openSearch, setOpenSearch] = useState(false);
+    const [searchQuantities, setSearchQuantities] = useState<{ [key: string]: number }>({});
 
-    const handleQuantityChange = (code: string, value: string) => {
-        const quantity = parseInt(value, 10);
-        setOrderQuantities(prev => ({ ...prev, [code]: isNaN(quantity) ? 0 : quantity }));
+    const handleSearchQuantityChange = (itemCode: string, quantity: number) => {
+        setSearchQuantities(prev => ({...prev, [itemCode]: Math.max(1, quantity)}));
     };
 
-    const handleSubmit = () => {
-        // Basic validation
-        const itemsOrdered = Object.values(orderQuantities).some(qty => qty > 0);
-        if (!itemsOrdered) {
+    const handleAddItem = (item: StationeryItem) => {
+        const quantity = searchQuantities[item.code] || 1;
+
+        if (orderItems.some(i => i.code === item.code)) {
             toast({
                 variant: "destructive",
-                title: "No Items Selected",
-                description: "Please enter a quantity for at least one item.",
+                title: "Item Already Added",
+                description: `${item.name} is already in your order. You can adjust the quantity below.`,
             });
             return;
         }
 
+        addToOrder({ ...item, quantity, cost: 0 }); // Cost will be calculated later or comes from a price list
+        setOpenSearch(false);
         toast({
-            title: "Order Submitted",
+            title: "Item Added",
+            description: `${quantity} x ${item.name} added to your order.`,
+        });
+    };
+
+    const grandTotal = useMemo(() => {
+        // Assuming a mock cost for now, as it's not in the base data.
+        // In a real app, you'd fetch this or have it in your data.
+        const mockPriceList: { [code: string]: number } = {
+            "PRIN0040": 50, "BILL0009": 135, "PRIN0061": 240,
+            "PRIN0062": 250, "REGI0022": 140, "STAT0034": 80, "STAT0035": 120
+        };
+        return orderItems.reduce((total, item) => {
+            const price = mockPriceList[item.code] || 0;
+            return total + (price * item.quantity);
+        }, 0);
+    }, [orderItems]);
+
+    const handleSubmitOrder = () => {
+        toast({
+            title: "Order Submitted Successfully!",
             description: "Your stationery order has been submitted for approval.",
         });
+        clearOrder();
         router.push("/dashboard/stationery-orders");
     };
     
@@ -75,34 +112,67 @@ export default function CreateStationeryOrderPage() {
 
             <Card>
                 <CardHeader>
-                    <CardTitle>Order Details & Search</CardTitle>
+                    <CardTitle>Search Items</CardTitle>
+                    <CardDescription>
+                        Click the search bar to find and add stationery items to your order.
+                    </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="space-y-2">
-                            <Label>Franchise Store ID</Label>
-                            <Input value={accountProfile.licenseDetails.storeId} readOnly />
-                        </div>
-                         <div className="space-y-2">
-                            <Label>Store Name</Label>
-                            <Input value={accountProfile.personalDetails.businessName} readOnly />
-                        </div>
-                         <div className="space-y-2">
-                            <Label>Order Date</Label>
-                            <Input value={currentDate} readOnly />
-                        </div>
-                    </div>
-                     <div className="relative">
-                        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                        <Input placeholder="Search by Product Code or Name..." className="pl-8" />
-                    </div>
+                <CardContent>
+                    <Popover open={openSearch} onOpenChange={setOpenSearch}>
+                        <PopoverTrigger asChild>
+                            <Button variant="outline" role="combobox" aria-expanded={openSearch} className="w-full justify-start">
+                                <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+                                Search for an item...
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
+                            <Command>
+                                <CommandInput placeholder="Search by name or code..." />
+                                <CommandList>
+                                    <CommandEmpty>No item found.</CommandEmpty>
+                                    <CommandGroup>
+                                        {mockItems.map((item) => (
+                                            <CommandItem
+                                                key={item.code}
+                                                value={`${item.name} ${item.code}`}
+                                                className="flex items-center justify-between p-3 border-b"
+                                            >
+                                                <div className="flex-1">
+                                                    <p className="font-medium">{item.name}</p>
+                                                    <p className="text-xs text-muted-foreground">{item.code}</p>
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <Input
+                                                        type="number"
+                                                        min="1"
+                                                        placeholder="1"
+                                                        className="h-8 w-20 text-center"
+                                                        value={searchQuantities[item.code] || ''}
+                                                        onChange={(e) => handleSearchQuantityChange(item.code, parseInt(e.target.value))}
+                                                        onClick={(e) => e.stopPropagation()}
+                                                    />
+                                                    <Button
+                                                        size="sm"
+                                                        variant="outline"
+                                                        onClick={(e) => { e.stopPropagation(); handleAddItem(item); }}
+                                                    >
+                                                        Add
+                                                    </Button>
+                                                </div>
+                                            </CommandItem>
+                                        ))}
+                                    </CommandGroup>
+                                </CommandList>
+                            </Command>
+                        </PopoverContent>
+                    </Popover>
                 </CardContent>
             </Card>
 
             <Card>
                 <CardHeader>
-                    <CardTitle>Stationery Items</CardTitle>
-                    <CardDescription>Enter the quantity for each item you want to order.</CardDescription>
+                    <CardTitle>Order Items</CardTitle>
+                    <CardDescription>Review the items in your order cart.</CardDescription>
                 </CardHeader>
                 <CardContent className="overflow-x-auto">
                     <Table>
@@ -111,39 +181,68 @@ export default function CreateStationeryOrderPage() {
                                 <TableHead>Code</TableHead>
                                 <TableHead>Product Name</TableHead>
                                 <TableHead>UoM</TableHead>
-                                <TableHead className="text-center">Example Qty</TableHead>
                                 <TableHead className="w-[150px] text-center">Order Quantity</TableHead>
+                                <TableHead className="text-center">Action</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {stationeryItemsData.map((item) => (
-                                <TableRow key={item.code}>
-                                    <TableCell>{item.code}</TableCell>
-                                    <TableCell className="font-medium">{item.name}</TableCell>
-                                    <TableCell>{item.uom}</TableCell>
-                                    <TableCell className="text-center">{item.example}</TableCell>
-                                    <TableCell className="text-center">
-                                        <Input 
-                                            type="number" 
-                                            min="0"
-                                            className="text-center"
-                                            placeholder="0"
-                                            value={orderQuantities[item.code] || ''}
-                                            onChange={(e) => handleQuantityChange(item.code, e.target.value)}
-                                        />
+                            {orderItems.length > 0 ? (
+                                orderItems.map((item) => (
+                                    <TableRow key={item.code}>
+                                        <TableCell>{item.code}</TableCell>
+                                        <TableCell className="font-medium">{item.name}</TableCell>
+                                        <TableCell>{item.uom}</TableCell>
+                                        <TableCell className="text-center">
+                                            <Input 
+                                                type="number" 
+                                                min="1"
+                                                className="text-center"
+                                                value={item.quantity}
+                                                onChange={(e) => updateQuantity(item.code, parseInt(e.target.value))}
+                                            />
+                                        </TableCell>
+                                        <TableCell className="text-center">
+                                            <Button variant="destructive" size="icon" onClick={() => removeFromOrder(item.code)}>
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell colSpan={5} className="text-center h-24">
+                                        No items added to the order yet.
                                     </TableCell>
                                 </TableRow>
-                            ))}
+                            )}
                         </TableBody>
                     </Table>
                 </CardContent>
             </Card>
 
-            <div className="flex justify-end gap-2">
+            <div className="flex justify-end items-center gap-4 p-4 border-t bg-card rounded-b-lg">
                  <Button variant="outline" asChild>
                     <Link href="/dashboard/stationery-orders">Cancel</Link>
                 </Button>
-                <Button onClick={handleSubmit}>Submit Order</Button>
+                 <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                        <Button size="lg" disabled={orderItems.length === 0}>
+                            Submit Order
+                        </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>Are you sure you want to submit?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                This will submit your stationery order for approval.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={handleSubmitOrder}>Confirm Submission</AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
             </div>
         </div>
     );
