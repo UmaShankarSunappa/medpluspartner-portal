@@ -37,6 +37,7 @@ import { paymentsData, accountProfile, stores as mockStores } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { DateRange } from "react-day-picker";
 
 const statusVariant: { [key: string]: "success" | "destructive" | "secondary" } = {
     "Successful": "success",
@@ -70,6 +71,7 @@ export default function PaymentsPage() {
     const [isCreatePaymentOpen, setIsCreatePaymentOpen] = useState(false);
     const [isViewDetailsOpen, setIsViewDetailsOpen] = useState(false);
     const [selectedPayment, setSelectedPayment] = useState<typeof paymentsData[0] | null>(null);
+    const [dateRange, setDateRange] = useState<DateRange | undefined>();
 
     // --- Single Source of Truth for Payment Modal State ---
     const [totalAmount, setTotalAmount] = useState<number>(0);
@@ -82,10 +84,10 @@ export default function PaymentsPage() {
             const initialAllocations = mockStores.map(store => ({
                 id: store.id,
                 name: store.name,
-                storeRatio: mockStores.length > 1 ? 0 : 1,
+                storeRatio: mockStores.length > 1 ? 1 : 1,
                 allocatedAmount: 0,
                 applicationRatios: initialApplicationRatios(),
-                isExpanded: false,
+                isExpanded: true, // Expand by default
             }));
             setStoreAllocations(initialAllocations);
             setTotalAmount(0);
@@ -373,7 +375,7 @@ export default function PaymentsPage() {
                 <div className="flex flex-col md:flex-row gap-4 items-end">
                     <div className="grid gap-2 w-full md:w-auto">
                         <Label htmlFor="date-range">Date Range</Label>
-                        <DateRangePicker />
+                        <DateRangePicker value={dateRange} onSelect={setDateRange} />
                     </div>
                     <Button><Search className="mr-2 h-4 w-4" />Search</Button>
                 </div>
