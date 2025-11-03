@@ -973,15 +973,6 @@ export const stationeryItemsData: StationeryItem[] = [
     { code: "STAT0034", name: "Ball Point Pens - Blue", uom: "Box", example: 2},
     { code: "STAT0035", name: "Stapler Machine - No. 10", uom: "Number", example: 1},
 ];
-
-export const orderSummaryData = [
-    { orderType: "Auto (Min/Max)", totalOrders: 120, delivered: 95, inTransit: 15, cancelled: 10 },
-    { orderType: "Sale Order", totalOrders: 45, delivered: 40, inTransit: 2, cancelled: 3 },
-    { orderType: "Web Order", totalOrders: 70, delivered: 60, inTransit: 8, cancelled: 2 },
-    { orderType: "Offline Web Order", totalOrders: 22, delivered: 20, inTransit: 1, cancelled: 1 },
-    { orderType: "Indent", totalOrders: 15, delivered: 10, inTransit: 5, cancelled: 0 },
-    { orderType: "All Orders", totalOrders: 272, delivered: 225, inTransit: 31, cancelled: 16 },
-];
   
 
     
@@ -999,3 +990,6 @@ export const orderSummaryData = [
 
 
 
+
+
+  

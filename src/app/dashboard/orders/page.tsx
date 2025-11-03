@@ -19,7 +19,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { ordersData, type Order, orderSummaryData } from "@/lib/data";
+import { ordersData, type Order } from "@/lib/data";
 import { Eye, RefreshCw, Truck, CheckCircle, Package, Download, TrendingUp, Filter } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
@@ -44,7 +44,6 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { DateRange } from "react-day-picker";
-import { subDays } from "date-fns";
 
 const statusVariant: { [key: string]: "default" | "secondary" | "destructive" | "outline" | "success" | "warning" | "info" } = {
     "Order Replenished": "success",
@@ -100,6 +99,43 @@ export default function OrdersPage() {
         setFilteredOrders(newFilteredOrders);
 
     }, [orderIdFilter, dateRange, selectedTypes, selectedStatuses]);
+    
+    const dynamicOrderSummary = useMemo(() => {
+        const summary: { [key: string]: { orderType: string; totalOrders: number; delivered: number; inTransit: number; cancelled: number; } } = {};
+
+        const initializeSummary = (type: string) => {
+            if (!summary[type]) {
+                summary[type] = { orderType: type, totalOrders: 0, delivered: 0, inTransit: 0, cancelled: 0 };
+            }
+        };
+
+        ALL_TYPES.forEach(type => initializeSummary(type));
+
+        filteredOrders.forEach(order => {
+            initializeSummary(order.type);
+            summary[order.type].totalOrders++;
+
+            if (order.status === "Order Replenished" || order.status === "Order Delivered") {
+                summary[order.type].delivered++;
+            } else if (order.status === "Cancelled") {
+                summary[order.type].cancelled++;
+            } else { // In Transit includes created, picked, dispatched
+                summary[order.type].inTransit++;
+            }
+        });
+
+        const allOrdersSummary = Object.values(summary).reduce((acc, curr) => {
+            acc.totalOrders += curr.totalOrders;
+            acc.delivered += curr.delivered;
+            acc.inTransit += curr.inTransit;
+            acc.cancelled += curr.cancelled;
+            return acc;
+        }, { orderType: "All Orders", totalOrders: 0, delivered: 0, inTransit: 0, cancelled: 0 });
+
+        return [...Object.values(summary).filter(s => s.totalOrders > 0), allOrdersSummary];
+
+    }, [filteredOrders]);
+
 
     const handleViewClick = (order: Order) => {
         setSelectedOrder(order);
@@ -196,8 +232,9 @@ export default function OrdersPage() {
             <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-xl font-bold">
                     <TrendingUp className="h-5 w-5" />
-                    Order Summary (Last 15 Days)
+                    Order Summary
                 </CardTitle>
+                 <CardDescription>This summary reflects the currently filtered orders below.</CardDescription>
             </CardHeader>
             <CardContent>
                 <Table>
@@ -211,7 +248,7 @@ export default function OrdersPage() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {orderSummaryData.map((summary, index) => (
+                        {dynamicOrderSummary.map((summary, index) => (
                             <TableRow key={summary.orderType} className={summary.orderType === 'All Orders' ? 'bg-muted/50' : ''}>
                                 <TableCell className={summary.orderType === 'All Orders' ? 'font-bold' : ''}>{summary.orderType}</TableCell>
                                 <TableCell className={summary.orderType === 'All Orders' ? 'font-bold' : ''}>{summary.totalOrders}</TableCell>
@@ -245,7 +282,8 @@ export default function OrdersPage() {
                 </TableRow>
                 </TableHeader>
                 <TableBody>
-                {filteredOrders.map((order) => (
+                {filteredOrders.length > 0 ? (
+                    filteredOrders.map((order) => (
                     <TableRow key={order.orderId}>
                     <TableCell className="font-medium">{order.orderId}</TableCell>
                     <TableCell>WEB-{order.orderId.split('-')[1]}</TableCell>
@@ -304,7 +342,14 @@ export default function OrdersPage() {
                         </div>
                     </TableCell>
                     </TableRow>
-                ))}
+                ))
+                ) : (
+                    <TableRow>
+                        <TableCell colSpan={7} className="h-24 text-center">
+                            No orders found for the selected filters.
+                        </TableCell>
+                    </TableRow>
+                )}
                 </TableBody>
             </Table>
             </CardContent>
@@ -392,3 +437,5 @@ export default function OrdersPage() {
     </TooltipProvider>
   );
 }
+
+    
