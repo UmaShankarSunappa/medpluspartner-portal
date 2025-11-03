@@ -51,7 +51,7 @@ const statusVariant: { [key: string]: "success" | "destructive" | "secondary" } 
 };
 
 type StoreAllocation = { [storeId: string]: { ratio: number; amount: number } };
-type ApplicationRatio = { [key: string]: number };
+type ApplicationRatio = { [key: string]: { ratio: number; amount: number } };
 
 export default function PaymentsPage() {
     const [isCreatePaymentOpen, setIsCreatePaymentOpen] = useState(false);
@@ -69,17 +69,18 @@ export default function PaymentsPage() {
     const [storeAllocations, setStoreAllocations] = useState<StoreAllocation>(initialStoreAllocations);
 
     const [applicationRatios, setApplicationRatios] = useState<ApplicationRatio>({
-        'minMax': 1,
-        'sale': 1,
-        'web': 1,
+        'minMax': { ratio: 1, amount: 0 },
+        'sale': { ratio: 1, amount: 0 },
+        'web': { ratio: 1, amount: 0 },
     });
     
-    // Recalculate allocations when totalAmount or ratios change
+    const storeRatios = useMemo(() => Object.values(storeAllocations).map(s => s.ratio), [storeAllocations]);
+
+    // Recalculate store allocations when totalAmount or ratios change
     useEffect(() => {
-        const totalRatio = Object.values(storeAllocations).reduce((sum, { ratio }) => sum + (ratio || 0), 0);
+        const totalRatio = storeRatios.reduce((sum, ratio) => sum + (ratio || 0), 0);
         
         if (totalRatio === 0 || totalAmount === 0) {
-            // If no ratio or amount, reset amounts to 0
              setStoreAllocations(prev => {
                 const newAllocations = {...prev};
                 Object.keys(newAllocations).forEach(storeId => {
@@ -111,13 +112,55 @@ export default function PaymentsPage() {
             }
         });
         setStoreAllocations(newAllocations);
-    }, [totalAmount, storeAllocations.store_01?.ratio, storeAllocations.store_02?.ratio]); // Simplified dependencies
+    }, [totalAmount, ...storeRatios]);
+
+    const appRatios = useMemo(() => Object.values(applicationRatios).map(a => a.ratio), [applicationRatios]);
+
+    // Recalculate application allocations
+    useEffect(() => {
+        const totalRatio = appRatios.reduce((sum, ratio) => sum + (ratio || 0), 0);
+        
+        if (totalRatio === 0 || totalAmount === 0) {
+            setApplicationRatios(prev => {
+                const newRatios = {...prev};
+                Object.keys(newRatios).forEach(key => { newRatios[key].amount = 0; });
+                return newRatios;
+            });
+            return;
+        }
+
+        const newAppRatios: ApplicationRatio = {};
+        let allocatedSum = 0;
+        const ratioKeys = Object.keys(applicationRatios);
+
+        ratioKeys.forEach((key, index) => {
+            const ratioItem = applicationRatios[key];
+             if (index === ratioKeys.length - 1) {
+                newAppRatios[key] = { ...ratioItem, amount: totalAmount - allocatedSum };
+            } else {
+                const allocatedAmount = (ratioItem.ratio / totalRatio) * totalAmount;
+                newAppRatios[key] = { ...ratioItem, amount: allocatedAmount };
+                allocatedSum += allocatedAmount;
+            }
+        });
+        setApplicationRatios(newAppRatios);
+
+    }, [totalAmount, ...appRatios]);
+
 
     const handleStoreRatioChange = (storeId: string, newRatioStr: string) => {
         const newRatio = parseFloat(newRatioStr) || 0;
         setStoreAllocations(prev => ({
             ...prev,
             [storeId]: { ...prev[storeId], ratio: newRatio },
+        }));
+    };
+
+     const handleAppRatioChange = (key: string, newRatioStr: string) => {
+        const newRatio = parseFloat(newRatioStr) || 0;
+        setApplicationRatios(prev => ({
+            ...prev,
+            [key]: { ...prev[key], ratio: newRatio },
         }));
     };
     
@@ -236,14 +279,20 @@ export default function PaymentsPage() {
                                  {Object.keys(applicationRatios).map(key => (
                                      <div key={key} className="space-y-2">
                                          <Label htmlFor={`app-ratio-${key}`} className="capitalize">{key.replace(/([A-Z])/g, ' $1')} Orders</Label>
-                                         <Input
-                                            id={`app-ratio-${key}`}
-                                            type="number"
-                                            min="0"
-                                            placeholder="Ratio"
-                                            value={applicationRatios[key]}
-                                            onChange={(e) => setApplicationRatios(prev => ({...prev, [key]: parseFloat(e.target.value) || 0}))}
-                                         />
+                                         <div className="flex items-center gap-2">
+                                            <Input
+                                                id={`app-ratio-${key}`}
+                                                type="number"
+                                                min="0"
+                                                placeholder="Ratio"
+                                                className="w-20"
+                                                value={applicationRatios[key].ratio}
+                                                onChange={(e) => handleAppRatioChange(key, e.target.value)}
+                                            />
+                                            <div className="text-sm font-semibold">
+                                                ₹{applicationRatios[key].amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                            </div>
+                                         </div>
                                      </div>
                                  ))}
                              </div>
@@ -381,4 +430,3 @@ export default function PaymentsPage() {
     </div>
   );
 }
-
