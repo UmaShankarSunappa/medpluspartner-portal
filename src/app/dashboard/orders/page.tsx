@@ -236,8 +236,8 @@ export default function OrdersPage() {
                 </CardTitle>
                  <CardDescription>This summary reflects the currently filtered orders below.</CardDescription>
             </CardHeader>
-            <CardContent>
-                 <div className="grid grid-cols-5 gap-4 bg-muted/50 p-4 rounded-t-lg font-semibold text-muted-foreground">
+            <CardContent className="pt-0">
+                 <div className="grid grid-cols-5 gap-4 bg-muted/50 p-2 rounded-t-lg font-semibold text-muted-foreground text-sm">
                     <div className="col-span-1">Order Type</div>
                     <div className="text-center flex items-center justify-center gap-1"><Package className="h-4 w-4" />Total</div>
                     <div className="text-center flex items-center justify-center gap-1"><PackageCheck className="h-4 w-4" />Delivered</div>
@@ -246,12 +246,12 @@ export default function OrdersPage() {
                 </div>
                 <div className="divide-y divide-border">
                     {dynamicOrderSummary.map((summary) => (
-                        <div key={summary.orderType} className={`grid grid-cols-5 gap-4 p-4 items-center transition-colors duration-200 hover:bg-muted/30 ${summary.orderType === 'All Orders' ? 'bg-primary/10 font-bold' : ''}`}>
+                        <div key={summary.orderType} className={`grid grid-cols-5 gap-4 p-2 items-center transition-colors duration-200 hover:bg-muted/30 text-sm ${summary.orderType === 'All Orders' ? 'bg-primary/10 font-bold' : ''}`}>
                             <div className="col-span-1">{summary.orderType}</div>
-                            <div className="text-center text-sm">{summary.totalOrders}</div>
-                            <div className="text-center text-sm">{summary.delivered}</div>
-                            <div className="text-center text-sm">{summary.inTransit}</div>
-                            <div className="text-center text-sm">{summary.cancelled}</div>
+                            <div className="text-center">{summary.totalOrders}</div>
+                            <div className="text-center">{summary.delivered}</div>
+                            <div className="text-center">{summary.inTransit}</div>
+                            <div className="text-center">{summary.cancelled}</div>
                         </div>
                     ))}
                 </div>
