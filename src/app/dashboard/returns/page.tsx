@@ -127,7 +127,7 @@ export default function ReturnsPage() {
             </Card>
 
         <div className="grid gap-4 md:grid-cols-3">
-            <Card className="shadow-md bg-blue-50 dark:bg-blue-900/50 border-blue-200 dark:border-blue-800">
+            <Card className="shadow-md">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium text-blue-800 dark:text-blue-200">TO Generated</CardTitle>
                     <FileText className="h-4 w-4 text-blue-600 dark:text-blue-400" />
@@ -136,7 +136,7 @@ export default function ReturnsPage() {
                     <div className="text-2xl font-bold text-blue-900 dark:text-blue-100">{kpiCounts.toGenerated}</div>
                 </CardContent>
             </Card>
-            <Card className="shadow-md bg-green-50 dark:bg-green-900/50 border-green-200 dark:border-green-800">
+            <Card className="shadow-md">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium text-green-800 dark:text-green-200">Replenished</CardTitle>
                     <RefreshCw className="h-4 w-4 text-green-600 dark:text-green-400" />
@@ -145,7 +145,7 @@ export default function ReturnsPage() {
                     <div className="text-2xl font-bold text-green-900 dark:text-green-100">{kpiCounts.replenished}</div>
                 </CardContent>
             </Card>
-             <Card className="shadow-md bg-teal-50 dark:bg-teal-900/50 border-teal-200 dark:border-teal-800">
+             <Card className="shadow-md">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium text-teal-800 dark:text-teal-200">Credit Note Received</CardTitle>
                     <CheckCircle className="h-4 w-4 text-teal-600 dark:text-teal-400" />
