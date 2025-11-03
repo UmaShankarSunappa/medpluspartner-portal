@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { ordersData, type Order } from "@/lib/data";
-import { Eye, RefreshCw, Truck, CheckCircle, Package, Download, TrendingUp, Filter } from "lucide-react";
+import { Eye, RefreshCw, Truck, CheckCircle, Package, Download, TrendingUp, Filter, XCircle, PackageCheck, PackageSearch } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
 import {
@@ -157,7 +157,7 @@ export default function OrdersPage() {
     };
     
     const handleStatusToggle = (status: string) => {
-        setSelectedStatuses(prev => prev.includes(status) ? prev.filter(s => s !== status) : [...prev, status]);
+        setSelectedStatuses(prev => prev.includes(status) ? prev.filter(s => s !== status) : [...prev, s]);
     };
 
 
@@ -236,29 +236,25 @@ export default function OrdersPage() {
                 </CardTitle>
                  <CardDescription>This summary reflects the currently filtered orders below.</CardDescription>
             </CardHeader>
-            <CardContent>
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Order Type</TableHead>
-                            <TableHead>Total Orders</TableHead>
-                            <TableHead>Delivered</TableHead>
-                            <TableHead>In Transit</TableHead>
-                            <TableHead>Cancelled</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {dynamicOrderSummary.map((summary, index) => (
-                            <TableRow key={summary.orderType} className={summary.orderType === 'All Orders' ? 'bg-muted/50' : ''}>
-                                <TableCell className={summary.orderType === 'All Orders' ? 'font-bold' : ''}>{summary.orderType}</TableCell>
-                                <TableCell className={summary.orderType === 'All Orders' ? 'font-bold' : ''}>{summary.totalOrders}</TableCell>
-                                <TableCell className={summary.orderType === 'All Orders' ? 'font-bold' : ''}>{summary.delivered}</TableCell>
-                                <TableCell className={summary.orderType === 'All Orders' ? 'font-bold' : ''}>{summary.inTransit}</TableCell>
-                                <TableCell className={summary.orderType === 'All Orders' ? 'font-bold' : ''}>{summary.cancelled}</TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+            <CardContent className="text-base">
+                 <div className="grid grid-cols-5 gap-4 bg-muted/50 p-4 rounded-t-lg font-semibold text-muted-foreground">
+                    <div className="col-span-1">Order Type</div>
+                    <div className="text-center flex items-center justify-center gap-1"><Package className="h-4 w-4" />Total</div>
+                    <div className="text-center flex items-center justify-center gap-1"><PackageCheck className="h-4 w-4" />Delivered</div>
+                    <div className="text-center flex items-center justify-center gap-1"><PackageSearch className="h-4 w-4" />In Transit</div>
+                    <div className="text-center flex items-center justify-center gap-1"><XCircle className="h-4 w-4" />Cancelled</div>
+                </div>
+                <div className="divide-y divide-border">
+                    {dynamicOrderSummary.map((summary) => (
+                        <div key={summary.orderType} className={`grid grid-cols-5 gap-4 p-4 items-center transition-colors duration-200 hover:bg-muted/30 ${summary.orderType === 'All Orders' ? 'bg-primary/10 font-bold' : ''}`}>
+                            <div className="col-span-1">{summary.orderType}</div>
+                            <div className="text-center text-lg">{summary.totalOrders}</div>
+                            <div className="text-center text-lg">{summary.delivered}</div>
+                            <div className="text-center text-lg">{summary.inTransit}</div>
+                            <div className="text-center text-lg">{summary.cancelled}</div>
+                        </div>
+                    ))}
+                </div>
             </CardContent>
         </Card>
 
@@ -437,5 +433,3 @@ export default function OrdersPage() {
     </TooltipProvider>
   );
 }
-
-    
