@@ -307,7 +307,7 @@ export type Return = {
   returnType: "Expiry" | "Short Expiry" | "Slow Moving" | "Damage" | "Complaint" | "Cuttings" | "MRP Change" | "Emergency" | "Invoice Return Damaged" | "Invoice Return Expired";
   receivedDate: string;
   returnNoteId: string | null;
-  status: "Approved" | "Pending" | "Rejected" | "In Transit" | "Partial Rejected";
+  status: "Credit Note Received" | "Replenished" | "TO Generated" | "Pending" | "Rejected";
   products: {
     sku: string;
     name: string;
@@ -328,16 +328,14 @@ export const returnsData: Return[] = [
     returnType: "Expiry",
     receivedDate: "2023-10-15",
     returnNoteId: "CN-056",
-    status: "Approved",
+    status: "Credit Note Received",
     products: [
         { sku: "PARA500", name: "Paracetamol 500mg", batch: "B123", quantity: 10, value: 150 },
         { sku: "VICKS-AC", name: "Vicks Action 500", batch: "V456", quantity: 5, value: 200 },
     ],
     trackingHistory: [
         { status: 'Credit Note Received', date: '2023-10-22 11:00', location: 'Finance Department' },
-        { status: 'Stock Replenished', date: '2023-10-21 16:00', location: 'Inventory System' },
-        { status: 'Stock Received at Warehouse', date: '2023-10-20 14:30', location: 'Hyderabad Warehouse' },
-        { status: 'TO Handover to Driver', date: '2023-10-18 09:00', location: 'Bangalore Hub' },
+        { status: 'Replenished', date: '2023-10-21 16:00', location: 'Inventory System' },
         { status: 'TO Generated', date: '2023-10-17 18:00', location: 'System' },
     ]
   },
@@ -349,12 +347,11 @@ export const returnsData: Return[] = [
     returnType: "Damage",
     receivedDate: "2023-10-18",
     returnNoteId: null,
-    status: "In Transit",
+    status: "TO Generated",
     products: [
         { sku: "MOOV", name: "Moov Ointment", batch: "M789", quantity: 10, value: 1200 }
     ],
     trackingHistory: [
-        { status: 'TO Handover to Driver', date: '2023-10-26 10:00', location: 'Bangalore Hub' },
         { status: 'TO Generated', date: '2023-10-25 12:00', location: 'System' },
     ]
   },
@@ -381,18 +378,19 @@ export const returnsData: Return[] = [
     total: 1500.0,
     returnType: "MRP Change",
     receivedDate: "2023-10-28",
-    returnNoteId: null,
-    status: "Partial Rejected",
+    returnNoteId: 'CN-057',
+    status: "Replenished",
     products: [
         { sku: "DETTOL-AS", name: "Dettol Antiseptic", batch: "D202", quantity: 10, value: 500 },
         { sku: "SAVALON", name: "Savlon Antiseptic", batch: "S303", quantity: 5, value: 250, rejectionReason: "Expired Product" }
     ],
      trackingHistory: [
-        { status: 'Partial rejection processed', date: '2023-10-29 11:00', location: 'Warehouse' },
-        { status: 'Stock Received at Warehouse', date: '2023-10-28 14:00', location: 'Hyderabad Warehouse' }
+        { status: 'Replenished', date: '2023-10-29 11:00', location: 'Warehouse' },
+        { status: 'TO Generated', date: '2023-10-28 14:00', location: 'System' }
     ]
   },
 ];
+
 
 export type MonthlyReport = {
   id: string;
@@ -996,6 +994,7 @@ export const orderSummaryData = [
     
 
     
+
 
 
 

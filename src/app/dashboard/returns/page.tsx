@@ -33,12 +33,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
-const statusVariant: { [key: string]: "default" | "secondary" | "destructive" | "outline" | "info" | "warning" } = {
-    "Approved": "default",
+const statusVariant: { [key: string]: "default" | "secondary" | "destructive" | "outline" | "info" | "warning" | "success" } = {
+    "Credit Note Received": "success",
+    "Replenished": "default",
+    "TO Generated": "info",
     "Pending": "secondary",
     "Rejected": "destructive",
-    "In Transit": "info",
-    "Partial Rejected": "warning",
 };
 
 export default function ReturnsPage() {
@@ -175,7 +175,7 @@ export default function ReturnsPage() {
                                 <TableHead>Batch</TableHead>
                                 <TableHead className="text-center">Quantity</TableHead>
                                 <TableHead className="text-right">Value</TableHead>
-                                {selectedReturn?.status === "Partial Rejected" && <TableHead>Rejection Reason</TableHead>}
+                                {(selectedReturn?.status === "Rejected" || selectedReturn?.products.some(p => p.rejectionReason)) && <TableHead>Rejection Reason</TableHead>}
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -186,7 +186,7 @@ export default function ReturnsPage() {
                                     <TableCell>{product.batch}</TableCell>
                                     <TableCell className="text-center">{product.quantity}</TableCell>
                                     <TableCell className="text-right">₹{product.value.toLocaleString('en-IN')}</TableCell>
-                                    {selectedReturn?.status === "Partial Rejected" && (
+                                    {(selectedReturn?.status === "Rejected" || selectedReturn?.products.some(p => p.rejectionReason)) && (
                                         <TableCell>
                                             {product.rejectionReason && (
                                                 <TooltipProvider>
@@ -227,7 +227,7 @@ export default function ReturnsPage() {
                         {selectedReturn?.trackingHistory?.map((event, index) => (
                             <div key={index} className="relative flex items-start gap-4 mb-6">
                                 <div className="z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                                    {event.status === 'Received' || event.status === 'Credit Note Received' ? <CheckCircle className="h-5 w-5" /> : <Package className="h-5 w-5" />}
+                                    {event.status === 'Credit Note Received' ? <CheckCircle className="h-5 w-5" /> : <Package className="h-5 w-5" />}
                                 </div>
                                 <div className="mt-1">
                                     <p className="font-semibold">{event.status}</p>
