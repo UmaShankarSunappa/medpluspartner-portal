@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useState } from "react";
@@ -38,7 +39,6 @@ const statusVariant: { [key: string]: "default" | "secondary" | "destructive" | 
     "Replenished": "default",
     "TO Generated": "info",
     "Pending": "secondary",
-    "Rejected": "destructive",
 };
 
 export default function ReturnsPage() {
@@ -175,7 +175,6 @@ export default function ReturnsPage() {
                                 <TableHead>Batch</TableHead>
                                 <TableHead className="text-center">Quantity</TableHead>
                                 <TableHead className="text-right">Value</TableHead>
-                                {(selectedReturn?.status === "Rejected" || selectedReturn?.products.some(p => p.rejectionReason)) && <TableHead>Rejection Reason</TableHead>}
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -186,25 +185,6 @@ export default function ReturnsPage() {
                                     <TableCell>{product.batch}</TableCell>
                                     <TableCell className="text-center">{product.quantity}</TableCell>
                                     <TableCell className="text-right">₹{product.value.toLocaleString('en-IN')}</TableCell>
-                                    {(selectedReturn?.status === "Rejected" || selectedReturn?.products.some(p => p.rejectionReason)) && (
-                                        <TableCell>
-                                            {product.rejectionReason && (
-                                                <TooltipProvider>
-                                                    <Tooltip>
-                                                        <TooltipTrigger>
-                                                            <div className="flex items-center text-destructive">
-                                                                <AlertCircle className="h-4 w-4 mr-1"/>
-                                                                <span>Rejected</span>
-                                                            </div>
-                                                        </TooltipTrigger>
-                                                        <TooltipContent>
-                                                            <p>{product.rejectionReason}</p>
-                                                        </TooltipContent>
-                                                    </Tooltip>
-                                                </TooltipProvider>
-                                            )}
-                                        </TableCell>
-                                    )}
                                 </TableRow>
                             ))}
                         </TableBody>

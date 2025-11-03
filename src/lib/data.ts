@@ -307,7 +307,7 @@ export type Return = {
   returnType: "Expiry" | "Short Expiry" | "Slow Moving" | "Damage" | "Complaint" | "Cuttings" | "MRP Change" | "Emergency" | "Invoice Return Damaged" | "Invoice Return Expired";
   receivedDate: string;
   returnNoteId: string | null;
-  status: "Credit Note Received" | "Replenished" | "TO Generated" | "Pending" | "Rejected";
+  status: "Credit Note Received" | "Replenished" | "TO Generated" | "Pending";
   products: {
     sku: string;
     name: string;
@@ -363,12 +363,12 @@ export const returnsData: Return[] = [
     returnType: "Slow Moving",
     receivedDate: "2023-10-22",
     returnNoteId: null,
-    status: "Rejected",
+    status: "Pending",
     products: [
-        { sku: "VOLINI", name: "Volini Spray", batch: "VO101", quantity: 5, value: 750, rejectionReason: "Documentation Issue" }
+        { sku: "VOLINI", name: "Volini Spray", batch: "VO101", quantity: 5, value: 750 }
     ],
      trackingHistory: [
-        { status: 'Rejected', date: '2023-10-22 15:00', location: 'Documentation Issue' },
+        { status: 'Pending', date: '2023-10-22 15:00', location: 'Awaiting Documentation' },
     ]
   },
    { 
@@ -382,7 +382,7 @@ export const returnsData: Return[] = [
     status: "Replenished",
     products: [
         { sku: "DETTOL-AS", name: "Dettol Antiseptic", batch: "D202", quantity: 10, value: 500 },
-        { sku: "SAVALON", name: "Savlon Antiseptic", batch: "S303", quantity: 5, value: 250, rejectionReason: "Expired Product" }
+        { sku: "SAVALON", name: "Savlon Antiseptic", batch: "S303", quantity: 5, value: 250 },
     ],
      trackingHistory: [
         { status: 'Replenished', date: '2023-10-29 11:00', location: 'Warehouse' },
@@ -416,9 +416,9 @@ export const monthlyReports: MonthlyReport[] = [
     // September
     { id: "REP-SEP-1", name: "Net Sale vs. Margin", period: "Sep 2025", month: "September", financialYear: "FY 2025-26", fileType: "Excel", status: "Updated" },
     { id: "REP-SEP-2", name: "Royalty Fee Invoice", period: "Sep 2025", month: "September", financialYear: "FY 2025-26", fileType: "PDF", status: "Updated" },
-    { id: "REP-SEP-3", name: "Rental Invoices", period: "Sep 2025", month: "September", financialYear: "FY 2025-26", fileType: "PDF", status: "Not Updated" },
-    { id: "REP-SEP-4", name: "GST Reports", period: "Sep 2025", month: "September", financialYear: "FY 2025-26", fileType: "Excel", status: "Updated" },
-    { id: "REP-SEP-5", name: "Expiry Products List", period: "Sep 2025", month: "September", financialYear: "FY 2025-26", fileType: "Excel", status: "Not Updated" },
+    { id: "REP-SEP-3", name: "Rental Invoices", period: "Sep 2025", month: "September", financialYear: "FY 2025-26", fileType: "PDF", status: "Updated" },
+    { id: "REP-SEP-4", name: "GST Reports", period: "Sep 2025", month: "September", financialYear: "FY 2025-26", fileType: "Excel", status: "Not Updated" },
+    { id: "REP-SEP-5", name: "Expiry Products List", period: "Sep 2025", month: "September", financialYear: "FY 2025-26", fileType: "Excel", status: "Updated" },
     { id: "REP-SEP-6", name: "Slow-Moving Products", period: "Sep 2025", month: "September", financialYear: "FY 2025-26", fileType: "Excel", status: "Updated" },
     { id: "REP-SEP-7", name: "Credit Note", period: "Sep 2025", month: "September", financialYear: "FY 2025-26", fileType: "Excel", status: "Updated" },
     
@@ -994,6 +994,7 @@ export const orderSummaryData = [
     
 
     
+
 
 
 
