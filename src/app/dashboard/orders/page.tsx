@@ -236,7 +236,7 @@ export default function OrdersPage() {
                 </CardTitle>
                  <CardDescription>This summary reflects the currently filtered orders below.</CardDescription>
             </CardHeader>
-            <CardContent className="text-base">
+            <CardContent>
                  <div className="grid grid-cols-5 gap-4 bg-muted/50 p-4 rounded-t-lg font-semibold text-muted-foreground">
                     <div className="col-span-1">Order Type</div>
                     <div className="text-center flex items-center justify-center gap-1"><Package className="h-4 w-4" />Total</div>
@@ -248,10 +248,10 @@ export default function OrdersPage() {
                     {dynamicOrderSummary.map((summary) => (
                         <div key={summary.orderType} className={`grid grid-cols-5 gap-4 p-4 items-center transition-colors duration-200 hover:bg-muted/30 ${summary.orderType === 'All Orders' ? 'bg-primary/10 font-bold' : ''}`}>
                             <div className="col-span-1">{summary.orderType}</div>
-                            <div className="text-center text-lg">{summary.totalOrders}</div>
-                            <div className="text-center text-lg">{summary.delivered}</div>
-                            <div className="text-center text-lg">{summary.inTransit}</div>
-                            <div className="text-center text-lg">{summary.cancelled}</div>
+                            <div className="text-center text-base">{summary.totalOrders}</div>
+                            <div className="text-center text-base">{summary.delivered}</div>
+                            <div className="text-center text-base">{summary.inTransit}</div>
+                            <div className="text-center text-base">{summary.cancelled}</div>
                         </div>
                     ))}
                 </div>
