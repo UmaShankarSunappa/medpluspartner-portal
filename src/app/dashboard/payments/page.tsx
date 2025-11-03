@@ -75,8 +75,9 @@ export default function PaymentsPage() {
     const [totalAmount, setTotalAmount] = useState<number>(0);
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string | null>(null);
     const [storeAllocations, setStoreAllocations] = useState<StoreAllocationState[]>([]);
-    const [isCalculating, setIsCalculating] = useState(false);
-
+    
+    // State to hold string values of inputs for better UX
+    const [inputValues, setInputValues] = useState<Record<string, string>>({});
 
     useEffect(() => {
         if (isCreatePaymentOpen) {
@@ -91,118 +92,121 @@ export default function PaymentsPage() {
             setStoreAllocations(initialAllocations);
             setTotalAmount(0);
             setSelectedPaymentMethod(null);
+            
+            const newInputs: Record<string, string> = {};
+            initialAllocations.forEach(store => {
+                newInputs[`ratio-${store.id}`] = String(store.storeRatio);
+                newInputs[`amount-${store.id}`] = '0.00';
+                 Object.keys(store.applicationRatios).forEach(key => {
+                    const appKey = key as keyof ApplicationRatios;
+                    newInputs[`app-ratio-${store.id}-${appKey}`] = String(store.applicationRatios[appKey].ratio);
+                    newInputs[`app-amount-${store.id}-${appKey}`] = '0.00';
+                });
+            });
+            setInputValues(newInputs);
+
         }
     }, [isCreatePaymentOpen]);
 
-    // Top-down calculation: Recalculate all amounts when totalAmount or ratios change
     useEffect(() => {
-        if (isCalculating) return;
-        setIsCalculating(true);
+        recalculateAll(totalAmount, storeAllocations);
+    }, [totalAmount, storeAllocations.map(s => s.storeRatio).join(), storeAllocations.map(s => Object.values(s.applicationRatios).map(r => r.ratio).join('-')).join()]);
 
-        const totalStoreRatio = storeAllocations.reduce((sum, s) => sum + s.storeRatio, 0);
+    const recalculateAll = (currentTotal: number, currentAllocations: StoreAllocationState[]) => {
+        const totalStoreRatio = currentAllocations.reduce((sum, s) => sum + s.storeRatio, 0);
 
-        setStoreAllocations(prevAllocations => {
-            return prevAllocations.map(store => {
-                const newAllocatedAmount = totalStoreRatio > 0
-                    ? (store.storeRatio / totalStoreRatio) * totalAmount
-                    : (mockStores.length === 1 ? totalAmount : 0);
-
-                const totalAppRatio = store.applicationRatios.minMax.ratio + store.applicationRatios.sale.ratio + store.applicationRatios.web.ratio;
-                
-                let newMinMaxAmount = 0;
-                let newSaleAmount = 0;
-                let newWebAmount = 0;
-                
-                if (totalAppRatio > 0) {
-                    newMinMaxAmount = (store.applicationRatios.minMax.ratio / totalAppRatio) * newAllocatedAmount;
-                    newSaleAmount = (store.applicationRatios.sale.ratio / totalAppRatio) * newAllocatedAmount;
-                    newWebAmount = newAllocatedAmount - newMinMaxAmount - newSaleAmount;
-                }
-
-                return {
-                    ...store,
-                    allocatedAmount: newAllocatedAmount,
-                    applicationRatios: {
-                        minMax: { ...store.applicationRatios.minMax, amount: newMinMaxAmount },
-                        sale: { ...store.applicationRatios.sale, amount: newSaleAmount },
-                        web: { ...store.applicationRatios.web, amount: newWebAmount },
-                    }
-                };
-            });
-        });
-        
-        setIsCalculating(false);
-
-    }, [totalAmount, storeAllocations.map(s => s.storeRatio).join(), storeAllocations.map(s => `${s.applicationRatios.minMax.ratio}-${s.applicationRatios.sale.ratio}-${s.applicationRatios.web.ratio}`).join()]);
-
-
-    const handleStoreRatioChange = (storeId: string, newRatioStr: string) => {
-        if (isCalculating) return;
-        const newRatio = parseFloat(newRatioStr) || 0;
-        setStoreAllocations(prev =>
-            prev.map(s => s.id === storeId ? { ...s, storeRatio: newRatio } : s)
-        );
-    };
-
-    const handleAppRatioChange = (storeId: string, key: keyof ApplicationRatios, newRatioStr: string) => {
-         if (isCalculating) return;
-        const newRatio = parseFloat(newRatioStr) || 0;
-        setStoreAllocations(prev =>
-            prev.map(s =>
-                s.id === storeId
-                    ? {
-                        ...s,
-                        applicationRatios: {
-                            ...s.applicationRatios,
-                            [key]: { ...s.applicationRatios[key], ratio: newRatio },
-                        },
-                      }
-                    : s
-            )
-        );
-    };
-    
-    const handleStoreAmountChange = (storeId: string, newAmountStr: string) => {
-        if (isCalculating) return;
-        setIsCalculating(true);
-        const newAmount = parseFloat(newAmountStr) || 0;
-
-        setStoreAllocations(prev => {
-            // Find the current and updated stores
-            const updatedStore = prev.find(s => s.id === storeId);
-            if (!updatedStore) return prev;
-
-            // Calculate the new ratio for the updated store based on the total amount
-            const newRatio = totalAmount > 0 ? (newAmount / totalAmount) * prev.reduce((sum, s) => sum + s.storeRatio, 0) : 1;
+        const newAllocations = currentAllocations.map(store => {
+            const newAllocatedAmount = totalStoreRatio > 0
+                ? (store.storeRatio / totalStoreRatio) * currentTotal
+                : (currentAllocations.length === 1 ? currentTotal : 0);
             
-            return prev.map(s => s.id === storeId ? { ...s, storeRatio: newRatio, allocatedAmount: newAmount } : s);
+            const totalAppRatio = store.applicationRatios.minMax.ratio + store.applicationRatios.sale.ratio + store.applicationRatios.web.ratio;
+            
+            let newMinMaxAmount = 0;
+            let newSaleAmount = 0;
+            let newWebAmount = 0;
+
+            if (totalAppRatio > 0) {
+                newMinMaxAmount = (store.applicationRatios.minMax.ratio / totalAppRatio) * newAllocatedAmount;
+                newSaleAmount = (store.applicationRatios.sale.ratio / totalAppRatio) * newAllocatedAmount;
+                newWebAmount = newAllocatedAmount - newMinMaxAmount - newSaleAmount;
+            }
+
+            return {
+                ...store,
+                allocatedAmount: newAllocatedAmount,
+                applicationRatios: {
+                    minMax: { ...store.applicationRatios.minMax, amount: newMinMaxAmount },
+                    sale: { ...store.applicationRatios.sale, amount: newSaleAmount },
+                    web: { ...store.applicationRatios.web, amount: newWebAmount },
+                }
+            };
         });
-        setIsCalculating(false);
-    };
-    
-    const handleAppAmountChange = (storeId: string, key: keyof ApplicationRatios, newAmountStr: string) => {
-        if (isCalculating) return;
-        setIsCalculating(true);
-        const newAmount = parseFloat(newAmountStr) || 0;
 
-        setStoreAllocations(prev => {
-            return prev.map(store => {
-                if (store.id !== storeId) return store;
-
-                // Calculate new ratio based on this store's allocated amount
-                const newRatio = store.allocatedAmount > 0 ? (newAmount / store.allocatedAmount) * (store.applicationRatios.minMax.ratio + store.applicationRatios.sale.ratio + store.applicationRatios.web.ratio) : 1;
-
-                const updatedAppRatios = {
-                    ...store.applicationRatios,
-                    [key]: { ratio: newRatio, amount: newAmount },
-                };
-
-                return { ...store, applicationRatios: updatedAppRatios };
+        setStoreAllocations(newAllocations);
+        
+        const newInputs: Record<string, string> = {};
+        newAllocations.forEach(store => {
+            newInputs[`ratio-${store.id}`] = String(store.storeRatio);
+            newInputs[`amount-${store.id}`] = store.allocatedAmount.toFixed(2);
+            Object.keys(store.applicationRatios).forEach(key => {
+                const appKey = key as keyof ApplicationRatios;
+                newInputs[`app-ratio-${store.id}-${appKey}`] = String(store.applicationRatios[appKey].ratio);
+                newInputs[`app-amount-${store.id}-${appKey}`] = store.applicationRatios[appKey].amount.toFixed(2);
             });
         });
-        setIsCalculating(false);
+        setInputValues(prev => ({ ...prev, ...newInputs }));
     };
 
+    const handleInputChange = (key: string, value: string) => {
+        setInputValues(prev => ({...prev, [key]: value}));
+    };
+    
+    const handleRatioBlur = (key: string, storeId: string, appKey?: keyof ApplicationRatios) => {
+        const newValue = parseFloat(inputValues[key]) || 0;
+        
+        if (appKey) { // It's an application ratio
+            setStoreAllocations(prev => prev.map(s => 
+                s.id === storeId ? {
+                    ...s,
+                    applicationRatios: {
+                        ...s.applicationRatios,
+                        [appKey]: { ...s.applicationRatios[appKey], ratio: newValue }
+                    }
+                } : s
+            ));
+        } else { // It's a store ratio
+            setStoreAllocations(prev => prev.map(s => s.id === storeId ? { ...s, storeRatio: newValue } : s));
+        }
+    };
+    
+    const handleAmountBlur = (key: string, storeId: string, appKey?: keyof ApplicationRatios) => {
+        const newAmount = parseFloat(inputValues[key]) || 0;
+        
+        if (appKey) { // App amount changed
+            setStoreAllocations(prev => {
+                return prev.map(store => {
+                    if (store.id !== storeId) return store;
+                    const totalAppRatio = store.applicationRatios.minMax.ratio + store.applicationRatios.sale.ratio + store.applicationRatios.web.ratio;
+                    const newRatio = store.allocatedAmount > 0 ? (newAmount / store.allocatedAmount) * totalAppRatio : 1;
+
+                    return {
+                        ...store,
+                        applicationRatios: {
+                            ...store.applicationRatios,
+                            [appKey]: { ratio: newRatio, amount: newAmount }
+                        }
+                    };
+                });
+            });
+        } else { // Store amount changed
+            setStoreAllocations(prev => {
+                 const totalStoreRatio = prev.reduce((sum, s) => sum + s.storeRatio, 0);
+                 const newRatio = totalAmount > 0 ? (newAmount / totalAmount) * totalStoreRatio : 1;
+                 return prev.map(s => s.id === storeId ? { ...s, storeRatio: newRatio, allocatedAmount: newAmount } : s);
+            });
+        }
+    };
 
     const toggleStoreExpansion = (storeId: string) => {
         setStoreAllocations(prev => 
@@ -294,7 +298,7 @@ export default function PaymentsPage() {
                      <div className="space-y-4">
                         <h3 className="font-semibold text-lg flex items-center gap-2"><span className="flex items-center justify-center h-6 w-6 rounded-full bg-primary text-primary-foreground text-sm">2</span>Payment Allocation</h3>
                         
-                        {mockStores.length > 1 && (
+                        {mockStores.length > 1 ? (
                             <div className="space-y-3">
                                 <h4 className="font-medium">Store Ratio Configuration</h4>
                                 <div className="space-y-2 rounded-lg border p-4">
@@ -313,16 +317,18 @@ export default function PaymentsPage() {
                                                     min="0"
                                                     placeholder="Ratio"
                                                     className="w-20 text-center h-8"
-                                                    value={store.storeRatio}
-                                                    onChange={(e) => handleStoreRatioChange(store.id, e.target.value)}
+                                                    value={inputValues[`ratio-${store.id}`] || ''}
+                                                    onChange={(e) => handleInputChange(`ratio-${store.id}`, e.target.value)}
+                                                    onBlur={() => handleRatioBlur(`ratio-${store.id}`, store.id)}
                                                 />
                                                 <Input
                                                     type="number"
                                                     min="0"
                                                     placeholder="Amount"
                                                     className="w-28 text-right h-8 font-semibold"
-                                                    value={store.allocatedAmount > 0 ? store.allocatedAmount.toFixed(2) : ''}
-                                                    onChange={(e) => handleStoreAmountChange(store.id, e.target.value)}
+                                                    value={inputValues[`amount-${store.id}`] || ''}
+                                                    onChange={(e) => handleInputChange(`amount-${store.id}`, e.target.value)}
+                                                    onBlur={() => handleAmountBlur(`amount-${store.id}`, store.id)}
                                                 />
                                             </div>
                                             <CollapsibleContent className="p-4 bg-muted/50 rounded-md mt-2">
@@ -330,27 +336,31 @@ export default function PaymentsPage() {
                                                      <h4 className="font-medium">Application Ratio Configuration</h4>
                                                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                                          {Object.keys(store.applicationRatios).map(key => {
-                                                            const appRatioKey = key as keyof ApplicationRatios;
+                                                            const appKey = key as keyof ApplicationRatios;
+                                                            const ratioId = `app-ratio-${store.id}-${appKey}`;
+                                                            const amountId = `app-amount-${store.id}-${appKey}`;
                                                             return (
                                                              <div key={key} className="space-y-2">
-                                                                 <Label htmlFor={`app-ratio-${store.id}-${key}`} className="capitalize text-xs">{key.replace(/([A-Z])/g, ' $1')} Orders</Label>
+                                                                 <Label htmlFor={ratioId} className="capitalize text-xs">{key.replace(/([A-Z])/g, ' $1')} Orders</Label>
                                                                  <div className="flex items-center gap-2">
                                                                     <Input
-                                                                        id={`app-ratio-${store.id}-${key}`}
+                                                                        id={ratioId}
                                                                         type="number"
                                                                         min="0"
                                                                         placeholder="Ratio"
                                                                         className="w-16 h-8 text-sm"
-                                                                        value={store.applicationRatios[appRatioKey].ratio}
-                                                                        onChange={(e) => handleAppRatioChange(store.id, appRatioKey, e.target.value)}
+                                                                        value={inputValues[ratioId] || ''}
+                                                                        onChange={(e) => handleInputChange(ratioId, e.target.value)}
+                                                                        onBlur={() => handleRatioBlur(ratioId, store.id, appKey)}
                                                                     />
                                                                     <Input
                                                                         type="number"
                                                                         min="0"
                                                                         placeholder="Amount"
                                                                         className="flex-1 h-8 text-right text-sm font-medium"
-                                                                        value={store.applicationRatios[appRatioKey].amount > 0 ? store.applicationRatios[appRatioKey].amount.toFixed(2) : ''}
-                                                                        onChange={(e) => handleAppAmountChange(store.id, appRatioKey, e.target.value)}
+                                                                        value={inputValues[amountId] || ''}
+                                                                        onChange={(e) => handleInputChange(amountId, e.target.value)}
+                                                                        onBlur={() => handleAmountBlur(amountId, store.id, appKey)}
                                                                     />
                                                                  </div>
                                                              </div>
@@ -362,34 +372,37 @@ export default function PaymentsPage() {
                                     ))}
                                 </div>
                             </div>
-                        )}
-                        
-                        {mockStores.length === 1 && storeAllocations.length > 0 && (
-                            <div className="space-y-3">
+                        ) : storeAllocations.length > 0 && (
+                             <div className="space-y-3">
                                 <h4 className="font-medium">Application Ratio Configuration</h4>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 rounded-lg border p-4">
                                     {Object.keys(storeAllocations[0].applicationRatios).map(key => {
-                                        const appRatioKey = key as keyof ApplicationRatios;
+                                        const appKey = key as keyof ApplicationRatios;
+                                        const store = storeAllocations[0];
+                                        const ratioId = `app-ratio-${store.id}-${appKey}`;
+                                        const amountId = `app-amount-${store.id}-${appKey}`;
                                         return (
                                         <div key={key} className="space-y-2">
-                                            <Label htmlFor={`app-ratio-${key}`} className="capitalize text-xs">{key.replace(/([A-Z])/g, ' $1')} Orders</Label>
+                                            <Label htmlFor={ratioId} className="capitalize text-xs">{key.replace(/([A-Z])/g, ' $1')} Orders</Label>
                                             <div className="flex items-center gap-2">
                                                 <Input
-                                                    id={`app-ratio-${key}`}
+                                                    id={ratioId}
                                                     type="number"
                                                     min="0"
                                                     placeholder="Ratio"
                                                     className="w-16 h-8 text-sm"
-                                                    value={storeAllocations[0].applicationRatios[appRatioKey].ratio}
-                                                    onChange={(e) => handleAppRatioChange(storeAllocations[0].id, appRatioKey, e.target.value)}
+                                                    value={inputValues[ratioId] || ''}
+                                                    onChange={(e) => handleInputChange(ratioId, e.target.value)}
+                                                    onBlur={() => handleRatioBlur(ratioId, store.id, appKey)}
                                                 />
                                                 <Input
                                                     type="number"
                                                     min="0"
                                                     placeholder="Amount"
                                                     className="flex-1 h-8 text-right text-sm font-medium"
-                                                    value={storeAllocations[0].applicationRatios[appRatioKey].amount > 0 ? storeAllocations[0].applicationRatios[appRatioKey].amount.toFixed(2) : ''}
-                                                    onChange={(e) => handleAppAmountChange(storeAllocations[0].id, appRatioKey, e.target.value)}
+                                                    value={inputValues[amountId] || ''}
+                                                    onChange={(e) => handleInputChange(amountId, e.target.value)}
+                                                    onBlur={() => handleAmountBlur(amountId, store.id, appKey)}
                                                 />
                                             </div>
                                         </div>
@@ -530,5 +543,7 @@ export default function PaymentsPage() {
     </div>
   );
 }
+
+    
 
     
