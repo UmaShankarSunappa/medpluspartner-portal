@@ -45,7 +45,6 @@ const statusVariant: { [key: string]: "success" | "destructive" | "secondary" } 
     "Pending": "secondary",
 };
 
-// Type definitions for our new state structure
 type ApplicationRatios = {
     minMax: { ratio: number; amount: number };
     sale: { ratio: number; amount: number };
@@ -73,12 +72,12 @@ export default function PaymentsPage() {
     const [selectedPayment, setSelectedPayment] = useState<typeof paymentsData[0] | null>(null);
     const [dateRange, setDateRange] = useState<DateRange | undefined>();
 
-    // --- Single Source of Truth for Payment Modal State ---
     const [totalAmount, setTotalAmount] = useState<number>(0);
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string | null>(null);
     const [storeAllocations, setStoreAllocations] = useState<StoreAllocationState[]>([]);
+    const [isCalculating, setIsCalculating] = useState(false);
 
-    // Initialize or reset state when modal opens
+
     useEffect(() => {
         if (isCreatePaymentOpen) {
             const initialAllocations = mockStores.map(store => ({
@@ -87,7 +86,7 @@ export default function PaymentsPage() {
                 storeRatio: mockStores.length > 1 ? 1 : 1,
                 allocatedAmount: 0,
                 applicationRatios: initialApplicationRatios(),
-                isExpanded: true, // Expand by default
+                isExpanded: true,
             }));
             setStoreAllocations(initialAllocations);
             setTotalAmount(0);
@@ -95,18 +94,19 @@ export default function PaymentsPage() {
         }
     }, [isCreatePaymentOpen]);
 
-    // Top-down calculation logic
+    // Top-down calculation: Recalculate all amounts when totalAmount or ratios change
     useEffect(() => {
+        if (isCalculating) return;
+        setIsCalculating(true);
+
         const totalStoreRatio = storeAllocations.reduce((sum, s) => sum + s.storeRatio, 0);
 
         setStoreAllocations(prevAllocations => {
             return prevAllocations.map(store => {
-                // 1. Calculate store's allocated amount
                 const newAllocatedAmount = totalStoreRatio > 0
                     ? (store.storeRatio / totalStoreRatio) * totalAmount
                     : (mockStores.length === 1 ? totalAmount : 0);
 
-                // 2. Calculate application splits for this store
                 const totalAppRatio = store.applicationRatios.minMax.ratio + store.applicationRatios.sale.ratio + store.applicationRatios.web.ratio;
                 
                 let newMinMaxAmount = 0;
@@ -116,7 +116,7 @@ export default function PaymentsPage() {
                 if (totalAppRatio > 0) {
                     newMinMaxAmount = (store.applicationRatios.minMax.ratio / totalAppRatio) * newAllocatedAmount;
                     newSaleAmount = (store.applicationRatios.sale.ratio / totalAppRatio) * newAllocatedAmount;
-                    newWebAmount = newAllocatedAmount - newMinMaxAmount - newSaleAmount; // Remainder logic for precision
+                    newWebAmount = newAllocatedAmount - newMinMaxAmount - newSaleAmount;
                 }
 
                 return {
@@ -130,12 +130,14 @@ export default function PaymentsPage() {
                 };
             });
         });
+        
+        setIsCalculating(false);
 
     }, [totalAmount, storeAllocations.map(s => s.storeRatio).join(), storeAllocations.map(s => `${s.applicationRatios.minMax.ratio}-${s.applicationRatios.sale.ratio}-${s.applicationRatios.web.ratio}`).join()]);
 
 
-    // --- Callback Handlers for Child Components ---
     const handleStoreRatioChange = (storeId: string, newRatioStr: string) => {
+        if (isCalculating) return;
         const newRatio = parseFloat(newRatioStr) || 0;
         setStoreAllocations(prev =>
             prev.map(s => s.id === storeId ? { ...s, storeRatio: newRatio } : s)
@@ -143,6 +145,7 @@ export default function PaymentsPage() {
     };
 
     const handleAppRatioChange = (storeId: string, key: keyof ApplicationRatios, newRatioStr: string) => {
+         if (isCalculating) return;
         const newRatio = parseFloat(newRatioStr) || 0;
         setStoreAllocations(prev =>
             prev.map(s =>
@@ -159,6 +162,48 @@ export default function PaymentsPage() {
         );
     };
     
+    const handleStoreAmountChange = (storeId: string, newAmountStr: string) => {
+        if (isCalculating) return;
+        setIsCalculating(true);
+        const newAmount = parseFloat(newAmountStr) || 0;
+
+        setStoreAllocations(prev => {
+            // Find the current and updated stores
+            const updatedStore = prev.find(s => s.id === storeId);
+            if (!updatedStore) return prev;
+
+            // Calculate the new ratio for the updated store based on the total amount
+            const newRatio = totalAmount > 0 ? (newAmount / totalAmount) * prev.reduce((sum, s) => sum + s.storeRatio, 0) : 1;
+            
+            return prev.map(s => s.id === storeId ? { ...s, storeRatio: newRatio, allocatedAmount: newAmount } : s);
+        });
+        setIsCalculating(false);
+    };
+    
+    const handleAppAmountChange = (storeId: string, key: keyof ApplicationRatios, newAmountStr: string) => {
+        if (isCalculating) return;
+        setIsCalculating(true);
+        const newAmount = parseFloat(newAmountStr) || 0;
+
+        setStoreAllocations(prev => {
+            return prev.map(store => {
+                if (store.id !== storeId) return store;
+
+                // Calculate new ratio based on this store's allocated amount
+                const newRatio = store.allocatedAmount > 0 ? (newAmount / store.allocatedAmount) * (store.applicationRatios.minMax.ratio + store.applicationRatios.sale.ratio + store.applicationRatios.web.ratio) : 1;
+
+                const updatedAppRatios = {
+                    ...store.applicationRatios,
+                    [key]: { ratio: newRatio, amount: newAmount },
+                };
+
+                return { ...store, applicationRatios: updatedAppRatios };
+            });
+        });
+        setIsCalculating(false);
+    };
+
+
     const toggleStoreExpansion = (storeId: string) => {
         setStoreAllocations(prev => 
             prev.map(s => s.id === storeId ? { ...s, isExpanded: !s.isExpanded } : s)
@@ -255,9 +300,9 @@ export default function PaymentsPage() {
                                 <div className="space-y-2 rounded-lg border p-4">
                                     {storeAllocations.map(store => (
                                         <Collapsible key={store.id} open={store.isExpanded} onOpenChange={() => toggleStoreExpansion(store.id)}>
-                                            <div className="flex items-center justify-between gap-4">
+                                            <div className="flex items-center justify-between gap-2">
                                                 <CollapsibleTrigger asChild>
-                                                    <Button variant="ghost" size="sm" className="flex items-center gap-2 flex-1 justify-start">
+                                                    <Button variant="ghost" size="sm" className="flex items-center gap-2 flex-1 justify-start p-2">
                                                         <ChevronDown className={cn("h-4 w-4 transition-transform", store.isExpanded && "rotate-180")} />
                                                         <Label htmlFor={`ratio-${store.id}`} className="cursor-pointer">{store.name}</Label>
                                                     </Button>
@@ -267,13 +312,18 @@ export default function PaymentsPage() {
                                                     type="number"
                                                     min="0"
                                                     placeholder="Ratio"
-                                                    className="w-24 text-center"
+                                                    className="w-20 text-center h-8"
                                                     value={store.storeRatio}
                                                     onChange={(e) => handleStoreRatioChange(store.id, e.target.value)}
                                                 />
-                                                <div className="w-32 text-right font-semibold">
-                                                    ₹{store.allocatedAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                                </div>
+                                                <Input
+                                                    type="number"
+                                                    min="0"
+                                                    placeholder="Amount"
+                                                    className="w-28 text-right h-8 font-semibold"
+                                                    value={store.allocatedAmount > 0 ? store.allocatedAmount.toFixed(2) : ''}
+                                                    onChange={(e) => handleStoreAmountChange(store.id, e.target.value)}
+                                                />
                                             </div>
                                             <CollapsibleContent className="p-4 bg-muted/50 rounded-md mt-2">
                                                  <div className="space-y-3">
@@ -283,20 +333,25 @@ export default function PaymentsPage() {
                                                             const appRatioKey = key as keyof ApplicationRatios;
                                                             return (
                                                              <div key={key} className="space-y-2">
-                                                                 <Label htmlFor={`app-ratio-${store.id}-${key}`} className="capitalize">{key.replace(/([A-Z])/g, ' $1')} Orders</Label>
+                                                                 <Label htmlFor={`app-ratio-${store.id}-${key}`} className="capitalize text-xs">{key.replace(/([A-Z])/g, ' $1')} Orders</Label>
                                                                  <div className="flex items-center gap-2">
                                                                     <Input
                                                                         id={`app-ratio-${store.id}-${key}`}
                                                                         type="number"
                                                                         min="0"
                                                                         placeholder="Ratio"
-                                                                        className="w-20"
+                                                                        className="w-16 h-8 text-sm"
                                                                         value={store.applicationRatios[appRatioKey].ratio}
                                                                         onChange={(e) => handleAppRatioChange(store.id, appRatioKey, e.target.value)}
                                                                     />
-                                                                    <div className="text-sm font-semibold">
-                                                                        ₹{store.applicationRatios[appRatioKey].amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                                                    </div>
+                                                                    <Input
+                                                                        type="number"
+                                                                        min="0"
+                                                                        placeholder="Amount"
+                                                                        className="flex-1 h-8 text-right text-sm font-medium"
+                                                                        value={store.applicationRatios[appRatioKey].amount > 0 ? store.applicationRatios[appRatioKey].amount.toFixed(2) : ''}
+                                                                        onChange={(e) => handleAppAmountChange(store.id, appRatioKey, e.target.value)}
+                                                                    />
                                                                  </div>
                                                              </div>
                                                          )})}
@@ -317,20 +372,25 @@ export default function PaymentsPage() {
                                         const appRatioKey = key as keyof ApplicationRatios;
                                         return (
                                         <div key={key} className="space-y-2">
-                                            <Label htmlFor={`app-ratio-${key}`} className="capitalize">{key.replace(/([A-Z])/g, ' $1')} Orders</Label>
+                                            <Label htmlFor={`app-ratio-${key}`} className="capitalize text-xs">{key.replace(/([A-Z])/g, ' $1')} Orders</Label>
                                             <div className="flex items-center gap-2">
-                                            <Input
-                                                id={`app-ratio-${key}`}
-                                                type="number"
-                                                min="0"
-                                                placeholder="Ratio"
-                                                className="w-20"
-                                                value={storeAllocations[0].applicationRatios[appRatioKey].ratio}
-                                                onChange={(e) => handleAppRatioChange(storeAllocations[0].id, appRatioKey, e.target.value)}
-                                            />
-                                            <div className="text-sm font-semibold">
-                                                ₹{storeAllocations[0].applicationRatios[appRatioKey].amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                            </div>
+                                                <Input
+                                                    id={`app-ratio-${key}`}
+                                                    type="number"
+                                                    min="0"
+                                                    placeholder="Ratio"
+                                                    className="w-16 h-8 text-sm"
+                                                    value={storeAllocations[0].applicationRatios[appRatioKey].ratio}
+                                                    onChange={(e) => handleAppRatioChange(storeAllocations[0].id, appRatioKey, e.target.value)}
+                                                />
+                                                <Input
+                                                    type="number"
+                                                    min="0"
+                                                    placeholder="Amount"
+                                                    className="flex-1 h-8 text-right text-sm font-medium"
+                                                    value={storeAllocations[0].applicationRatios[appRatioKey].amount > 0 ? storeAllocations[0].applicationRatios[appRatioKey].amount.toFixed(2) : ''}
+                                                    onChange={(e) => handleAppAmountChange(storeAllocations[0].id, appRatioKey, e.target.value)}
+                                                />
                                             </div>
                                         </div>
                                     )})}
