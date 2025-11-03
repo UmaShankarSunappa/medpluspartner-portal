@@ -101,23 +101,6 @@ export default function DashboardLayout({
                   ))}
                 </div>
               </div>
-              <div>
-                <SidebarLink
-                  link={{
-                    label: user?.displayName || "Anand Sharma",
-                    href: "/dashboard/account",
-                    icon: (
-                      <Image
-                        src={user?.photoURL || "https://picsum.photos/seed/avatar/50/50"}
-                        className="h-7 w-7 flex-shrink-0 rounded-full"
-                        width={50}
-                        height={50}
-                        alt="Avatar"
-                      />
-                    ),
-                  }}
-                />
-              </div>
             </SidebarBody>
           </Sidebar>
           <div className="flex flex-1">
