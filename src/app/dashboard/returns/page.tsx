@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -28,11 +28,12 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { returnsData, type Return } from "@/lib/data";
-import { Eye, Search, Truck, CheckCircle, Package, AlertCircle } from "lucide-react";
+import { Eye, Search, Truck, CheckCircle, Package, AlertCircle, FileText, RefreshCw } from "lucide-react";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { DateRange } from "react-day-picker";
 
 const statusVariant: { [key: string]: "default" | "secondary" | "destructive" | "outline" | "info" | "warning" | "success" } = {
     "Credit Note Received": "success",
@@ -42,9 +43,47 @@ const statusVariant: { [key: string]: "default" | "secondary" | "destructive" | 
 };
 
 export default function ReturnsPage() {
+    const [filteredReturns, setFilteredReturns] = useState<Return[]>(returnsData);
     const [selectedReturn, setSelectedReturn] = useState<Return | null>(null);
     const [isViewModalOpen, setIsViewModalOpen] = useState(false);
     const [isTrackModalOpen, setIsTrackModalOpen] = useState(false);
+    
+    // State for filters
+    const [returnIdFilter, setReturnIdFilter] = useState("");
+    const [dateRange, setDateRange] = useState<DateRange | undefined>();
+
+    useEffect(() => {
+        let newFilteredReturns = returnsData;
+
+        // Date Range filter
+        if (dateRange?.from && dateRange?.to) {
+            newFilteredReturns = newFilteredReturns.filter(ret => {
+                const returnDate = new Date(ret.receivedDate);
+                return returnDate >= dateRange.from! && returnDate <= dateRange.to!;
+            });
+        }
+
+        // Return ID filter
+        if (returnIdFilter.trim()) {
+            newFilteredReturns = newFilteredReturns.filter(ret => ret.returnId.toLowerCase().includes(returnIdFilter.toLowerCase()));
+        }
+        
+        setFilteredReturns(newFilteredReturns);
+
+    }, [returnIdFilter, dateRange]);
+
+    const kpiCounts = useMemo(() => {
+        return filteredReturns.reduce((acc, ret) => {
+            if (ret.status === "TO Generated") {
+                acc.toGenerated++;
+            } else if (ret.status === "Replenished") {
+                acc.replenished++;
+            } else if (ret.status === "Credit Note Received") {
+                acc.creditNoteReceived++;
+            }
+            return acc;
+        }, { toGenerated: 0, replenished: 0, creditNoteReceived: 0 });
+    }, [filteredReturns]);
 
     const handleViewClick = (ret: Return) => {
         setSelectedReturn(ret);
@@ -75,20 +114,49 @@ export default function ReturnsPage() {
                     <div className="flex flex-col md:flex-row gap-4 items-end">
                         <div className="grid gap-2 w-full md:w-auto">
                             <Label htmlFor="date-range">Date Range</Label>
-                            <DateRangePicker />
+                            <DateRangePicker onSelect={setDateRange} value={dateRange}/>
                         </div>
                         <div className="grid gap-2 w-full md:w-auto">
                             <Label htmlFor="search-return-id">Return ID</Label>
                             <div className="relative">
                                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                                <Input placeholder="Search..." id="search-return-id" className="pl-8" />
+                                <Input placeholder="Search..." id="search-return-id" className="pl-8" value={returnIdFilter} onChange={(e) => setReturnIdFilter(e.target.value)} />
                             </div>
                         </div>
-                        <Button>Search</Button>
                     </div>
                 </CardContent>
             </Card>
 
+        <div className="grid gap-4 md:grid-cols-3">
+            <Card className="shadow-md bg-blue-50 dark:bg-blue-900/50 border-blue-200 dark:border-blue-800">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium text-blue-800 dark:text-blue-200">TO Generated</CardTitle>
+                    <FileText className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                </CardHeader>
+                <CardContent>
+                    <div className="text-2xl font-bold text-blue-900 dark:text-blue-100">{kpiCounts.toGenerated}</div>
+                </CardContent>
+            </Card>
+            <Card className="shadow-md bg-green-50 dark:bg-green-900/50 border-green-200 dark:border-green-800">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium text-green-800 dark:text-green-200">Replenished</CardTitle>
+                    <RefreshCw className="h-4 w-4 text-green-600 dark:text-green-400" />
+                </CardHeader>
+                <CardContent>
+                    <div className="text-2xl font-bold text-green-900 dark:text-green-100">{kpiCounts.replenished}</div>
+                </CardContent>
+            </Card>
+             <Card className="shadow-md bg-teal-50 dark:bg-teal-900/50 border-teal-200 dark:border-teal-800">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium text-teal-800 dark:text-teal-200">Credit Note Received</CardTitle>
+                    <CheckCircle className="h-4 w-4 text-teal-600 dark:text-teal-400" />
+                </CardHeader>
+                <CardContent>
+                    <div className="text-2xl font-bold text-teal-900 dark:text-teal-100">{kpiCounts.creditNoteReceived}</div>
+                </CardContent>
+            </Card>
+        </div>
+        
         <Card>
             <CardHeader>
             <CardTitle>Return History</CardTitle>
@@ -112,7 +180,7 @@ export default function ReturnsPage() {
                 </TableRow>
                 </TableHeader>
                 <TableBody>
-                {returnsData.map((ret) => (
+                {filteredReturns.map((ret) => (
                     <TableRow key={ret.returnId}>
                     <TableCell className="font-medium">{ret.returnId}</TableCell>
                     <TableCell>{ret.taxInvoice}</TableCell>
@@ -224,3 +292,4 @@ export default function ReturnsPage() {
     </TooltipProvider>
   );
 }
+
