@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
@@ -28,7 +27,7 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { returnsData, type Return } from "@/lib/data";
-import { Eye, Search, Truck, CheckCircle, Package, AlertCircle, FileText, RefreshCw } from "lucide-react";
+import { Eye, Search, Truck, CheckCircle, Package, FileText, RefreshCw } from "lucide-react";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -292,4 +291,3 @@ export default function ReturnsPage() {
     </TooltipProvider>
   );
 }
-
