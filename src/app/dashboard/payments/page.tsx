@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { PlusCircle, Search, Download, Landmark, CreditCard, Signal, IndianRupee, BotMessageSquare, Eye } from "lucide-react";
+import { PlusCircle, Search, Download, Landmark, CreditCard, Signal, IndianRupee, BotMessageSquare, Eye, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -28,13 +28,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -43,6 +36,7 @@ import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { paymentsData, accountProfile, stores as mockStores } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 const statusVariant: { [key: string]: "success" | "destructive" | "secondary" } = {
     "Successful": "success",
@@ -50,127 +44,130 @@ const statusVariant: { [key: string]: "success" | "destructive" | "secondary" } 
     "Pending": "secondary",
 };
 
-type StoreAllocation = { [storeId: string]: { ratio: number; amount: number } };
-type ApplicationRatio = { [key: string]: { ratio: number; amount: number } };
+// Type definitions for our new state structure
+type ApplicationRatios = {
+    minMax: { ratio: number; amount: number };
+    sale: { ratio: number; amount: number };
+    web: { ratio: number; amount: number };
+};
+
+type StoreAllocationState = {
+    id: string;
+    name: string;
+    storeRatio: number;
+    allocatedAmount: number;
+    applicationRatios: ApplicationRatios;
+    isExpanded: boolean;
+};
+
+const initialApplicationRatios = (): ApplicationRatios => ({
+    minMax: { ratio: 1, amount: 0 },
+    sale: { ratio: 1, amount: 0 },
+    web: { ratio: 1, amount: 0 },
+});
 
 export default function PaymentsPage() {
     const [isCreatePaymentOpen, setIsCreatePaymentOpen] = useState(false);
     const [isViewDetailsOpen, setIsViewDetailsOpen] = useState(false);
     const [selectedPayment, setSelectedPayment] = useState<typeof paymentsData[0] | null>(null);
 
+    // --- Single Source of Truth for Payment Modal State ---
     const [totalAmount, setTotalAmount] = useState<number>(0);
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string | null>(null);
-    
-    const initialStoreAllocations = useMemo(() => 
-        mockStores.reduce((acc, store) => ({ ...acc, [store.id]: { ratio: mockStores.length > 1 ? 0 : 1, amount: 0 } }), {}),
-        []
-    );
+    const [storeAllocations, setStoreAllocations] = useState<StoreAllocationState[]>([]);
 
-    const [storeAllocations, setStoreAllocations] = useState<StoreAllocation>(initialStoreAllocations);
-
-    const [applicationRatios, setApplicationRatios] = useState<ApplicationRatio>({
-        'minMax': { ratio: 1, amount: 0 },
-        'sale': { ratio: 1, amount: 0 },
-        'web': { ratio: 1, amount: 0 },
-    });
-    
-    const storeRatios = useMemo(() => Object.values(storeAllocations).map(s => s.ratio), [storeAllocations]);
-
-    // Recalculate store allocations when totalAmount or ratios change
+    // Initialize or reset state when modal opens
     useEffect(() => {
-        const totalRatio = storeRatios.reduce((sum, ratio) => sum + (ratio || 0), 0);
-        
-        if (totalRatio === 0 || totalAmount === 0) {
-             setStoreAllocations(prev => {
-                const newAllocations = {...prev};
-                Object.keys(newAllocations).forEach(storeId => {
-                    newAllocations[storeId].amount = 0;
-                });
-                return newAllocations;
-            });
-            return;
+        if (isCreatePaymentOpen) {
+            const initialAllocations = mockStores.map(store => ({
+                id: store.id,
+                name: store.name,
+                storeRatio: mockStores.length > 1 ? 0 : 1,
+                allocatedAmount: 0,
+                applicationRatios: initialApplicationRatios(),
+                isExpanded: false,
+            }));
+            setStoreAllocations(initialAllocations);
+            setTotalAmount(0);
+            setSelectedPaymentMethod(null);
         }
+    }, [isCreatePaymentOpen]);
 
-        const newAllocations: StoreAllocation = {};
-        let allocatedSum = 0;
-        const storeIds = Object.keys(storeAllocations);
-
-        storeIds.forEach((storeId, index) => {
-            const store = storeAllocations[storeId];
-            if (index === storeIds.length - 1) {
-                 newAllocations[storeId] = {
-                    ...store,
-                    amount: totalAmount - allocatedSum,
-                };
-            } else {
-                const allocatedAmount = (store.ratio / totalRatio) * totalAmount;
-                newAllocations[storeId] = {
-                    ...store,
-                    amount: allocatedAmount
-                };
-                allocatedSum += allocatedAmount;
-            }
-        });
-        setStoreAllocations(newAllocations);
-    }, [totalAmount, ...storeRatios]);
-
-    const appRatios = useMemo(() => Object.values(applicationRatios).map(a => a.ratio), [applicationRatios]);
-
-    // Recalculate application allocations
+    // Top-down calculation logic
     useEffect(() => {
-        const totalRatio = appRatios.reduce((sum, ratio) => sum + (ratio || 0), 0);
-        
-        if (totalRatio === 0 || totalAmount === 0) {
-            setApplicationRatios(prev => {
-                const newRatios = {...prev};
-                Object.keys(newRatios).forEach(key => { newRatios[key].amount = 0; });
-                return newRatios;
+        const totalStoreRatio = storeAllocations.reduce((sum, s) => sum + s.storeRatio, 0);
+
+        setStoreAllocations(prevAllocations => {
+            return prevAllocations.map(store => {
+                // 1. Calculate store's allocated amount
+                const newAllocatedAmount = totalStoreRatio > 0
+                    ? (store.storeRatio / totalStoreRatio) * totalAmount
+                    : (mockStores.length === 1 ? totalAmount : 0);
+
+                // 2. Calculate application splits for this store
+                const totalAppRatio = store.applicationRatios.minMax.ratio + store.applicationRatios.sale.ratio + store.applicationRatios.web.ratio;
+                
+                let newMinMaxAmount = 0;
+                let newSaleAmount = 0;
+                let newWebAmount = 0;
+                
+                if (totalAppRatio > 0) {
+                    newMinMaxAmount = (store.applicationRatios.minMax.ratio / totalAppRatio) * newAllocatedAmount;
+                    newSaleAmount = (store.applicationRatios.sale.ratio / totalAppRatio) * newAllocatedAmount;
+                    newWebAmount = newAllocatedAmount - newMinMaxAmount - newSaleAmount; // Remainder logic for precision
+                }
+
+                return {
+                    ...store,
+                    allocatedAmount: newAllocatedAmount,
+                    applicationRatios: {
+                        minMax: { ...store.applicationRatios.minMax, amount: newMinMaxAmount },
+                        sale: { ...store.applicationRatios.sale, amount: newSaleAmount },
+                        web: { ...store.applicationRatios.web, amount: newWebAmount },
+                    }
+                };
             });
-            return;
-        }
-
-        const newAppRatios: ApplicationRatio = {};
-        let allocatedSum = 0;
-        const ratioKeys = Object.keys(applicationRatios);
-
-        ratioKeys.forEach((key, index) => {
-            const ratioItem = applicationRatios[key];
-             if (index === ratioKeys.length - 1) {
-                newAppRatios[key] = { ...ratioItem, amount: totalAmount - allocatedSum };
-            } else {
-                const allocatedAmount = (ratioItem.ratio / totalRatio) * totalAmount;
-                newAppRatios[key] = { ...ratioItem, amount: allocatedAmount };
-                allocatedSum += allocatedAmount;
-            }
         });
-        setApplicationRatios(newAppRatios);
 
-    }, [totalAmount, ...appRatios]);
+    }, [totalAmount, storeAllocations.map(s => s.storeRatio).join(), storeAllocations.map(s => `${s.applicationRatios.minMax.ratio}-${s.applicationRatios.sale.ratio}-${s.applicationRatios.web.ratio}`).join()]);
 
 
+    // --- Callback Handlers for Child Components ---
     const handleStoreRatioChange = (storeId: string, newRatioStr: string) => {
         const newRatio = parseFloat(newRatioStr) || 0;
-        setStoreAllocations(prev => ({
-            ...prev,
-            [storeId]: { ...prev[storeId], ratio: newRatio },
-        }));
+        setStoreAllocations(prev =>
+            prev.map(s => s.id === storeId ? { ...s, storeRatio: newRatio } : s)
+        );
     };
 
-     const handleAppRatioChange = (key: string, newRatioStr: string) => {
+    const handleAppRatioChange = (storeId: string, key: keyof ApplicationRatios, newRatioStr: string) => {
         const newRatio = parseFloat(newRatioStr) || 0;
-        setApplicationRatios(prev => ({
-            ...prev,
-            [key]: { ...prev[key], ratio: newRatio },
-        }));
+        setStoreAllocations(prev =>
+            prev.map(s =>
+                s.id === storeId
+                    ? {
+                        ...s,
+                        applicationRatios: {
+                            ...s.applicationRatios,
+                            [key]: { ...s.applicationRatios[key], ratio: newRatio },
+                        },
+                      }
+                    : s
+            )
+        );
     };
     
+    const toggleStoreExpansion = (storeId: string) => {
+        setStoreAllocations(prev => 
+            prev.map(s => s.id === storeId ? { ...s, isExpanded: !s.isExpanded } : s)
+        );
+    };
+
     const handleViewDetails = (payment: typeof paymentsData[0]) => {
         setSelectedPayment(payment);
         setIsViewDetailsOpen(true);
     };
-
-    const isProceedDisabled = totalAmount <= 0 || !selectedPaymentMethod;
-
+    
     const handleExport = () => {
         const headers = ["Date & Time", "Allocated Amount", "Payment Method", "Master Payment ID", "Status"];
         const csvRows = [
@@ -198,6 +195,8 @@ export default function PaymentsPage() {
         document.body.removeChild(link);
     };
 
+
+    const isProceedDisabled = totalAmount <= 0 || !selectedPaymentMethod;
 
   return (
     <div className="space-y-6">
@@ -243,60 +242,99 @@ export default function PaymentsPage() {
                         </div>
                     </div>
                     <Separator />
+
                     {/* Step 2: Payment Allocation */}
                      <div className="space-y-4">
                         <h3 className="font-semibold text-lg flex items-center gap-2"><span className="flex items-center justify-center h-6 w-6 rounded-full bg-primary text-primary-foreground text-sm">2</span>Payment Allocation</h3>
                         
-                        {/* Store Ratio Configuration */}
                         {mockStores.length > 1 && (
                             <div className="space-y-3">
                                 <h4 className="font-medium">Store Ratio Configuration</h4>
                                 <div className="space-y-2 rounded-lg border p-4">
-                                    {mockStores.map(store => (
-                                        <div key={store.id} className="flex items-center justify-between gap-4">
-                                            <Label htmlFor={`ratio-${store.id}`} className="flex-1">{store.name}</Label>
-                                            <Input
-                                                id={`ratio-${store.id}`}
-                                                type="number"
-                                                min="0"
-                                                placeholder="Ratio"
-                                                className="w-24 text-center"
-                                                value={storeAllocations[store.id]?.ratio || ''}
-                                                onChange={(e) => handleStoreRatioChange(store.id, e.target.value)}
-                                            />
-                                            <div className="w-32 text-right font-semibold">
-                                                ₹ {storeAllocations[store.id]?.amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+                                    {storeAllocations.map(store => (
+                                        <Collapsible key={store.id} open={store.isExpanded} onOpenChange={() => toggleStoreExpansion(store.id)}>
+                                            <div className="flex items-center justify-between gap-4">
+                                                <CollapsibleTrigger asChild>
+                                                    <Button variant="ghost" size="sm" className="flex items-center gap-2 flex-1 justify-start">
+                                                        <ChevronDown className={cn("h-4 w-4 transition-transform", store.isExpanded && "rotate-180")} />
+                                                        <Label htmlFor={`ratio-${store.id}`} className="cursor-pointer">{store.name}</Label>
+                                                    </Button>
+                                                </CollapsibleTrigger>
+                                                <Input
+                                                    id={`ratio-${store.id}`}
+                                                    type="number"
+                                                    min="0"
+                                                    placeholder="Ratio"
+                                                    className="w-24 text-center"
+                                                    value={store.storeRatio}
+                                                    onChange={(e) => handleStoreRatioChange(store.id, e.target.value)}
+                                                />
+                                                <div className="w-32 text-right font-semibold">
+                                                    ₹{store.allocatedAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                </div>
                                             </div>
-                                        </div>
+                                            <CollapsibleContent className="p-4 bg-muted/50 rounded-md mt-2">
+                                                 <div className="space-y-3">
+                                                     <h4 className="font-medium">Application Ratio Configuration</h4>
+                                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                                         {Object.keys(store.applicationRatios).map(key => {
+                                                            const appRatioKey = key as keyof ApplicationRatios;
+                                                            return (
+                                                             <div key={key} className="space-y-2">
+                                                                 <Label htmlFor={`app-ratio-${store.id}-${key}`} className="capitalize">{key.replace(/([A-Z])/g, ' $1')} Orders</Label>
+                                                                 <div className="flex items-center gap-2">
+                                                                    <Input
+                                                                        id={`app-ratio-${store.id}-${key}`}
+                                                                        type="number"
+                                                                        min="0"
+                                                                        placeholder="Ratio"
+                                                                        className="w-20"
+                                                                        value={store.applicationRatios[appRatioKey].ratio}
+                                                                        onChange={(e) => handleAppRatioChange(store.id, appRatioKey, e.target.value)}
+                                                                    />
+                                                                    <div className="text-sm font-semibold">
+                                                                        ₹{store.applicationRatios[appRatioKey].amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                                    </div>
+                                                                 </div>
+                                                             </div>
+                                                         )})}
+                                                     </div>
+                                                 </div>
+                                            </CollapsibleContent>
+                                        </Collapsible>
                                     ))}
                                 </div>
                             </div>
                         )}
-                         {/* Application Ratio Configuration */}
-                         <div className="space-y-3">
-                             <h4 className="font-medium">Application Ratio Configuration</h4>
-                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 rounded-lg border p-4">
-                                 {Object.keys(applicationRatios).map(key => (
-                                     <div key={key} className="space-y-2">
-                                         <Label htmlFor={`app-ratio-${key}`} className="capitalize">{key.replace(/([A-Z])/g, ' $1')} Orders</Label>
-                                         <div className="flex items-center gap-2">
+                        
+                        {mockStores.length === 1 && storeAllocations.length > 0 && (
+                            <div className="space-y-3">
+                                <h4 className="font-medium">Application Ratio Configuration</h4>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 rounded-lg border p-4">
+                                    {Object.keys(storeAllocations[0].applicationRatios).map(key => {
+                                        const appRatioKey = key as keyof ApplicationRatios;
+                                        return (
+                                        <div key={key} className="space-y-2">
+                                            <Label htmlFor={`app-ratio-${key}`} className="capitalize">{key.replace(/([A-Z])/g, ' $1')} Orders</Label>
+                                            <div className="flex items-center gap-2">
                                             <Input
                                                 id={`app-ratio-${key}`}
                                                 type="number"
                                                 min="0"
                                                 placeholder="Ratio"
                                                 className="w-20"
-                                                value={applicationRatios[key].ratio}
-                                                onChange={(e) => handleAppRatioChange(key, e.target.value)}
+                                                value={storeAllocations[0].applicationRatios[appRatioKey].ratio}
+                                                onChange={(e) => handleAppRatioChange(storeAllocations[0].id, appRatioKey, e.target.value)}
                                             />
                                             <div className="text-sm font-semibold">
-                                                ₹{applicationRatios[key].amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                ₹{storeAllocations[0].applicationRatios[appRatioKey].amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                             </div>
-                                         </div>
-                                     </div>
-                                 ))}
-                             </div>
-                         </div>
+                                            </div>
+                                        </div>
+                                    )})}
+                                </div>
+                            </div>
+                        )}
                     </div>
                      <Separator />
                     {/* Step 3: Payment Method */}
@@ -430,3 +468,5 @@ export default function PaymentsPage() {
     </div>
   );
 }
+
+    
