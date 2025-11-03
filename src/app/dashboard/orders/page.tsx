@@ -137,39 +137,6 @@ export default function OrdersPage() {
 
         <Card>
             <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-xl font-bold">
-                    <TrendingUp className="h-5 w-5" />
-                    Order Summary (Last 15 Days)
-                </CardTitle>
-            </CardHeader>
-            <CardContent>
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Order Type</TableHead>
-                            <TableHead>Total Orders</TableHead>
-                            <TableHead>Delivered</TableHead>
-                            <TableHead>In Transit</TableHead>
-                            <TableHead>Cancelled</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {orderSummaryData.map((summary, index) => (
-                            <TableRow key={summary.orderType} className={summary.orderType === 'All Orders' ? 'bg-muted/50' : ''}>
-                                <TableCell className={summary.orderType === 'All Orders' ? 'font-bold' : ''}>{summary.orderType}</TableCell>
-                                <TableCell className={summary.orderType === 'All Orders' ? 'font-bold' : ''}>{summary.totalOrders}</TableCell>
-                                <TableCell className={summary.orderType === 'All Orders' ? 'font-bold' : ''}>{summary.delivered}</TableCell>
-                                <TableCell className={summary.orderType === 'All Orders' ? 'font-bold' : ''}>{summary.inTransit}</TableCell>
-                                <TableCell className={summary.orderType === 'All Orders' ? 'font-bold' : ''}>{summary.cancelled}</TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </CardContent>
-        </Card>
-
-        <Card>
-            <CardHeader>
                 <CardTitle>Search Orders</CardTitle>
                 <CardDescription>Filter orders by date range, type, and status.</CardDescription>
             </CardHeader>
@@ -222,6 +189,39 @@ export default function OrdersPage() {
                         </DropdownMenu>
                     </div>
                 </div>
+            </CardContent>
+        </Card>
+        
+        <Card>
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-xl font-bold">
+                    <TrendingUp className="h-5 w-5" />
+                    Order Summary (Last 15 Days)
+                </CardTitle>
+            </CardHeader>
+            <CardContent>
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Order Type</TableHead>
+                            <TableHead>Total Orders</TableHead>
+                            <TableHead>Delivered</TableHead>
+                            <TableHead>In Transit</TableHead>
+                            <TableHead>Cancelled</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {orderSummaryData.map((summary, index) => (
+                            <TableRow key={summary.orderType} className={summary.orderType === 'All Orders' ? 'bg-muted/50' : ''}>
+                                <TableCell className={summary.orderType === 'All Orders' ? 'font-bold' : ''}>{summary.orderType}</TableCell>
+                                <TableCell className={summary.orderType === 'All Orders' ? 'font-bold' : ''}>{summary.totalOrders}</TableCell>
+                                <TableCell className={summary.orderType === 'All Orders' ? 'font-bold' : ''}>{summary.delivered}</TableCell>
+                                <TableCell className={summary.orderType === 'All Orders' ? 'font-bold' : ''}>{summary.inTransit}</TableCell>
+                                <TableCell className={summary.orderType === 'All Orders' ? 'font-bold' : ''}>{summary.cancelled}</TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
             </CardContent>
         </Card>
 
