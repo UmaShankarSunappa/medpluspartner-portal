@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { PlusCircle, Search, Download, Landmark, CreditCard, Signal, IndianRupee, BotMessageSquare } from "lucide-react";
+import { PlusCircle, Search, Download, Landmark, CreditCard, Signal, IndianRupee, BotMessageSquare, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -44,8 +44,9 @@ import { paymentsData, accountProfile, stores as mockStores } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 
-const statusVariant: { [key: string]: "default" | "secondary" } = {
-    "Approved": "default",
+const statusVariant: { [key: string]: "success" | "destructive" | "secondary" } = {
+    "Successful": "success",
+    "Failed": "destructive",
     "Pending": "secondary",
 };
 
@@ -54,82 +55,90 @@ type ApplicationRatio = { [key: string]: number };
 
 export default function PaymentsPage() {
     const [isCreatePaymentOpen, setIsCreatePaymentOpen] = useState(false);
+    const [isViewDetailsOpen, setIsViewDetailsOpen] = useState(false);
+    const [selectedPayment, setSelectedPayment] = useState<typeof paymentsData[0] | null>(null);
+
     const [totalAmount, setTotalAmount] = useState<number>(0);
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string | null>(null);
-    const [storeAllocations, setStoreAllocations] = useState<StoreAllocation>(
-      mockStores.reduce((acc, store) => ({ ...acc, [store.id]: { ratio: 1, amount: 0 } }), {})
+    
+    const initialStoreAllocations = useMemo(() => 
+        mockStores.reduce((acc, store) => ({ ...acc, [store.id]: { ratio: mockStores.length > 1 ? 0 : 1, amount: 0 } }), {}),
+        []
     );
+
+    const [storeAllocations, setStoreAllocations] = useState<StoreAllocation>(initialStoreAllocations);
+
     const [applicationRatios, setApplicationRatios] = useState<ApplicationRatio>({
         'minMax': 1,
         'sale': 1,
         'web': 1,
     });
-
+    
+    // Recalculate allocations when totalAmount or ratios change
     useEffect(() => {
-        const totalRatio = Object.values(storeAllocations).reduce((sum, { ratio }) => sum + ratio, 0);
-        if (totalRatio === 0) return;
+        const totalRatio = Object.values(storeAllocations).reduce((sum, { ratio }) => sum + (ratio || 0), 0);
+        
+        if (totalRatio === 0 || totalAmount === 0) {
+            // If no ratio or amount, reset amounts to 0
+             setStoreAllocations(prev => {
+                const newAllocations = {...prev};
+                Object.keys(newAllocations).forEach(storeId => {
+                    newAllocations[storeId].amount = 0;
+                });
+                return newAllocations;
+            });
+            return;
+        }
 
         const newAllocations: StoreAllocation = {};
         let allocatedSum = 0;
         const storeIds = Object.keys(storeAllocations);
 
         storeIds.forEach((storeId, index) => {
+            const store = storeAllocations[storeId];
             if (index === storeIds.length - 1) {
                  newAllocations[storeId] = {
-                    ...storeAllocations[storeId],
+                    ...store,
                     amount: totalAmount - allocatedSum,
                 };
             } else {
-                const allocatedAmount = (storeAllocations[storeId].ratio / totalRatio) * totalAmount;
+                const allocatedAmount = (store.ratio / totalRatio) * totalAmount;
                 newAllocations[storeId] = {
-                    ...storeAllocations[storeId],
+                    ...store,
                     amount: allocatedAmount
                 };
                 allocatedSum += allocatedAmount;
             }
         });
         setStoreAllocations(newAllocations);
-    }, [totalAmount]);
+    }, [totalAmount, storeAllocations.store_01?.ratio, storeAllocations.store_02?.ratio]); // Simplified dependencies
 
-    const handleStoreRatioChange = (storeId: string, newRatio: number) => {
-        const updatedAllocations = {
-            ...storeAllocations,
-            [storeId]: { ...storeAllocations[storeId], ratio: newRatio },
-        };
-        
-        const totalRatio = Object.values(updatedAllocations).reduce((sum, { ratio }) => sum + ratio, 0);
-        if (totalRatio > 0) {
-             let allocatedSum = 0;
-             const storeIds = Object.keys(updatedAllocations);
-             storeIds.forEach((id, index) => {
-                 const store = updatedAllocations[id];
-                 if (index === storeIds.length - 1) {
-                     store.amount = totalAmount - allocatedSum;
-                 } else {
-                    store.amount = (store.ratio / totalRatio) * totalAmount;
-                    allocatedSum += store.amount;
-                 }
-             });
-        }
-
-        setStoreAllocations(updatedAllocations);
+    const handleStoreRatioChange = (storeId: string, newRatioStr: string) => {
+        const newRatio = parseFloat(newRatioStr) || 0;
+        setStoreAllocations(prev => ({
+            ...prev,
+            [storeId]: { ...prev[storeId], ratio: newRatio },
+        }));
+    };
+    
+    const handleViewDetails = (payment: typeof paymentsData[0]) => {
+        setSelectedPayment(payment);
+        setIsViewDetailsOpen(true);
     };
 
     const isProceedDisabled = totalAmount <= 0 || !selectedPaymentMethod;
 
     const handleExport = () => {
-        const headers = ["Payment ID", "Name", "Created Date", "Approved Date", "Status", "Amount", "Mode of Payment"];
+        const headers = ["Date & Time", "Allocated Amount", "Payment Method", "Master Payment ID", "Status"];
         const csvRows = [
             headers.join(','),
             ...paymentsData.map(p => 
                 [
-                    `"${p.paymentId}"`,
-                    `"${p.name}"`,
                     `"${p.createdDate}"`,
-                    `"${p.approvedDate || 'N/A'}"`,
-                    `"${p.status}"`,
                     p.amount,
-                    `"${p.mode}"`
+                    `"${p.mode}"`,
+                    `"${p.paymentId}"`,
+                    `"${p.status}"`
                 ].join(',')
             )
         ];
@@ -194,30 +203,33 @@ export default function PaymentsPage() {
                     {/* Step 2: Payment Allocation */}
                      <div className="space-y-4">
                         <h3 className="font-semibold text-lg flex items-center gap-2"><span className="flex items-center justify-center h-6 w-6 rounded-full bg-primary text-primary-foreground text-sm">2</span>Payment Allocation</h3>
-                        {/* Part A: Store Ratio */}
-                        <div className="space-y-3">
-                            <h4 className="font-medium">Store Ratio Configuration</h4>
-                            <div className="space-y-2 rounded-lg border p-4">
-                                {mockStores.map(store => (
-                                    <div key={store.id} className="flex items-center justify-between gap-4">
-                                        <Label htmlFor={`ratio-${store.id}`} className="flex-1">{store.name}</Label>
-                                        <Input
-                                            id={`ratio-${store.id}`}
-                                            type="number"
-                                            min="0"
-                                            placeholder="Ratio"
-                                            className="w-24 text-center"
-                                            value={storeAllocations[store.id]?.ratio || ''}
-                                            onChange={(e) => handleStoreRatioChange(store.id, parseFloat(e.target.value) || 0)}
-                                        />
-                                        <div className="w-32 text-right font-semibold">
-                                            ₹ {storeAllocations[store.id]?.amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+                        
+                        {/* Store Ratio Configuration */}
+                        {mockStores.length > 1 && (
+                            <div className="space-y-3">
+                                <h4 className="font-medium">Store Ratio Configuration</h4>
+                                <div className="space-y-2 rounded-lg border p-4">
+                                    {mockStores.map(store => (
+                                        <div key={store.id} className="flex items-center justify-between gap-4">
+                                            <Label htmlFor={`ratio-${store.id}`} className="flex-1">{store.name}</Label>
+                                            <Input
+                                                id={`ratio-${store.id}`}
+                                                type="number"
+                                                min="0"
+                                                placeholder="Ratio"
+                                                className="w-24 text-center"
+                                                value={storeAllocations[store.id]?.ratio || ''}
+                                                onChange={(e) => handleStoreRatioChange(store.id, e.target.value)}
+                                            />
+                                            <div className="w-32 text-right font-semibold">
+                                                ₹ {storeAllocations[store.id]?.amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
                             </div>
-                        </div>
-                         {/* Part B: Application Ratio */}
+                        )}
+                         {/* Application Ratio Configuration */}
                          <div className="space-y-3">
                              <h4 className="font-medium">Application Ratio Configuration</h4>
                              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 rounded-lg border p-4">
@@ -252,16 +264,6 @@ export default function PaymentsPage() {
                                 </Button>
                              ))}
                          </div>
-                         {selectedPaymentMethod === 'UPI' && (
-                             <div className="p-4 bg-muted/50 rounded-lg">
-                                 <h4 className="font-medium mb-4 text-center">Pay with UPI App</h4>
-                                  <div className="flex justify-center gap-4">
-                                    <Button variant="outline" size="icon" className="h-16 w-16 rounded-full"><IndianRupee className="h-8 w-8" /></Button>
-                                    <Button variant="outline" size="icon" className="h-16 w-16 rounded-full"><CreditCard className="h-8 w-8" /></Button>
-                                    <Button variant="outline" size="icon" className="h-16 w-16 rounded-full"><Landmark className="h-8 w-8" /></Button>
-                                </div>
-                             </div>
-                         )}
                     </div>
 
                 </div>
@@ -295,7 +297,7 @@ export default function PaymentsPage() {
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
             <CardTitle>Payment History</CardTitle>
-            <CardDescription>Last 30 days of payments</CardDescription>
+            <CardDescription>Allocation records for the selected store.</CardDescription>
           </div>
           <Button variant="outline" onClick={handleExport}>
             <Download className="mr-2 h-4 w-4" />
@@ -306,35 +308,77 @@ export default function PaymentsPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Payment ID</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Created Date</TableHead>
-                <TableHead>Approved Date</TableHead>
+                <TableHead>Date & Time</TableHead>
+                <TableHead className="text-right">Allocated Amount</TableHead>
+                <TableHead>Payment Method</TableHead>
+                <TableHead>Master Payment ID</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead className="text-right">Amount</TableHead>
-                <TableHead>Mode of Payment</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {paymentsData.map((payment) => (
-                <TableRow key={payment.paymentId}>
-                  <TableCell className="font-medium">{payment.paymentId}</TableCell>
-                  <TableCell>{payment.name}</TableCell>
+                <TableRow key={payment.id}>
                   <TableCell>{payment.createdDate}</TableCell>
-                  <TableCell>{payment.approvedDate || '–'}</TableCell>
+                  <TableCell className="text-right font-medium">₹{payment.amount.toLocaleString('en-IN')}</TableCell>
+                  <TableCell>{payment.mode}</TableCell>
+                  <TableCell>{payment.paymentId}</TableCell>
                   <TableCell>
                     <Badge variant={statusVariant[payment.status] || 'secondary'}>
                       {payment.status}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-right">₹{payment.amount.toLocaleString('en-IN')}</TableCell>
-                  <TableCell>{payment.mode}</TableCell>
+                  <TableCell className="text-right">
+                    <Button variant="ghost" size="icon" onClick={() => handleViewDetails(payment)}>
+                        <Eye className="h-4 w-4" />
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </CardContent>
       </Card>
+      
+       {/* View Details Modal */}
+       <Dialog open={isViewDetailsOpen} onOpenChange={setIsViewDetailsOpen}>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Payment Details</DialogTitle>
+                    <DialogDescription>
+                        Summary for Master Payment ID: <span className="font-medium">{selectedPayment?.paymentId}</span>
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4 py-4">
+                    <div className="space-y-1">
+                        <Label>Gateway Transaction ID</Label>
+                        <p className="text-sm text-muted-foreground">{selectedPayment?.gatewayTxId}</p>
+                    </div>
+                     <div className="space-y-1">
+                        <Label>Remarks</Label>
+                        <p className="text-sm text-muted-foreground">{selectedPayment?.remarks || "No remarks provided."}</p>
+                    </div>
+                    <div>
+                        <Label>Application Ratio Used</Label>
+                        <div className="grid grid-cols-3 gap-4 p-3 border rounded-md mt-1">
+                           <div>
+                                <p className="text-xs text-muted-foreground">Min Max Orders</p>
+                                <p className="font-medium">{selectedPayment?.applicationRatios.minMax}</p>
+                           </div>
+                             <div>
+                                <p className="text-xs text-muted-foreground">Sale Orders</p>
+                                <p className="font-medium">{selectedPayment?.applicationRatios.sale}</p>
+                           </div>
+                            <div>
+                                <p className="text-xs text-muted-foreground">Web Orders</p>
+                                <p className="font-medium">{selectedPayment?.applicationRatios.web}</p>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+            </DialogContent>
+        </Dialog>
     </div>
   );
 }
+

@@ -1,5 +1,4 @@
 
-
 import {
   Activity,
   Banknote,
@@ -57,7 +56,6 @@ export const user = {
 export const stores = [
   { id: "store-01", name: "Koramangala, Bangalore" },
   { id: "store-02", name: "Indiranagar, Bangalore" },
-  { id: "store-03", name: "Jubilee Hills, Hyderabad" },
 ];
 
 export const kpiData = {
@@ -295,8 +293,48 @@ export const transactions = [
 
 
 export const paymentsData = [
-  { paymentId: "PAY-2024-001", name: "Monthly Payment", createdDate: "1/15/2024", approvedDate: "1/16/2024", status: "Approved", amount: 30000, mode: "NEFT" },
-  { paymentId: "PAY-2024-002", name: "Advance Payment", createdDate: "1/20/2024", approvedDate: null, status: "Pending", amount: 15000, mode: "UPI" },
+  { 
+    id: "alloc-001a",
+    paymentId: "PAY-2024-001", 
+    name: "Monthly Payment", 
+    createdDate: "1/15/2024 10:30", 
+    approvedDate: "1/16/2024 11:00", 
+    status: "Successful", 
+    amount: 30000, 
+    mode: "NEFT",
+    storeId: "store-01",
+    gatewayTxId: "gat_EviY1b6g3VqD9z",
+    remarks: "Monthly payment for October.",
+    applicationRatios: { minMax: 1, sale: 1, web: 0 }
+  },
+  { 
+    id: "alloc-002a",
+    paymentId: "PAY-2024-002", 
+    name: "Advance Payment", 
+    createdDate: "1/20/2024 14:00", 
+    approvedDate: null, 
+    status: "Pending", 
+    amount: 15000, 
+    mode: "UPI",
+    storeId: "store-01",
+    gatewayTxId: "gat_FviY2c7g4WrE1a",
+    remarks: "Advance for Q4.",
+    applicationRatios: { minMax: 1, sale: 0, web: 0 }
+  },
+  { 
+    id: "alloc-001b",
+    paymentId: "PAY-2024-001", 
+    name: "Monthly Payment", 
+    createdDate: "1/15/2024 10:30", 
+    approvedDate: "1/16/2024 11:00", 
+    status: "Successful", 
+    amount: 30000, 
+    mode: "NEFT",
+    storeId: "store-02",
+    gatewayTxId: "gat_EviY1b6g3VqD9z",
+    remarks: "Monthly payment for October.",
+    applicationRatios: { minMax: 1, sale: 1, web: 0 }
+  },
 ];
 
 export type Return = {
