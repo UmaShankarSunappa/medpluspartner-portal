@@ -1,7 +1,5 @@
 import type {Config} from 'tailwindcss';
 
-const { fontFamily } = require("tailwindcss/defaultTheme")
-
 export default {
   darkMode: ['class'],
   content: [
@@ -10,16 +8,10 @@ export default {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-    container: {
-      center: true,
-      padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
-    },
     extend: {
       fontFamily: {
-        sans: ["var(--font-inter)", ...fontFamily.sans],
+        body: ['Inter', 'sans-serif'],
+        headline: ['Inter', 'sans-serif'],
         code: ['monospace'],
       },
       colors: {
@@ -78,10 +70,6 @@ export default {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
-        '2xl': 'calc(var(--radius) + 8px)',
-      },
-      boxShadow: {
-        'soft-diffused': '0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.08)',
       },
       keyframes: {
         'accordion-down': {
@@ -100,10 +88,32 @@ export default {
             height: '0',
           },
         },
+        'fade-in-up': {
+            '0%': {
+                opacity: '0',
+                transform: 'translate3d(0, 10px, 0) scale(0.98)',
+            },
+            '100%': {
+                opacity: '1',
+                transform: 'translate3d(0, 0, 0) scale(1)',
+            },
+        },
+        'fade-out-down': {
+            '0%': {
+                opacity: '1',
+                transform: 'translateY(0)',
+            },
+            '100%': {
+                opacity: '0',
+                transform: 'translateY(10px)',
+            },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'fade-in-up': 'fade-in-up 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards',
+        'fade-out-down': 'fade-out-down 0.3s ease-in forwards',
       },
     },
   },
