@@ -314,7 +314,6 @@ export type Return = {
     batch: string;
     quantity: number;
     value: number;
-    rejectionReason?: string;
   }[];
   trackingHistory?: { status: string; date: string; location: string }[];
 };
@@ -363,12 +362,12 @@ export const returnsData: Return[] = [
     returnType: "Slow Moving",
     receivedDate: "2023-10-22",
     returnNoteId: null,
-    status: "Pending",
+    status: "TO Generated",
     products: [
         { sku: "VOLINI", name: "Volini Spray", batch: "VO101", quantity: 5, value: 750 }
     ],
      trackingHistory: [
-        { status: 'Pending', date: '2023-10-22 15:00', location: 'Awaiting Documentation' },
+        { status: 'TO Generated', date: '2023-10-22 15:00', location: 'System' },
     ]
   },
    { 
@@ -994,6 +993,7 @@ export const orderSummaryData = [
     
 
     
+
 
 
 
