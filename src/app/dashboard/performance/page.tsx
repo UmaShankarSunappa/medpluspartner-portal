@@ -366,9 +366,9 @@ export default function PerformancePage() {
                   <TableHead className="text-center">Sale Orders</TableHead>
                   <TableHead className="text-center">Web Orders</TableHead>
                   <TableHead className="text-right">ABV</TableHead>
-                  <TableHead className="text-center"># of Bills</TableHead>
-                  <TableHead className="text-right">Discount %</TableHead>
-                  <TableHead className="text-right">Returns</TableHead>
+                  <TableHead className="text-center">&lt;500 bills #</TableHead>
+                  <TableHead className="text-center">500-1000 bills #</TableHead>
+                  <TableHead className="text-center">&gt;1000 bills #</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -384,9 +384,9 @@ export default function PerformancePage() {
                     <TableCell className="text-center">{row.saleOrdersCount}</TableCell>
                     <TableCell className="text-center">{row.webOrdersCount}</TableCell>
                     <TableCell className="text-right">₹{row.avgBillValue.toLocaleString()}</TableCell>
-                    <TableCell className="text-center">{row.billsCount}</TableCell>
-                    <TableCell className="text-right">{row.discountPercentage.toFixed(2)}%</TableCell>
-                    <TableCell className="text-right">₹{row.returnedProducts.toLocaleString()}</TableCell>
+                    <TableCell className="text-center">{row.bills_lt_500}</TableCell>
+                    <TableCell className="text-center">{row.bills_500_1000}</TableCell>
+                    <TableCell className="text-center">{row.bills_gt_1000}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
