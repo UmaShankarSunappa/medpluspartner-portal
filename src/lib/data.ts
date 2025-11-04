@@ -1,4 +1,5 @@
 
+
 import {
   Activity,
   Banknote,
@@ -799,23 +800,18 @@ const momBrandedVsPl = [
     }
 });
 
-const dayBrandedVsPl = [
-  { day: "1-Oct", branded: 15000, pl: 5000 },
-  { day: "2-Oct", branded: 16000, pl: 6000 },
-  { day: "3-Oct", branded: 15500, pl: 5500 },
-  { day: "4-Oct", branded: 18000, pl: 6000 },
-  { day: "5-Oct", branded: 19000, pl: 6000 },
-  { day: "6-Oct", branded: 21000, pl: 7000 },
-  { day: "7-Oct", branded: 13000, pl: 5000 },
-].map(item => {
-    const total = item.branded + item.pl;
-    return {
-        ...item,
-        brandedPercentage: (item.branded / total) * 100,
-        plPercentage: (item.pl / total) * 100,
-    }
-});
-
+const dayWiseTableData = [
+  { date: "2025-10-01", netSale: 22050, marginAmount: 3307, brandedSale: 15000, plSipSale: 7050, offlineSale: 20000, onlineSale: 2050, saleOrdersCount: 50, webOrdersCount: 5, avgBillValue: 400, billsCount: 55, discountPercentage: 2.5, returnedProducts: 500 },
+  { date: "2025-10-02", netSale: 23100, marginAmount: 3465, brandedSale: 16000, plSipSale: 7100, offlineSale: 21000, onlineSale: 2100, saleOrdersCount: 52, webOrdersCount: 6, avgBillValue: 398, billsCount: 58, discountPercentage: 2.6, returnedProducts: 250 },
+  { date: "2025-10-03", netSale: 21500, marginAmount: 3225, brandedSale: 14500, plSipSale: 7000, offlineSale: 19500, onlineSale: 2000, saleOrdersCount: 48, webOrdersCount: 4, avgBillValue: 413, billsCount: 52, discountPercentage: 2.4, returnedProducts: 100 },
+  { date: "2025-10-04", netSale: 25200, marginAmount: 3780, brandedSale: 17000, plSipSale: 8200, offlineSale: 23000, onlineSale: 2200, saleOrdersCount: 55, webOrdersCount: 7, avgBillValue: 406, billsCount: 62, discountPercentage: 2.8, returnedProducts: 0 },
+  { date: "2025-10-05", netSale: 26250, marginAmount: 3937, brandedSale: 18000, plSipSale: 8250, offlineSale: 24000, onlineSale: 2250, saleOrdersCount: 58, webOrdersCount: 8, avgBillValue: 410, billsCount: 64, discountPercentage: 2.9, returnedProducts: 75 },
+  { date: "2025-10-06", netSale: 28350, marginAmount: 4252, brandedSale: 19000, plSipSale: 9350, offlineSale: 26000, onlineSale: 2350, saleOrdersCount: 65, webOrdersCount: 9, avgBillValue: 405, billsCount: 70, discountPercentage: 3.1, returnedProducts: 320 },
+  { date: "2025-10-07", netSale: 24150, marginAmount: 3622, brandedSale: 16500, plSipSale: 7650, offlineSale: 22000, onlineSale: 2150, saleOrdersCount: 53, webOrdersCount: 7, avgBillValue: 416, billsCount: 58, discountPercentage: 2.7, returnedProducts: 150 },
+  { date: "2025-10-08", netSale: 27300, marginAmount: 4095, brandedSale: 18500, plSipSale: 8800, offlineSale: 25000, onlineSale: 2300, saleOrdersCount: 62, webOrdersCount: 8, avgBillValue: 407, billsCount: 67, discountPercentage: 3.0, returnedProducts: 0 },
+  { date: "2025-10-09", netSale: 29400, marginAmount: 4410, brandedSale: 20000, plSipSale: 9400, offlineSale: 27000, onlineSale: 2400, saleOrdersCount: 68, webOrdersCount: 10, avgBillValue: 408, billsCount: 72, discountPercentage: 3.2, returnedProducts: 80 },
+  { date: "2025-10-10", netSale: 31500, marginAmount: 4725, brandedSale: 21000, plSipSale: 10500, offlineSale: 28500, onlineSale: 3000, saleOrdersCount: 70, webOrdersCount: 12, avgBillValue: 421, billsCount: 75, discountPercentage: 3.5, returnedProducts: 120 },
+];
 
 export const performanceData = {
   mom: {
@@ -866,56 +862,7 @@ export const performanceData = {
     ]
   },
   day: {
-    netSalesMargin: [
-      { day: "1-Oct", netSale: 20000, margin: 3000, marginPercentage: (3000 / 20000) * 100 },
-      { day: "2-Oct", netSale: 22000, margin: 3500, marginPercentage: (3500 / 22000) * 100 },
-      { day: "3-Oct", netSale: 21000, margin: 3200, marginPercentage: (3200 / 21000) * 100 },
-      { day: "4-Oct", netSale: 24000, margin: 4000, marginPercentage: (4000 / 24000) * 100 },
-      { day: "5-Oct", netSale: 25000, margin: 4200, marginPercentage: (4200 / 25000) * 100 },
-      { day: "6-Oct", netSale: 28000, margin: 4800, marginPercentage: (4800 / 28000) * 100 },
-      { day: "7-Oct", netSale: 18000, margin: 2800, marginPercentage: (2800 / 18000) * 100 },
-    ],
-    brandedVsPl: dayBrandedVsPl,
-    salesByCategory: [
-      { day: "1-Oct", pharma_sale: 10000, pharma_margin: 1500, general_sale: 5000, general_margin: 1000, pl_pharma_sale: 3000, pl_pharma_margin: 1200, pl_general_sale: 2000, pl_general_margin: 1000, surgical_sale: 1000, surgical_margin: 200 },
-      { day: "2-Oct", pharma_sale: 11000, pharma_margin: 1650, general_sale: 5500, general_margin: 1100, pl_pharma_sale: 3500, pl_pharma_margin: 1400, pl_general_sale: 2000, pl_general_margin: 1000, surgical_sale: 1000, surgical_margin: 200 },
-      { day: "3-Oct", pharma_sale: 10500, pharma_margin: 1575, general_sale: 5200, general_margin: 1040, pl_pharma_sale: 3300, pl_pharma_margin: 1320, pl_general_sale: 2000, pl_general_margin: 1000, surgical_sale: 1000, surgical_margin: 200 },
-      { day: "4-Oct", pharma_sale: 12000, pharma_margin: 1800, general_sale: 6000, general_margin: 1200, pl_pharma_sale: 4000, pl_pharma_margin: 1600, pl_general_sale: 2000, pl_general_margin: 1000, surgical_sale: 1000, surgical_margin: 200 },
-      { day: "5-Oct", pharma_sale: 12500, pharma_margin: 1875, general_sale: 6500, general_margin: 1300, pl_pharma_sale: 4000, pl_pharma_margin: 1600, pl_general_sale: 2000, pl_general_margin: 1000, surgical_sale: 1000, surgical_margin: 200 },
-      { day: "6-Oct", pharma_sale: 14000, pharma_margin: 2100, general_sale: 7000, general_margin: 1400, pl_pharma_sale: 4500, pl_pharma_margin: 1800, pl_general_sale: 2500, pl_general_margin: 1250, surgical_sale: 1000, surgical_margin: 200 },
-      { day: "7-Oct", pharma_sale: 9000, pharma_margin: 1350, general_sale: 4000, general_margin: 800, pl_pharma_sale: 3000, pl_pharma_margin: 1200, pl_general_sale: 2000, pl_general_margin: 1000, surgical_sale: 1000, surgical_margin: 200 },
-    ],
-    offlineVsOnline: [
-      { name: 'Offline', value: 130200, fill: 'hsl(var(--chart-1))' },
-      { name: 'Online', value: 24600, fill: 'hsl(var(--chart-2))' },
-    ],
-    ordersCount: [
-      { day: "1-Oct", salesOrders: 50, webOrders: 10 },
-      { day: "2-Oct", salesOrders: 55, webOrders: 12 },
-      { day: "3-Oct", salesOrders: 52, webOrders: 11 },
-      { day: "4-Oct", salesOrders: 60, webOrders: 15 },
-      { day: "5-Oct", salesOrders: 62, webOrders: 18 },
-      { day: "6-Oct", salesOrders: 70, webOrders: 20 },
-      { day: "7-Oct", salesOrders: 45, webOrders: 8 },
-    ],
-    avgBillValue: [
-        { day: "1-Oct", abv: 400, bills: 50 },
-        { day: "2-Oct", abv: 400, bills: 55 },
-        { day: "3-Oct", abv: 403, bills: 52 },
-        { day: "4-Oct", abv: 400, bills: 60 },
-        { day: "5-Oct", abv: 403, bills: 62 },
-        { day: "6-Oct", abv: 400, bills: 70 },
-        { day: "7-Oct", abv: 400, bills: 45 },
-    ],
-    billsBySlab: [
-        { day: "1-Oct", bills_lt_200: 10, bills_200_500: 20, bills_500_999: 15, bills_gt_1000: 5 },
-        { day: "2-Oct", bills_lt_200: 11, bills_200_500: 22, bills_500_999: 16, bills_gt_1000: 6 },
-        { day: "3-Oct", bills_lt_200: 10, bills_200_500: 21, bills_500_999: 15, bills_gt_1000: 6 },
-        { day: "4-Oct", bills_lt_200: 12, bills_200_500: 24, bills_500_999: 18, bills_gt_1000: 6 },
-        { day: "5-Oct", bills_lt_200: 12, bills_200_500: 25, bills_500_999: 19, bills_gt_1000: 6 },
-        { day: "6-Oct", bills_lt_200: 14, bills_200_500: 28, bills_500_999: 21, bills_gt_1000: 7 },
-        { day: "7-Oct", bills_lt_200: 9, bills_200_500: 18, bills_500_999: 13, bills_gt_1000: 5 },
-    ]
+    tableData: dayWiseTableData,
   }
 };
     
@@ -1031,3 +978,4 @@ export const stationeryItemsData: StationeryItem[] = [
 
 
   
+

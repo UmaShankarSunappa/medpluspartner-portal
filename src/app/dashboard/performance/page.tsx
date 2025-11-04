@@ -27,6 +27,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
@@ -41,7 +49,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { performanceData } from "@/lib/data";
 import { useToast } from "@/hooks/use-toast";
 
@@ -74,7 +82,8 @@ const chartConfigBase = {
 
 export default function PerformancePage() {
   const [view, setView] = useState<"mom" | "day">("mom");
-  const data = performanceData[view];
+  const data = performanceData.mom;
+  const dayWiseTableData = performanceData.day.tableData;
   const [category, setCategory] = useState("pharma");
   const { toast } = useToast();
 
@@ -125,215 +134,266 @@ export default function PerformancePage() {
                         <SelectItem value="current_month">Current Month</SelectItem>
                     </SelectContent>
                 </Select>
-            ) : <DateRangePicker max={15} onMaxRangeError={handleMaxRangeError} />}
+            ) : <DateRangePicker max={30} onMaxRangeError={handleMaxRangeError} />}
           </div>
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Net Sale vs. Margin Amount</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ChartContainer config={chartConfigBase} className="h-[300px] w-full">
-              <BarChart data={data.netSalesMargin}>
-                <CartesianGrid vertical={false} />
-                <XAxis dataKey={view === 'mom' ? 'month' : 'day'} tickLine={false} axisLine={false} />
-                <YAxis />
-                <ChartTooltip
-                  content={
-                    <ChartTooltipContent
-                      formatter={(value, name, props) => {
-                        const { payload } = props;
-                        if (name === "margin") {
-                          return (
-                            <div className="flex flex-col">
-                              <span>
-                                {`₹${value.toLocaleString()}`}
-                                {payload.marginPercentage && (
-                                  <span className="ml-2 text-muted-foreground">
-                                    ({payload.marginPercentage.toFixed(2)}%)
-                                  </span>
-                                )}
-                              </span>
-                            </div>
-                          );
-                        }
-                        return `₹${Number(value).toLocaleString()}`;
-                      }}
-                    />
-                  }
-                />
-                <Legend />
-                <Bar dataKey="netSale" fill="var(--color-netSale)" radius={4} />
-                <Bar dataKey="margin" fill="var(--color-margin)" radius={4} />
-              </BarChart>
-            </ChartContainer>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Branded Sale vs. (PL+SIP) Sale</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ChartContainer config={chartConfigBase} className="h-[300px] w-full">
-              <BarChart data={data.brandedVsPl}>
-                <CartesianGrid vertical={false} />
-                <XAxis dataKey={view === 'mom' ? 'month' : 'day'} tickLine={false} axisLine={false} />
-                <YAxis />
-                <ChartTooltip
-                  content={
-                    <ChartTooltipContent
-                      formatter={(value, name, props) => {
-                        const { payload } = props;
-                        const percentage = name === 'branded' ? payload.brandedPercentage : payload.plPercentage;
-                        return (
-                          <div className="flex flex-col">
-                            <span>
-                              {`₹${value.toLocaleString()}`}
-                              {percentage && (
-                                <span className="ml-2 text-muted-foreground">
-                                  ({percentage.toFixed(2)}%)
-                                </span>
-                              )}
-                            </span>
-                          </div>
-                        );
-                      }}
-                    />
-                  }
-                />
-                <Legend />
-                <Bar dataKey="branded" fill="var(--color-branded)" radius={4} />
-                <Bar dataKey="pl" fill="var(--color-pl)" radius={4} />
-              </BarChart>
-            </ChartContainer>
-          </CardContent>
-        </Card>
-
-         <Card className="lg:col-span-2">
-           <CardHeader>
-            <div className="flex justify-between items-center">
-                <CardTitle>Detailed Sales &amp; Margin by Category</CardTitle>
-                <Select value={category} onValueChange={setCategory}>
-                    <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Select category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="pharma">Pharma</SelectItem>
-                        <SelectItem value="general">General</SelectItem>
-                        <SelectItem value="pl_pharma">PL Pharma</SelectItem>
-                        <SelectItem value="pl_general">PL General</SelectItem>
-                        <SelectItem value="surgical">Surgical</SelectItem>
-                    </SelectContent>
-                </Select>
-            </div>
-           </CardHeader>
-           <CardContent>
-             <ChartContainer config={chartConfigBase} className="h-[300px] w-full">
-               <BarChart data={data.salesByCategory}>
-                 <CartesianGrid vertical={false} />
-                 <XAxis dataKey={view === 'mom' ? 'month' : 'day'} tickLine={false} axisLine={false} />
-                 <YAxis />
-                 <ChartTooltip content={<ChartTooltipContent />} />
-                 <Legend />
-                 <Bar dataKey={`${category}_sale`} fill={`var(--color-${category}_sale)`} radius={4} name={chartConfigBase[`${category}_sale` as keyof typeof chartConfigBase]?.label} />
-                  <Bar dataKey={`${category}_margin`} fill={`var(--color-${category}_margin)`} radius={4} name={chartConfigBase[`${category}_margin` as keyof typeof chartConfigBase]?.label} />
-               </BarChart>
-             </ChartContainer>
-           </CardContent>
-         </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Offline vs. Online Sale</CardTitle>
-          </CardHeader>
-          <CardContent className="flex items-center justify-center">
-            <ChartContainer config={chartConfigBase} className="h-[250px] w-[250px]">
-              <PieChart>
-                <ChartTooltip
-                  cursor={false}
-                  content={<ChartTooltipContent hideLabel />}
-                />
-                <Pie
-                  data={data.offlineVsOnline}
-                  dataKey="value"
-                  nameKey="name"
-                  innerRadius={60}
-                  strokeWidth={5}
-                >
-                  {data.offlineVsOnline.map((entry) => (
-                     <Cell key={entry.name} fill={entry.fill} className="focus:outline-none" />
-                  ))}
-                </Pie>
-                <Legend />
-              </PieChart>
-            </ChartContainer>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader>
-            <CardTitle>Sale &amp; Web Orders Count</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ChartContainer config={chartConfigBase} className="h-[300px] w-full">
-              <BarChart data={data.ordersCount}>
-                <CartesianGrid vertical={false} />
-                <XAxis dataKey={view === 'mom' ? 'month' : 'day'} />
-                <YAxis />
-                <ChartTooltip content={<ChartTooltipContent />} />
-                <Legend />
-                <Bar dataKey="salesOrders" stackId="a" fill="var(--color-salesOrders)" />
-                <Bar dataKey="webOrders" stackId="a" fill="var(--color-webOrders)" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ChartContainer>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Avg Bill Value (ABV) vs. No. of Bills</CardTitle>
-          </CardHeader>
-          <CardContent>
-             <ChartContainer config={chartConfigBase} className="h-[300px] w-full">
-              <ComposedChart data={data.avgBillValue}>
-                <CartesianGrid vertical={false} />
-                <XAxis dataKey={view === 'mom' ? 'month' : 'day'} />
-                <YAxis yAxisId="left" orientation="left" stroke="var(--color-abv)" />
-                <YAxis yAxisId="right" orientation="right" stroke="var(--color-bills)" />
-                <ChartTooltip content={<ChartTooltipContent />} />
-                <Legend />
-                <Bar yAxisId="right" dataKey="bills" fill="var(--color-bills)" radius={4} />
-                <Line yAxisId="left" type="monotone" dataKey="abv" stroke="var(--color-abv)" strokeWidth={2} dot={false} />
-              </ComposedChart>
-            </ChartContainer>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Total Bills by Slab</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ChartContainer config={chartConfigBase} className="h-[300px] w-full">
-                <BarChart data={data.billsBySlab}>
+      {view === 'mom' ? (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card>
+            <CardHeader>
+                <CardTitle>Net Sale vs. Margin Amount</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <ChartContainer config={chartConfigBase} className="h-[300px] w-full">
+                <BarChart data={data.netSalesMargin}>
                     <CartesianGrid vertical={false} />
-                    <XAxis dataKey={view === 'mom' ? 'month' : 'day'} tickLine={false} axisLine={false} />
+                    <XAxis dataKey="month" tickLine={false} axisLine={false} />
+                    <YAxis />
+                    <ChartTooltip
+                    content={
+                        <ChartTooltipContent
+                        formatter={(value, name, props) => {
+                            const { payload } = props;
+                            if (name === "margin") {
+                            return (
+                                <div className="flex flex-col">
+                                <span>
+                                    {`₹${value.toLocaleString()}`}
+                                    {payload.marginPercentage && (
+                                    <span className="ml-2 text-muted-foreground">
+                                        ({payload.marginPercentage.toFixed(2)}%)
+                                    </span>
+                                    )}
+                                </span>
+                                </div>
+                            );
+                            }
+                            return `₹${Number(value).toLocaleString()}`;
+                        }}
+                        />
+                    }
+                    />
+                    <Legend />
+                    <Bar dataKey="netSale" fill="var(--color-netSale)" radius={4} />
+                    <Bar dataKey="margin" fill="var(--color-margin)" radius={4} />
+                </BarChart>
+                </ChartContainer>
+            </CardContent>
+            </Card>
+
+            <Card>
+            <CardHeader>
+                <CardTitle>Branded Sale vs. (PL+SIP) Sale</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <ChartContainer config={chartConfigBase} className="h-[300px] w-full">
+                <BarChart data={data.brandedVsPl}>
+                    <CartesianGrid vertical={false} />
+                    <XAxis dataKey="month" tickLine={false} axisLine={false} />
+                    <YAxis />
+                    <ChartTooltip
+                    content={
+                        <ChartTooltipContent
+                        formatter={(value, name, props) => {
+                            const { payload } = props;
+                            const percentage = name === 'branded' ? payload.brandedPercentage : payload.plPercentage;
+                            return (
+                            <div className="flex flex-col">
+                                <span>
+                                {`₹${value.toLocaleString()}`}
+                                {percentage && (
+                                    <span className="ml-2 text-muted-foreground">
+                                    ({percentage.toFixed(2)}%)
+                                    </span>
+                                )}
+                                </span>
+                            </div>
+                            );
+                        }}
+                        />
+                    }
+                    />
+                    <Legend />
+                    <Bar dataKey="branded" fill="var(--color-branded)" radius={4} />
+                    <Bar dataKey="pl" fill="var(--color-pl)" radius={4} />
+                </BarChart>
+                </ChartContainer>
+            </CardContent>
+            </Card>
+
+            <Card className="lg:col-span-2">
+            <CardHeader>
+                <div className="flex justify-between items-center">
+                    <CardTitle>Detailed Sales &amp; Margin by Category</CardTitle>
+                    <Select value={category} onValueChange={setCategory}>
+                        <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="Select category" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="pharma">Pharma</SelectItem>
+                            <SelectItem value="general">General</SelectItem>
+                            <SelectItem value="pl_pharma">PL Pharma</SelectItem>
+                            <SelectItem value="pl_general">PL General</SelectItem>
+                            <SelectItem value="surgical">Surgical</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+            </CardHeader>
+            <CardContent>
+                <ChartContainer config={chartConfigBase} className="h-[300px] w-full">
+                <BarChart data={data.salesByCategory}>
+                    <CartesianGrid vertical={false} />
+                    <XAxis dataKey="month" tickLine={false} axisLine={false} />
                     <YAxis />
                     <ChartTooltip content={<ChartTooltipContent />} />
                     <Legend />
-                    <Bar dataKey="bills_lt_200" stackId="a" fill="var(--color-bills_lt_200)" name="< 200" />
-                    <Bar dataKey="bills_200_500" stackId="a" fill="var(--color-bills_200_500)" name="200-500" />
-                    <Bar dataKey="bills_500_999" stackId="a" fill="var(--color-bills_500_999)" name="500-999" />
-                    <Bar dataKey="bills_gt_1000" stackId="a" fill="var(--color-bills_gt_1000)" name="> 1000" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey={`${category}_sale`} fill={`var(--color-${category}_sale)`} radius={4} name={chartConfigBase[`${category}_sale` as keyof typeof chartConfigBase]?.label} />
+                    <Bar dataKey={`${category}_margin`} fill={`var(--color-${category}_margin)`} radius={4} name={chartConfigBase[`${category}_margin` as keyof typeof chartConfigBase]?.label} />
                 </BarChart>
-            </ChartContainer>
+                </ChartContainer>
+            </CardContent>
+            </Card>
+
+            <Card>
+            <CardHeader>
+                <CardTitle>Offline vs. Online Sale</CardTitle>
+            </CardHeader>
+            <CardContent className="flex items-center justify-center">
+                <ChartContainer config={chartConfigBase} className="h-[250px] w-[250px]">
+                <PieChart>
+                    <ChartTooltip
+                    cursor={false}
+                    content={<ChartTooltipContent hideLabel />}
+                    />
+                    <Pie
+                    data={data.offlineVsOnline}
+                    dataKey="value"
+                    nameKey="name"
+                    innerRadius={60}
+                    strokeWidth={5}
+                    >
+                    {data.offlineVsOnline.map((entry) => (
+                        <Cell key={entry.name} fill={entry.fill} className="focus:outline-none" />
+                    ))}
+                    </Pie>
+                    <Legend />
+                </PieChart>
+                </ChartContainer>
+            </CardContent>
+            </Card>
+            
+            <Card>
+            <CardHeader>
+                <CardTitle>Sale &amp; Web Orders Count</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <ChartContainer config={chartConfigBase} className="h-[300px] w-full">
+                <BarChart data={data.ordersCount}>
+                    <CartesianGrid vertical={false} />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <ChartTooltip content={<ChartTooltipContent />} />
+                    <Legend />
+                    <Bar dataKey="salesOrders" stackId="a" fill="var(--color-salesOrders)" />
+                    <Bar dataKey="webOrders" stackId="a" fill="var(--color-webOrders)" radius={[4, 4, 0, 0]} />
+                </BarChart>
+                </ChartContainer>
+            </CardContent>
+            </Card>
+
+            <Card>
+            <CardHeader>
+                <CardTitle>Avg Bill Value (ABV) vs. No. of Bills</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <ChartContainer config={chartConfigBase} className="h-[300px] w-full">
+                <ComposedChart data={data.avgBillValue}>
+                    <CartesianGrid vertical={false} />
+                    <XAxis dataKey="month" />
+                    <YAxis yAxisId="left" orientation="left" stroke="var(--color-abv)" />
+                    <YAxis yAxisId="right" orientation="right" stroke="var(--color-bills)" />
+                    <ChartTooltip content={<ChartTooltipContent />} />
+                    <Legend />
+                    <Bar yAxisId="right" dataKey="bills" fill="var(--color-bills)" radius={4} />
+                    <Line yAxisId="left" type="monotone" dataKey="abv" stroke="var(--color-abv)" strokeWidth={2} dot={false} />
+                </ComposedChart>
+                </ChartContainer>
+            </CardContent>
+            </Card>
+
+            <Card>
+            <CardHeader>
+                <CardTitle>Total Bills by Slab</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <ChartContainer config={chartConfigBase} className="h-[300px] w-full">
+                    <BarChart data={data.billsBySlab}>
+                        <CartesianGrid vertical={false} />
+                        <XAxis dataKey="month" tickLine={false} axisLine={false} />
+                        <YAxis />
+                        <ChartTooltip content={<ChartTooltipContent />} />
+                        <Legend />
+                        <Bar dataKey="bills_lt_200" stackId="a" fill="var(--color-bills_lt_200)" name="< 200" />
+                        <Bar dataKey="bills_200_500" stackId="a" fill="var(--color-bills_200_500)" name="200-500" />
+                        <Bar dataKey="bills_500_999" stackId="a" fill="var(--color-bills_500_999)" name="500-999" />
+                        <Bar dataKey="bills_gt_1000" stackId="a" fill="var(--color-bills_gt_1000)" name="> 1000" radius={[4, 4, 0, 0]} />
+                    </BarChart>
+                </ChartContainer>
+            </CardContent>
+            </Card>
+        </div>
+      ) : (
+        <Card>
+          <CardHeader>
+            <CardTitle>Day-wise Performance Data</CardTitle>
+            <CardDescription>
+              A detailed breakdown of performance metrics for the selected date range.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Date</TableHead>
+                  <TableHead className="text-right">Net Sale</TableHead>
+                  <TableHead className="text-right">Margin</TableHead>
+                  <TableHead className="text-right">Branded Sale</TableHead>
+                  <TableHead className="text-right">PL+SIP Sale</TableHead>
+                  <TableHead className="text-right">Offline Sale</TableHead>
+                  <TableHead className="text-right">Online Sale</TableHead>
+                  <TableHead className="text-center">Sale Orders</TableHead>
+                  <TableHead className="text-center">Web Orders</TableHead>
+                  <TableHead className="text-right">ABV</TableHead>
+                  <TableHead className="text-center"># of Bills</TableHead>
+                  <TableHead className="text-right">Discount %</TableHead>
+                  <TableHead className="text-right">Returns</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {dayWiseTableData.map((row) => (
+                  <TableRow key={row.date}>
+                    <TableCell className="font-medium">{row.date}</TableCell>
+                    <TableCell className="text-right">₹{row.netSale.toLocaleString()}</TableCell>
+                    <TableCell className="text-right">₹{row.marginAmount.toLocaleString()}</TableCell>
+                    <TableCell className="text-right">₹{row.brandedSale.toLocaleString()}</TableCell>
+                    <TableCell className="text-right">₹{row.plSipSale.toLocaleString()}</TableCell>
+                    <TableCell className="text-right">₹{row.offlineSale.toLocaleString()}</TableCell>
+                    <TableCell className="text-right">₹{row.onlineSale.toLocaleString()}</TableCell>
+                    <TableCell className="text-center">{row.saleOrdersCount}</TableCell>
+                    <TableCell className="text-center">{row.webOrdersCount}</TableCell>
+                    <TableCell className="text-right">₹{row.avgBillValue.toLocaleString()}</TableCell>
+                    <TableCell className="text-center">{row.billsCount}</TableCell>
+                    <TableCell className="text-right">{row.discountPercentage.toFixed(2)}%</TableCell>
+                    <TableCell className="text-right">₹{row.returnedProducts.toLocaleString()}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </CardContent>
         </Card>
-      </div>
+      )}
     </div>
   );
 }
