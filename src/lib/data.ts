@@ -338,150 +338,12 @@ export const paymentsData = [
   },
 ];
 
-export type Return = {
-  returnId: string;
-  taxInvoice: string;
-  createdBy: string;
-  total: number;
-  returnType: "Expiry" | "Short Expiry" | "Slow Moving" | "Damage" | "Complaint" | "Cuttings" | "MRP Change" | "Emergency" | "Invoice Return Damaged" | "Invoice Return Expired";
-  receivedDate: string;
-  returnNoteId: string | null;
-  status: "Credit Note Received" | "Replenished" | "TO Generated" | "Pending";
-  products: {
-    sku: string;
-    name: string;
-    batch: string;
-    quantity: number;
-    value: number;
-  }[];
-  trackingHistory?: { status: string; date: string; location: string }[];
-};
-
-export const returnsData: Return[] = [
-  { 
-    returnId: "RET-0123", 
-    taxInvoice: "TINV-987",
-    createdBy: "Anand Sharma",
-    total: 2300.0,
-    returnType: "Expiry",
-    receivedDate: "2023-10-15",
-    returnNoteId: "CN-056",
-    status: "Credit Note Received",
-    products: [
-        { sku: "PARA500", name: "Paracetamol 500mg", batch: "B123", quantity: 10, value: 150 },
-        { sku: "VICKS-AC", name: "Vicks Action 500", batch: "V456", quantity: 5, value: 200 },
-    ],
-    trackingHistory: [
-        { status: 'Credit Note Received', date: '2023-10-22 11:00', location: 'Finance Department' },
-        { status: 'Replenished', date: '2023-10-21 16:00', location: 'Inventory System' },
-        { status: 'TO Generated', date: '2023-10-17 18:00', location: 'System' },
-    ]
-  },
-  { 
-    returnId: "RET-0124", 
-    taxInvoice: "TINV-991",
-    createdBy: "Anand Sharma",
-    total: 1250.0,
-    returnType: "Damage",
-    receivedDate: "2023-10-18",
-    returnNoteId: null,
-    status: "TO Generated",
-    products: [
-        { sku: "MOOV", name: "Moov Ointment", batch: "M789", quantity: 10, value: 1200 }
-    ],
-    trackingHistory: [
-        { status: 'TO Generated', date: '2023-10-25 12:00', location: 'System' },
-    ]
-  },
-  { 
-    returnId: "RET-0125", 
-    taxInvoice: "TINV-992",
-    createdBy: "Anand Sharma",
-    total: 800.0,
-    returnType: "Slow Moving",
-    receivedDate: "2023-10-22",
-    returnNoteId: null,
-    status: "TO Generated",
-    products: [
-        { sku: "VOLINI", name: "Volini Spray", batch: "VO101", quantity: 5, value: 750 }
-    ],
-     trackingHistory: [
-        { status: 'TO Generated', date: '2023-10-22 15:00', location: 'System' },
-    ]
-  },
-   { 
-    returnId: "RET-0126", 
-    taxInvoice: "TINV-993",
-    createdBy: "Anand Sharma",
-    total: 1500.0,
-    returnType: "MRP Change",
-    receivedDate: "2023-10-28",
-    returnNoteId: 'CN-057',
-    status: "Replenished",
-    products: [
-        { sku: "DETTOL-AS", name: "Dettol Antiseptic", batch: "D202", quantity: 10, value: 500 },
-        { sku: "SAVALON", name: "Savlon Antiseptic", batch: "S303", quantity: 5, value: 250 },
-    ],
-     trackingHistory: [
-        { status: 'Replenished', date: '2023-10-29 11:00', location: 'Warehouse' },
-        { status: 'TO Generated', date: '2023-10-28 14:00', location: 'System' }
-    ]
-  },
-];
-
-
-export type MonthlyReport = {
-  id: string;
-  name: string;
-  period: string;
-  month: string;
-  financialYear: string;
-  fileType: "Excel" | "PDF";
-  status: "Updated" | "Not Updated";
-};
-
-export const monthlyReports: MonthlyReport[] = [
-    // --- FY 2025-26 ---
-    // October
-    { id: "REP-OCT-1", name: "Net Sale vs. Margin", period: "Oct 2025", month: "October", financialYear: "FY 2025-26", fileType: "Excel", status: "Updated" },
-    { id: "REP-OCT-2", name: "Royalty Fee Invoice", period: "Oct 2025", month: "October", financialYear: "FY 2025-26", fileType: "PDF", status: "Not Updated" },
-    { id: "REP-OCT-3", name: "Rental Invoices", period: "Oct 2025", month: "October", financialYear: "FY 2025-26", fileType: "PDF", status: "Updated" },
-    { id: "REP-OCT-4", name: "GST Reports", period: "Oct 2025", month: "October", financialYear: "FY 2025-26", fileType: "Excel", status: "Not Updated" },
-    { id: "REP-OCT-5", name: "Expiry Products List", period: "Oct 2025", month: "October", financialYear: "FY 2025-26", fileType: "Excel", status: "Updated" },
-    { id: "REP-OCT-6", name: "Slow-Moving Products", period: "Oct 2025", month: "October", financialYear: "FY 2025-26", fileType: "Excel", status: "Not Updated" },
-    { id: "REP-OCT-7", name: "Credit Note", period: "Oct 2025", month: "October", financialYear: "FY 2025-26", fileType: "Excel", status: "Updated" },
-    
-    // September
-    { id: "REP-SEP-1", name: "Net Sale vs. Margin", period: "Sep 2025", month: "September", financialYear: "FY 2025-26", fileType: "Excel", status: "Updated" },
-    { id: "REP-SEP-2", name: "Royalty Fee Invoice", period: "Sep 2025", month: "September", financialYear: "FY 2025-26", fileType: "PDF", status: "Updated" },
-    { id: "REP-SEP-3", name: "Rental Invoices", period: "Sep 2025", month: "September", financialYear: "FY 2025-26", fileType: "PDF", status: "Updated" },
-    { id: "REP-SEP-4", name: "GST Reports", period: "Sep 2025", month: "September", financialYear: "FY 2025-26", fileType: "Excel", status: "Not Updated" },
-    { id: "REP-SEP-5", name: "Expiry Products List", period: "Sep 2025", month: "September", financialYear: "FY 2025-26", fileType: "Excel", status: "Updated" },
-    { id: "REP-SEP-6", name: "Slow-Moving Products", period: "Sep 2025", month: "September", financialYear: "FY 2025-26", fileType: "Excel", status: "Updated" },
-    { id: "REP-SEP-7", name: "Credit Note", period: "Sep 2025", month: "September", financialYear: "FY 2025-26", fileType: "Excel", status: "Updated" },
-    
-    // --- FY 2024-25 ---
-    { id: "REP-MAR-1", name: "GST Reports", period: "Mar 2025", month: "March", financialYear: "FY 2024-25", fileType: "Excel", status: "Updated" },
-];
-
-
-export const invoices = {
-  order: [
-    { invoiceId: "INV-1024", orderId: "ORD75639", date: "2023-10-25 14:30", amount: 12450.0, status: "Paid" },
-    { invoiceId: "INV-1025", orderId: "ORD75641", date: "2023-10-22 10:00", amount: 8990.0, status: "Unpaid" },
-  ],
-  membership: [
-    { invoiceId: "FEE-0923", period: "September 2023", date: "2023-10-10", amount: 25000.0, status: "Generated" },
-    { invoiceId: "FEE-0823", period: "August 2023", date: "2023-09-10", amount: 24500.0, status: "Paid" },
-  ],
-};
-
 export type Complaint = {
   complaintId: string;
   dateTime: string;
   department: string;
   subject: string;
-  status: "Resolved" | "In Progress";
+  status: "Closed" | "In Progress" | "Awaiting Your Response" | "Reopened";
   activityLog: {
     date: string;
     activity: string;
@@ -498,8 +360,9 @@ export const complaintsData: Complaint[] = [
         department: "Warehouse",
         subject: "Damaged stock received", 
         description: "Received 10 units of Paracetamol 500mg with damaged packaging in order ORD-2023-123. The outer carton was crushed, and some strips were torn. Please arrange for a replacement or credit note.",
-        status: "Resolved",
+        status: "Closed",
         activityLog: [
+            { date: "2023-10-15 09:30 AM", activity: "Franchisee accepted the resolution.", user: "Anand Sharma" },
             { date: "2023-10-14 11:00 AM", activity: "Credit note issued for damaged items.", user: "Support Team" },
             { date: "2023-10-13 02:15 PM", activity: "Complaint reviewed. Awaiting confirmation from warehouse.", user: "Support Team" },
             { date: "2023-10-12 10:30 AM", activity: "Complaint raised by partner.", user: "Anand Sharma" },
@@ -508,7 +371,7 @@ export const complaintsData: Complaint[] = [
     { 
         complaintId: "COM-057", 
         dateTime: "2023-10-25 04:00 PM", 
-        department: "Warehouse",
+        department: "Logistics",
         subject: "Delay in order ORD75641", 
         description: "Order ORD75641 was scheduled for delivery on Oct 24th but has not yet arrived. The tracking information has not been updated in over 24 hours. Please provide an urgent update on the shipment status.",
         status: "In Progress",
@@ -516,6 +379,19 @@ export const complaintsData: Complaint[] = [
             { date: "2023-10-26 09:00 AM", activity: "Contacted logistics partner for an update. Awaiting response.", user: "Support Team" },
             { date: "2023-10-25 04:05 PM", activity: "Complaint acknowledged and assigned to logistics team.", user: "Support Team" },
             { date: "2023-10-25 04:00 PM", activity: "Complaint raised by partner.", user: "Anand Sharma" },
+        ]
+    },
+     { 
+        complaintId: "COM-058", 
+        dateTime: "2023-11-01 11:00 AM", 
+        department: "Technical Support",
+        subject: "POS system lagging", 
+        description: "The Point of Sale system has been very slow since the last update. Billing is taking twice as long, causing long queues and customer dissatisfaction.",
+        status: "Awaiting Your Response",
+        activityLog: [
+            { date: "2023-11-02 03:00 PM", activity: "A patch has been deployed remotely. Please check the performance and confirm if the issue is resolved.", user: "Support Team" },
+            { date: "2023-11-01 11:05 AM", activity: "Ticket assigned to the technical team.", user: "Support Team" },
+            { date: "2023-11-01 11:00 AM", activity: "Complaint raised by partner.", user: "Anand Sharma" },
         ]
     },
 ];
@@ -958,6 +834,79 @@ export const stationeryItemsData: StationeryItem[] = [
     { code: "STAT0034", name: "Ball Point Pens - Blue", uom: "Box", example: 2},
     { code: "STAT0035", name: "Stapler Machine - No. 10", uom: "Number", example: 1},
 ];
+
+export type Return = {
+  returnId: string;
+  taxInvoice: string;
+  createdBy: string;
+  total: number;
+  returnType: string;
+  receivedDate: string;
+  returnNoteId?: string;
+  status: "Pending" | "TO Generated" | "Replenished" | "Credit Note Received";
+  products: { sku: string; name: string; batch: string; quantity: number; value: number }[];
+  trackingHistory: { status: string; date: string; location: string }[];
+};
+
+export const returnsData: Return[] = [
+  {
+    returnId: "RET-001",
+    taxInvoice: "INV-123",
+    createdBy: "System",
+    total: 1200,
+    returnType: "Expiry",
+    receivedDate: "2024-10-15",
+    returnNoteId: "CN-101",
+    status: "Credit Note Received",
+    products: [
+      { sku: "PROD-X", name: "Product X", batch: "B001", quantity: 10, value: 1200 }
+    ],
+    trackingHistory: [
+        { status: 'Credit Note Received', date: '2024-10-15', location: 'Finance Dept.'},
+        { status: 'Return Received', date: '2024-10-14', location: 'Central Warehouse'},
+        { status: 'Dispatched', date: '2024-10-13', location: 'Store'},
+    ]
+  },
+  {
+    returnId: "RET-002",
+    taxInvoice: "INV-124",
+    createdBy: "Anand Sharma",
+    total: 850,
+    returnType: "Damage",
+    receivedDate: "2024-10-16",
+    status: "TO Generated",
+     products: [
+      { sku: "PROD-Y", name: "Product Y", batch: "B002", quantity: 5, value: 850 }
+    ],
+    trackingHistory: [
+        { status: 'TO Generated', date: '2024-10-16', location: 'System'},
+    ]
+  },
+   {
+    returnId: "RET-003",
+    taxInvoice: "INV-125",
+    createdBy: "System",
+    total: 2500,
+    returnType: "Non-Moving",
+    receivedDate: "2024-10-18",
+    status: "Replenished",
+     products: [
+      { sku: "PROD-Z", name: "Product Z", batch: "B003", quantity: 25, value: 2500 }
+    ],
+    trackingHistory: [
+        { status: 'Replenished', date: '2024-10-18', location: 'System'},
+        { status: 'Return Received', date: '2024-10-17', location: 'Central Warehouse'},
+    ]
+  },
+];
+
+export const invoicesData = {
+    membership: [
+        { invoiceId: "M-FEE-001", period: "Oct 2024", date: "2024-11-05", status: "Paid", amount: 584.10 },
+        { invoiceId: "M-FEE-002", period: "Sep 2024", date: "2024-10-05", status: "Paid", amount: 584.10 },
+        { invoiceId: "M-FEE-003", period: "Nov 2024", date: "2024-12-05", status: "Generated", amount: 584.10 },
+    ]
+};
   
 
     
@@ -978,5 +927,7 @@ export const stationeryItemsData: StationeryItem[] = [
 
 
   
+
+
 
 

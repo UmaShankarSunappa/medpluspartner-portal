@@ -2,7 +2,7 @@
 "use client";
 
 import { useState } from "react";
-import { MoreHorizontal, PlusCircle, MessageCircle, Clock } from "lucide-react";
+import { MoreHorizontal, PlusCircle, MessageCircle, Clock, Check, RefreshCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -35,6 +35,16 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -43,19 +53,53 @@ import { complaintsData, type Complaint } from "@/lib/data";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 
-const statusVariant: { [key: string]: "default" | "secondary" | "destructive" | "outline" } = {
-    "Resolved": "default",
+const statusVariant: { [key: string]: "default" | "secondary" | "destructive" | "outline" | "warning" | "success" | "info" } = {
+    "Closed": "success",
     "In Progress": "secondary",
+    "Awaiting Your Response": "warning",
+    "Reopened": "info",
 };
 
 export default function ComplaintsPage() {
+    const [complaints, setComplaints] = useState<Complaint[]>(complaintsData);
     const [selectedComplaint, setSelectedComplaint] = useState<Complaint | null>(null);
     const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+    const [isAcceptAlertOpen, setIsAcceptAlertOpen] = useState(false);
+    const [isReopenModalOpen, setIsReopenModalOpen] = useState(false);
 
     const handleViewClick = (complaint: Complaint) => {
         setSelectedComplaint(complaint);
         setIsViewModalOpen(true);
     };
+
+    const handleAcceptClosure = () => {
+        if (!selectedComplaint) return;
+        setComplaints(prev => prev.map(c => c.complaintId === selectedComplaint.complaintId ? {...c, status: "Closed"} : c));
+        setIsAcceptAlertOpen(false);
+        setIsViewModalOpen(false);
+    };
+
+    const handleReopenSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+        const reason = formData.get("reopen-reason") as string;
+        if (!selectedComplaint || !reason.trim()) return;
+
+        const newActivity = {
+            date: new Date().toLocaleString(),
+            activity: `Reopened: ${reason}`,
+            user: "Anand Sharma"
+        };
+        
+        setComplaints(prev => prev.map(c => 
+            c.complaintId === selectedComplaint.complaintId 
+            ? { ...c, status: "Reopened", activityLog: [newActivity, ...c.activityLog] } 
+            : c
+        ));
+        setIsReopenModalOpen(false);
+        setIsViewModalOpen(false);
+    };
+
 
   return (
     <div className="space-y-6">
@@ -90,6 +134,7 @@ export default function ComplaintsPage() {
                             <SelectContent>
                                 <SelectItem value="warehouse">Warehouse</SelectItem>
                                 <SelectItem value="support">Technical Support</SelectItem>
+                                <SelectItem value="logistics">Logistics</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>
@@ -135,7 +180,7 @@ export default function ComplaintsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {complaintsData.map((complaint) => (
+              {complaints.map((complaint) => (
                 <TableRow key={complaint.complaintId}>
                   <TableCell className="font-medium">{complaint.complaintId}</TableCell>
                    <TableCell>{complaint.department}</TableCell>
@@ -176,7 +221,7 @@ export default function ComplaintsPage() {
                     Status: <Badge variant={statusVariant[selectedComplaint?.status || ''] || 'secondary'}>{selectedComplaint?.status}</Badge>
                 </DialogDescription>
                 </DialogHeader>
-                <div className="grid gap-6 py-4 max-h-[70vh] overflow-y-auto pr-4">
+                <div className="grid gap-6 py-4 max-h-[60vh] overflow-y-auto pr-4">
                     <div className="space-y-4">
                         <h3 className="font-semibold text-lg">Details</h3>
                         <div className="space-y-2">
@@ -215,9 +260,60 @@ export default function ComplaintsPage() {
                         </div>
                     </div>
                 </div>
-                <DialogFooter>
-                    <Button variant="outline" onClick={() => setIsViewModalOpen(false)}>Close</Button>
-                </DialogFooter>
+                 {selectedComplaint?.status === 'Awaiting Your Response' ? (
+                    <DialogFooter className="flex-col sm:flex-row gap-2">
+                        <Button variant="outline" onClick={() => setIsReopenModalOpen(true)}>
+                            <RefreshCcw className="mr-2 h-4 w-4" />
+                            Reopen
+                        </Button>
+                        <Button onClick={() => setIsAcceptAlertOpen(true)}>
+                            <Check className="mr-2 h-4 w-4" />
+                            Accept Closure
+                        </Button>
+                    </DialogFooter>
+                ) : (
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setIsViewModalOpen(false)}>Close</Button>
+                    </DialogFooter>
+                )}
+            </DialogContent>
+        </Dialog>
+        
+        {/* Accept Closure Alert */}
+        <AlertDialog open={isAcceptAlertOpen} onOpenChange={setIsAcceptAlertOpen}>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        This will permanently close the complaint ticket. You won't be able to reopen it after this.
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleAcceptClosure}>Confirm</AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+        
+        {/* Reopen Complaint Modal */}
+        <Dialog open={isReopenModalOpen} onOpenChange={setIsReopenModalOpen}>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Reopen Complaint</DialogTitle>
+                    <DialogDescription>
+                        Please provide a reason for reopening this complaint.
+                    </DialogDescription>
+                </DialogHeader>
+                <form onSubmit={handleReopenSubmit}>
+                    <div className="py-4">
+                        <Label htmlFor="reopen-reason">Reason</Label>
+                        <Textarea id="reopen-reason" name="reopen-reason" placeholder="Explain why the resolution is not satisfactory..." required />
+                    </div>
+                    <DialogFooter>
+                        <Button type="button" variant="outline" onClick={() => setIsReopenModalOpen(false)}>Cancel</Button>
+                        <Button type="submit">Submit and Reopen</Button>
+                    </DialogFooter>
+                </form>
             </DialogContent>
         </Dialog>
     </div>
