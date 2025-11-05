@@ -121,7 +121,7 @@ export default function DashboardPage() {
                 <TableHeader>
                     <TableRow>
                         <TableHead className="text-center">Date</TableHead>
-                        <TableHead className="text-center">Net Sales</TableHead>
+                        <TableHead className="text-center">Gross Sales</TableHead>
                         <TableHead className="text-center">Cash to be deposited</TableHead>
                         <TableHead className="text-center">Tentative Margin</TableHead>
                     </TableRow>
@@ -130,9 +130,9 @@ export default function DashboardPage() {
                     {cashDepositReportData.map((row) => (
                         <TableRow key={row.date}>
                             <TableCell className="text-center">{row.date}</TableCell>
-                            <TableCell className="text-center">₹{row.netSales.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
+                            <TableCell className="text-center">₹{row.grossSales.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
                             <TableCell className="text-center">₹{row.cashToBeDeposited.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
-                            <TableCell className="text-center font-medium">₹{(row.netSales - row.cashToBeDeposited).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
+                            <TableCell className="text-center font-medium">₹{(row.grossSales - row.cashToBeDeposited).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>

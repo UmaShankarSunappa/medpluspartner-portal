@@ -96,16 +96,16 @@ export const salesData = [
 ];
 
 export const cashDepositReportData = [
-    { date: "01-Oct-25", netSales: 16251.46, cashToBeDeposited: 12570.65 },
-    { date: "02-Oct-25", netSales: 7891.74, cashToBeDeposited: 6455.66 },
-    { date: "03-Oct-25", netSales: 14106.97, cashToBeDeposited: 11133.34 },
-    { date: "04-Oct-25", netSales: 15389.52, cashToBeDeposited: 12219.88 },
-    { date: "05-Oct-25", netSales: 18387.22, cashToBeDeposited: 14164.62 },
-    { date: "06-Oct-25", netSales: 24739.23, cashToBeDeposited: 21107.69 },
-    { date: "07-Oct-25", netSales: 17330.08, cashToBeDeposited: 14776.97 },
-    { date: "08-Oct-25", netSales: 13029.01, cashToBeDeposited: 10910.66 },
-    { date: "09-Oct-25", netSales: 20226.13, cashToBeDeposited: 17660.44 },
-    { date: "10-Oct-25", netSales: 9515.42, cashToBeDeposited: 7939.92 },
+    { date: "01-Oct-25", grossSales: 16251.46, cashToBeDeposited: 12570.65 },
+    { date: "02-Oct-25", grossSales: 7891.74, cashToBeDeposited: 6455.66 },
+    { date: "03-Oct-25", grossSales: 14106.97, cashToBeDeposited: 11133.34 },
+    { date: "04-Oct-25", grossSales: 15389.52, cashToBeDeposited: 12219.88 },
+    { date: "05-Oct-25", grossSales: 18387.22, cashToBeDeposited: 14164.62 },
+    { date: "06-Oct-25", grossSales: 24739.23, cashToBeDeposited: 21107.69 },
+    { date: "07-Oct-25", grossSales: 17330.08, cashToBeDeposited: 14776.97 },
+    { date: "08-Oct-25", grossSales: 13029.01, cashToBeDeposited: 10910.66 },
+    { date: "09-Oct-25", grossSales: 20226.13, cashToBeDeposited: 17660.44 },
+    { date: "10-Oct-25", grossSales: 9515.42, cashToBeDeposited: 7939.92 },
 ];
 
 export type Order = {
@@ -677,16 +677,16 @@ const momBrandedVsPl = [
 });
 
 const dayWiseTableData = [
-  { date: "2025-10-01", netSale: 22050, marginAmount: 3307, brandedSale: 15000, plSipSale: 7050, offlineSale: 20000, onlineSale: 2050, saleOrdersCount: 50, webOrdersCount: 5, avgBillValue: 400, bills_lt_500: 30, bills_500_1000: 20, bills_gt_1000: 5 },
-  { date: "2025-10-02", netSale: 23100, marginAmount: 3465, brandedSale: 16000, plSipSale: 7100, offlineSale: 21000, onlineSale: 2100, saleOrdersCount: 52, webOrdersCount: 6, avgBillValue: 398, bills_lt_500: 35, bills_500_1000: 18, bills_gt_1000: 5 },
-  { date: "2025-10-03", netSale: 21500, marginAmount: 3225, brandedSale: 14500, plSipSale: 7000, offlineSale: 19500, onlineSale: 2000, saleOrdersCount: 48, webOrdersCount: 4, avgBillValue: 413, bills_lt_500: 28, bills_500_1000: 19, bills_gt_1000: 5 },
-  { date: "2025-10-04", netSale: 25200, marginAmount: 3780, brandedSale: 17000, plSipSale: 8200, offlineSale: 23000, onlineSale: 2200, saleOrdersCount: 55, webOrdersCount: 7, avgBillValue: 406, bills_lt_500: 38, bills_500_1000: 20, bills_gt_1000: 4 },
-  { date: "2025-10-05", netSale: 26250, marginAmount: 3937, brandedSale: 18000, plSipSale: 8250, offlineSale: 24000, onlineSale: 2250, saleOrdersCount: 58, webOrdersCount: 8, avgBillValue: 410, bills_lt_500: 40, bills_500_1000: 18, bills_gt_1000: 6 },
-  { date: "2025-10-06", netSale: 28350, marginAmount: 4252, brandedSale: 19000, plSipSale: 9350, offlineSale: 26000, onlineSale: 2350, saleOrdersCount: 65, webOrdersCount: 9, avgBillValue: 405, bills_lt_500: 45, bills_500_1000: 20, bills_gt_1000: 5 },
-  { date: "2025-10-07", netSale: 24150, marginAmount: 3622, brandedSale: 16500, plSipSale: 7650, offlineSale: 22000, onlineSale: 2150, saleOrdersCount: 53, webOrdersCount: 7, avgBillValue: 416, bills_lt_500: 33, bills_500_1000: 20, bills_gt_1000: 5 },
-  { date: "2025-10-08", netSale: 27300, marginAmount: 4095, brandedSale: 18500, plSipSale: 8800, offlineSale: 25000, onlineSale: 2300, saleOrdersCount: 62, webOrdersCount: 8, avgBillValue: 407, bills_lt_500: 42, bills_500_1000: 20, bills_gt_1000: 5 },
-  { date: "2025-10-09", netSale: 29400, marginAmount: 4410, brandedSale: 20000, plSipSale: 9400, offlineSale: 27000, onlineSale: 2400, saleOrdersCount: 68, webOrdersCount: 10, avgBillValue: 408, bills_lt_500: 48, bills_500_1000: 22, bills_gt_1000: 2 },
-  { date: "2025-10-10", netSale: 31500, marginAmount: 4725, brandedSale: 21000, plSipSale: 10500, offlineSale: 28500, onlineSale: 3000, saleOrdersCount: 70, webOrdersCount: 12, avgBillValue: 421, bills_lt_500: 50, bills_500_1000: 18, bills_gt_1000: 7 },
+  { date: "2025-10-01", netSale: 22050, marginAmount: 3307, brandedSale: 15000, plSipSale: 7050, offlineSale: 20000, onlineSale: 2050, saleOrdersCount: 50, webOrdersCount: 5, avgBillValue: 400, bills_lt_500: 30, bills_500_1000: 15, bills_gt_1000: 5 },
+  { date: "2025-10-02", netSale: 23100, marginAmount: 3465, brandedSale: 16000, plSipSale: 7100, offlineSale: 21000, onlineSale: 2100, saleOrdersCount: 52, webOrdersCount: 6, avgBillValue: 398, bills_lt_500: 35, bills_500_1000: 12, bills_gt_1000: 5 },
+  { date: "2025-10-03", netSale: 21500, marginAmount: 3225, brandedSale: 14500, plSipSale: 7000, offlineSale: 19500, onlineSale: 2000, saleOrdersCount: 48, webOrdersCount: 4, avgBillValue: 413, bills_lt_500: 28, bills_500_1000: 15, bills_gt_1000: 5 },
+  { date: "2025-10-04", netSale: 25200, marginAmount: 3780, brandedSale: 17000, plSipSale: 8200, offlineSale: 23000, onlineSale: 2200, saleOrdersCount: 55, webOrdersCount: 7, avgBillValue: 406, bills_lt_500: 38, bills_500_1000: 13, bills_gt_1000: 4 },
+  { date: "2025-10-05", netSale: 26250, marginAmount: 3937, brandedSale: 18000, plSipSale: 8250, offlineSale: 24000, onlineSale: 2250, saleOrdersCount: 58, webOrdersCount: 8, avgBillValue: 410, bills_lt_500: 40, bills_500_1000: 12, bills_gt_1000: 6 },
+  { date: "2025-10-06", netSale: 28350, marginAmount: 4252, brandedSale: 19000, plSipSale: 9350, offlineSale: 26000, onlineSale: 2350, saleOrdersCount: 65, webOrdersCount: 9, avgBillValue: 405, bills_lt_500: 45, bills_500_1000: 15, bills_gt_1000: 5 },
+  { date: "2025-10-07", netSale: 24150, marginAmount: 3622, brandedSale: 16500, plSipSale: 7650, offlineSale: 22000, onlineSale: 2150, saleOrdersCount: 53, webOrdersCount: 7, avgBillValue: 416, bills_lt_500: 33, bills_500_1000: 15, bills_gt_1000: 5 },
+  { date: "2025-10-08", netSale: 27300, marginAmount: 4095, brandedSale: 18500, plSipSale: 8800, offlineSale: 25000, onlineSale: 2300, saleOrdersCount: 62, webOrdersCount: 8, avgBillValue: 407, bills_lt_500: 42, bills_500_1000: 15, bills_gt_1000: 5 },
+  { date: "2025-10-09", netSale: 29400, marginAmount: 4410, brandedSale: 20000, plSipSale: 9400, offlineSale: 27000, onlineSale: 2400, saleOrdersCount: 68, webOrdersCount: 10, avgBillValue: 408, bills_lt_500: 48, bills_500_1000: 18, bills_gt_1000: 2 },
+  { date: "2025-10-10", netSale: 31500, marginAmount: 4725, brandedSale: 21000, plSipSale: 10500, offlineSale: 28500, onlineSale: 3000, saleOrdersCount: 70, webOrdersCount: 12, avgBillValue: 421, bills_lt_500: 50, bills_500_1000: 13, bills_gt_1000: 7 },
 ];
 
 export const performanceData = {
@@ -927,6 +927,7 @@ export const invoicesData = {
 
 
   
+
 
 
 
