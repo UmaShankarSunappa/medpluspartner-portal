@@ -916,7 +916,6 @@ export type MonthlyReport = {
   financialYear: string;
   fileType: "Excel" | "PDF";
   status: "Updated" | "Not Updated";
-  requiredAction?: boolean;
   url?: string;
 };
   
@@ -946,7 +945,6 @@ const generateReportsForMonth = (month: string, year: number, financialYear: str
       financialYear: financialYear,
       fileType: fileType,
       status: Math.random() > 0.3 ? "Updated" : "Not Updated", // Randomize status
-      requiredAction: name === "Slow-Moving Products",
     };
   });
 };
@@ -973,6 +971,7 @@ export const monthlyReports: MonthlyReport[] = [
 
 
   
+
 
 
 

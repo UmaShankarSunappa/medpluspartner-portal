@@ -1,9 +1,8 @@
 
-
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { Download, File as FileIcon, Sheet as ExcelIcon, ChevronsUpDown, CheckCircle } from "lucide-react";
+import { Download, File as FileIcon, Sheet as ExcelIcon, ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -38,19 +37,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { DatePicker } from "@/components/ui/date-picker";
-import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
-
 
 // --- Helper Functions ---
 const financialYearMonths = [
@@ -86,9 +72,6 @@ export default function ReportsPage() {
   const allReportTypes = useMemo(() => getReportTypes(allReportsData), []);
   
   const [filteredReports, setFilteredReports] = useState<MonthlyReport[]>(allReportsData);
-  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-  const [selectedReport, setSelectedReport] = useState<MonthlyReport | null>(null);
-  const { toast } = useToast();
   
   // Filter States
   const [selectedYear, setSelectedYear] = useState<string>(getCurrentFinancialYear());
@@ -128,20 +111,6 @@ export default function ReportsPage() {
         ? prev.filter(t => t !== type)
         : [...prev, t]
     );
-  };
-  
-  const handleConfirmReturnClick = (report: MonthlyReport) => {
-    setSelectedReport(report);
-    setIsConfirmModalOpen(true);
-  };
-
-  const handleConfirmSubmit = () => {
-    toast({
-        title: "Return Confirmed",
-        description: `Return for ${selectedReport?.name} has been confirmed.`,
-    });
-    setIsConfirmModalOpen(false);
-    setSelectedReport(null);
   };
 
   return (
@@ -267,21 +236,15 @@ export default function ReportsPage() {
                         {report.fileType}
                     </TableCell>
                     <TableCell>
-                        <Badge variant={report.requiredAction ? "warning" : report.status === 'Updated' ? 'success' : 'secondary'}>
-                            {report.requiredAction ? "Action Required" : report.status}
+                        <Badge variant={report.status === 'Updated' ? 'success' : 'secondary'}>
+                            {report.status}
                         </Badge>
                     </TableCell>
                     <TableCell className="text-right">
-                       {report.requiredAction ? (
-                          <Button variant="outline" size="sm" onClick={() => handleConfirmReturnClick(report)}>
-                            Confirm Return
-                          </Button>
-                        ) : (
-                          <Button variant="ghost" size="icon" disabled={report.status === 'Not Updated'}>
-                              <Download className="h-4 w-4" />
-                              <span className="sr-only">Download</span>
-                          </Button>
-                        )}
+                      <Button variant="ghost" size="icon" disabled={report.status === 'Not Updated'}>
+                          <Download className="h-4 w-4" />
+                          <span className="sr-only">Download</span>
+                      </Button>
                     </TableCell>
                     </TableRow>
                 ))
@@ -296,31 +259,6 @@ export default function ReportsPage() {
           </Table>
         </CardContent>
       </Card>
-
-      <Dialog open={isConfirmModalOpen} onOpenChange={setIsConfirmModalOpen}>
-        <DialogContent>
-            <DialogHeader>
-                <DialogTitle>Confirm Return for {selectedReport?.name}</DialogTitle>
-                <DialogDescription>
-                    Please provide the dispatch date and Transfer Order (TO) ID to confirm the return of slow-moving products for {selectedReport?.period}.
-                </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-                <div className="space-y-2">
-                    <Label htmlFor="dispatchDate">Dispatch Date</Label>
-                    <DatePicker placeholder="Select dispatch date" />
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor="toId">Transfer Order (TO) ID</Label>
-                    <Input id="toId" placeholder="Enter TO ID" />
-                </div>
-            </div>
-            <DialogFooter>
-                <Button variant="outline" onClick={() => setIsConfirmModalOpen(false)}>Cancel</Button>
-                <Button onClick={handleConfirmSubmit}><CheckCircle className="mr-2 h-4 w-4" />Confirm</Button>
-            </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
