@@ -908,7 +908,25 @@ export const invoicesData = {
     ]
 };
   
-
+export type MonthlyReport = {
+  id: string;
+  name: string;
+  period: string;
+  month: string;
+  financialYear: string;
+  fileType: "Excel" | "PDF";
+  status: "Updated" | "Not Updated";
+  url?: string;
+};
+  
+export const monthlyReports: MonthlyReport[] = [
+    { id: "1", name: "Sales Statement", period: "Oct 2024", month: "October", financialYear: "FY 2024-25", fileType: "Excel", status: "Updated" },
+    { id: "2", name: "Stock Ledger", period: "Oct 2024", month: "October", financialYear: "FY 2024-25", fileType: "PDF", status: "Updated" },
+    { id: "3", name: "Purchase Statement", period: "Oct 2024", month: "October", financialYear: "FY 2024-25", fileType: "Excel", status: "Not Updated" },
+    { id: "4", name: "Sales Statement", period: "Sep 2024", month: "September", financialYear: "FY 2024-25", fileType: "Excel", status: "Updated" },
+    { id: "5", name: "Stock Ledger", period: "Sep 2024", month: "September", financialYear: "FY 2024-25", fileType: "PDF", status: "Updated" },
+    { id: "6", name: "Sales Statement", period: "Mar 2024", month: "March", financialYear: "FY 2023-24", fileType: "Excel", status: "Updated" },
+];
     
 
   
@@ -927,6 +945,7 @@ export const invoicesData = {
 
 
   
+
 
 
 
