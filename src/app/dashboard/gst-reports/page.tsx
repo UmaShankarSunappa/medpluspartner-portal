@@ -42,7 +42,7 @@ export default function GstReportsPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
             <CardTitle>Post GST Reports</CardTitle>
@@ -76,16 +76,6 @@ export default function GstReportsPage() {
             <ReportLink reportName="Franchise Purchase Tax Wise" />
             <ReportLink reportName="Franchise PurchaseReturn Tax Wise" />
             <ReportLink reportName="Total Stock Value Report" />
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>ValuePlus</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <ReportLink reportName="Points sale Debit" />
-            <ReportLink reportName="Points sale Credit" />
           </CardContent>
         </Card>
       </div>
