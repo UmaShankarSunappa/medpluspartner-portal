@@ -916,16 +916,44 @@ export type MonthlyReport = {
   financialYear: string;
   fileType: "Excel" | "PDF";
   status: "Updated" | "Not Updated";
+  requiredAction?: boolean;
   url?: string;
 };
   
+const reportNames = [
+  "Net Sale vs. Margin",
+  "Rental Invoices",
+  "Expiry Products List",
+  "Slow-Moving Products",
+  "Credit Note",
+  "Royalty Fee Invoice",
+  "GST Reports",
+];
+
+const generateReportsForMonth = (month: string, year: number, financialYear: string): MonthlyReport[] => {
+  return reportNames.map((name, index) => {
+    const id = `${financialYear}-${month.slice(0, 3)}-${index + 1}`;
+    let fileType: "Excel" | "PDF" = "Excel";
+    if (name === "Rental Invoices" || name === "Royalty Fee Invoice") {
+      fileType = "PDF";
+    }
+
+    return {
+      id: id,
+      name: name,
+      period: `${month.slice(0, 3)} ${year}`,
+      month: month,
+      financialYear: financialYear,
+      fileType: fileType,
+      status: Math.random() > 0.3 ? "Updated" : "Not Updated", // Randomize status
+      requiredAction: name === "Slow-Moving Products",
+    };
+  });
+};
+
 export const monthlyReports: MonthlyReport[] = [
-    { id: "1", name: "Sales Statement", period: "Oct 2024", month: "October", financialYear: "FY 2024-25", fileType: "Excel", status: "Updated" },
-    { id: "2", name: "Stock Ledger", period: "Oct 2024", month: "October", financialYear: "FY 2024-25", fileType: "PDF", status: "Updated" },
-    { id: "3", name: "Purchase Statement", period: "Oct 2024", month: "October", financialYear: "FY 2024-25", fileType: "Excel", status: "Not Updated" },
-    { id: "4", name: "Sales Statement", period: "Sep 2024", month: "September", financialYear: "FY 2024-25", fileType: "Excel", status: "Updated" },
-    { id: "5", name: "Stock Ledger", period: "Sep 2024", month: "September", financialYear: "FY 2024-25", fileType: "PDF", status: "Updated" },
-    { id: "6", name: "Sales Statement", period: "Mar 2024", month: "March", financialYear: "FY 2023-24", fileType: "Excel", status: "Updated" },
+  ...generateReportsForMonth("October", 2024, "FY 2024-25"),
+  ...generateReportsForMonth("November", 2024, "FY 2024-25"),
 ];
     
 
@@ -945,6 +973,7 @@ export const monthlyReports: MonthlyReport[] = [
 
 
   
+
 
 
 
