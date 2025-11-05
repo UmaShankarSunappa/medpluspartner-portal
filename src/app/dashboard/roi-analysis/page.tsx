@@ -150,7 +150,7 @@ export default function RoiAnalysisPage() {
                         <Input readOnly value={`₹${salesData.netSales.toLocaleString("en-IN")}`} />
                     </div>
                     <div className="space-y-2">
-                        <Label>Net Margin Value</Label>
+                        <Label>Gross Margin Value</Label>
                         <Input readOnly value={`₹${salesData.netMargin.toLocaleString("en-IN")}`} />
                     </div>
                      <div className="space-y-2">
