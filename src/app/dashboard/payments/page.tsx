@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { PlusCircle, Search, Download, Landmark, CreditCard, Signal, IndianRupee, BotMessageSquare, Eye, ChevronDown } from "lucide-react";
+import { PlusCircle, Search, Download, Landmark, CreditCard, Signal, IndianRupee, BotMessageSquare, Eye, ChevronDown, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -33,11 +33,14 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
-import { paymentsData, accountProfile, stores as mockStores } from "@/lib/data";
+import { paymentsData, accountProfile, stores as mockStores, kpiData } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { DateRange } from "react-day-picker";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+
 
 const statusVariant: { [key: string]: "success" | "destructive" | "secondary" } = {
     "Successful": "success",
@@ -51,6 +54,8 @@ type ApplicationRatios = {
     web: { ratio: number; amount: number };
 };
 
+type AllocationMode = "ratio" | "amount";
+
 type StoreAllocationState = {
     id: string;
     name: string;
@@ -58,6 +63,9 @@ type StoreAllocationState = {
     allocatedAmount: number;
     applicationRatios: ApplicationRatios;
     isExpanded: boolean;
+    applicationAllocationMode: AllocationMode;
+    // Assuming a mock inventory value for each store for the cap calculation
+    inventoryValue: number;
 };
 
 const initialApplicationRatios = (): ApplicationRatios => ({
@@ -72,146 +80,157 @@ export default function PaymentsPage() {
     const [selectedPayment, setSelectedPayment] = useState<typeof paymentsData[0] | null>(null);
     const [dateRange, setDateRange] = useState<DateRange | undefined>();
 
+    // Main payment state
     const [totalAmount, setTotalAmount] = useState<number>(0);
-    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string | null>(null);
     const [storeAllocations, setStoreAllocations] = useState<StoreAllocationState[]>([]);
+    const [storeAllocationMode, setStoreAllocationMode] = useState<AllocationMode>("ratio");
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string | null>(null);
     
-    // State to hold string values of inputs for better UX
-    const [inputValues, setInputValues] = useState<Record<string, string>>({});
+    // Derived states for validation and display
+    const { totalAllocated, remaining, isStoreAllocationValid, applicationAllocationErrors } = useMemo(() => {
+        const totalAllocated = storeAllocations.reduce((sum, s) => sum + s.allocatedAmount, 0);
+        const remaining = totalAmount - totalAllocated;
+        const isStoreAllocationValid = storeAllocationMode === 'ratio' || Math.abs(remaining) < 0.01;
+        
+        const errors: Record<string, string> = {};
+        storeAllocations.forEach(store => {
+            if (store.applicationAllocationMode === 'amount') {
+                const appTotal = store.applicationRatios.minMax.amount + store.applicationRatios.sale.amount + store.applicationRatios.web.amount;
+                if (Math.abs(appTotal - store.allocatedAmount) > 0.01) {
+                    errors[store.id] = `The allocated amounts (₹${appTotal.toFixed(2)}) do not add up to the total for this store (₹${store.allocatedAmount.toFixed(2)}).`;
+                }
+
+                const maxCap = store.inventoryValue * 0.02;
+                if (store.applicationRatios.sale.amount > maxCap) {
+                    errors[`${store.id}-sale`] = `Sale Orders amount cannot exceed ₹${maxCap.toFixed(2)} (2% of inventory).`;
+                }
+                if (store.applicationRatios.web.amount > maxCap) {
+                    errors[`${store.id}-web`] = `Web Orders amount cannot exceed ₹${maxCap.toFixed(2)} (2% of inventory).`;
+                }
+            }
+        });
+
+        return { totalAllocated, remaining, isStoreAllocationValid, applicationAllocationErrors: errors };
+    }, [storeAllocations, totalAmount, storeAllocationMode]);
 
     useEffect(() => {
         if (isCreatePaymentOpen) {
             const initialAllocations = mockStores.map(store => ({
                 id: store.id,
                 name: store.name,
-                storeRatio: mockStores.length > 1 ? 1 : 1,
+                storeRatio: 1,
                 allocatedAmount: 0,
                 applicationRatios: initialApplicationRatios(),
                 isExpanded: true,
+                applicationAllocationMode: "ratio" as AllocationMode,
+                inventoryValue: (kpiData[store.id as keyof typeof kpiData]?.availableCredit || 0) * 5, // Mock inventory
             }));
             setStoreAllocations(initialAllocations);
             setTotalAmount(0);
             setSelectedPaymentMethod(null);
-            
-            const newInputs: Record<string, string> = {};
-            initialAllocations.forEach(store => {
-                newInputs[`ratio-${store.id}`] = String(store.storeRatio);
-                newInputs[`amount-${store.id}`] = '0.00';
-                 Object.keys(store.applicationRatios).forEach(key => {
-                    const appKey = key as keyof ApplicationRatios;
-                    newInputs[`app-ratio-${store.id}-${appKey}`] = String(store.applicationRatios[appKey].ratio);
-                    newInputs[`app-amount-${store.id}-${appKey}`] = '0.00';
-                });
-            });
-            setInputValues(newInputs);
-
+            setStoreAllocationMode("ratio");
         }
     }, [isCreatePaymentOpen]);
 
     useEffect(() => {
-        recalculateAll(totalAmount, storeAllocations);
-    }, [totalAmount, storeAllocations.map(s => s.storeRatio).join(), storeAllocations.map(s => Object.values(s.applicationRatios).map(r => r.ratio).join('-')).join()]);
-
-    const recalculateAll = (currentTotal: number, currentAllocations: StoreAllocationState[]) => {
-        const totalStoreRatio = currentAllocations.reduce((sum, s) => sum + s.storeRatio, 0);
-
-        const newAllocations = currentAllocations.map(store => {
-            const newAllocatedAmount = totalStoreRatio > 0
-                ? (store.storeRatio / totalStoreRatio) * currentTotal
-                : (currentAllocations.length === 1 ? currentTotal : 0);
-            
-            const totalAppRatio = store.applicationRatios.minMax.ratio + store.applicationRatios.sale.ratio + store.applicationRatios.web.ratio;
-            
-            let newMinMaxAmount = 0;
-            let newSaleAmount = 0;
-            let newWebAmount = 0;
-
-            if (totalAppRatio > 0) {
-                newMinMaxAmount = (store.applicationRatios.minMax.ratio / totalAppRatio) * newAllocatedAmount;
-                newSaleAmount = (store.applicationRatios.sale.ratio / totalAppRatio) * newAllocatedAmount;
-                newWebAmount = newAllocatedAmount - newMinMaxAmount - newSaleAmount;
+        if (storeAllocationMode === 'ratio') {
+            recalculateStoreAmounts();
+        }
+    }, [totalAmount, storeAllocationMode, storeAllocations.map(s => s.storeRatio).join(',')]);
+    
+    useEffect(() => {
+        const newAllocations = storeAllocations.map(store => {
+            if (store.applicationAllocationMode === 'ratio') {
+                return { ...store, applicationRatios: calculateApplicationAmounts(store) };
             }
+            return store;
+        });
+        if (JSON.stringify(newAllocations) !== JSON.stringify(storeAllocations)) {
+            setStoreAllocations(newAllocations);
+        }
+    }, [storeAllocations.map(s => s.allocatedAmount).join(',')]);
 
+
+    const recalculateStoreAmounts = () => {
+        const totalStoreRatio = storeAllocations.reduce((sum, s) => sum + s.storeRatio, 0);
+        setStoreAllocations(prev => prev.map(store => {
+            const newAllocatedAmount = totalStoreRatio > 0 ? (store.storeRatio / totalStoreRatio) * totalAmount : (prev.length === 1 ? totalAmount : 0);
             return {
                 ...store,
                 allocatedAmount: newAllocatedAmount,
-                applicationRatios: {
-                    minMax: { ...store.applicationRatios.minMax, amount: newMinMaxAmount },
-                    sale: { ...store.applicationRatios.sale, amount: newSaleAmount },
-                    web: { ...store.applicationRatios.web, amount: newWebAmount },
-                }
+                applicationRatios: calculateApplicationAmounts({ ...store, allocatedAmount: newAllocatedAmount }),
             };
-        });
-
-        setStoreAllocations(newAllocations);
-        
-        const newInputs: Record<string, string> = {};
-        newAllocations.forEach(store => {
-            newInputs[`ratio-${store.id}`] = String(store.storeRatio);
-            newInputs[`amount-${store.id}`] = store.allocatedAmount.toFixed(2);
-            Object.keys(store.applicationRatios).forEach(key => {
-                const appKey = key as keyof ApplicationRatios;
-                newInputs[`app-ratio-${store.id}-${appKey}`] = String(store.applicationRatios[appKey].ratio);
-                newInputs[`app-amount-${store.id}-${appKey}`] = store.applicationRatios[appKey].amount.toFixed(2);
-            });
-        });
-        setInputValues(prev => ({ ...prev, ...newInputs }));
-    };
-
-    const handleInputChange = (key: string, value: string) => {
-        setInputValues(prev => ({...prev, [key]: value}));
+        }));
     };
     
-    const handleRatioBlur = (key: string, storeId: string, appKey?: keyof ApplicationRatios) => {
-        const newValue = parseFloat(inputValues[key]) || 0;
-        
-        if (appKey) { // It's an application ratio
-            setStoreAllocations(prev => prev.map(s => 
-                s.id === storeId ? {
-                    ...s,
-                    applicationRatios: {
-                        ...s.applicationRatios,
-                        [appKey]: { ...s.applicationRatios[appKey], ratio: newValue }
-                    }
-                } : s
-            ));
-        } else { // It's a store ratio
-            setStoreAllocations(prev => prev.map(s => s.id === storeId ? { ...s, storeRatio: newValue } : s));
+    const recalculateStoreRatios = () => {
+        if (totalAmount > 0) {
+            setStoreAllocations(prev => prev.map(store => ({
+                ...store,
+                storeRatio: store.allocatedAmount / totalAmount,
+            })));
         }
     };
     
-    const handleAmountBlur = (key: string, storeId: string, appKey?: keyof ApplicationRatios) => {
-        const newAmount = parseFloat(inputValues[key]) || 0;
-        
-        if (appKey) { // App amount changed
-            setStoreAllocations(prev => {
-                return prev.map(store => {
-                    if (store.id !== storeId) return store;
-                    const totalAppRatio = store.applicationRatios.minMax.ratio + store.applicationRatios.sale.ratio + store.applicationRatios.web.ratio;
-                    const newRatio = store.allocatedAmount > 0 ? (newAmount / store.allocatedAmount) * totalAppRatio : 1;
+    const calculateApplicationAmounts = (store: StoreAllocationState): ApplicationRatios => {
+        const totalAppRatio = store.applicationRatios.minMax.ratio + store.applicationRatios.sale.ratio + store.applicationRatios.web.ratio;
+        let newMinMaxAmount = 0, newSaleAmount = 0, newWebAmount = 0;
 
-                    return {
-                        ...store,
-                        applicationRatios: {
-                            ...store.applicationRatios,
-                            [appKey]: { ratio: newRatio, amount: newAmount }
-                        }
-                    };
-                });
-            });
-        } else { // Store amount changed
-            setStoreAllocations(prev => {
-                 const totalStoreRatio = prev.reduce((sum, s) => sum + s.storeRatio, 0);
-                 const newRatio = totalAmount > 0 ? (newAmount / totalAmount) * totalStoreRatio : 1;
-                 return prev.map(s => s.id === storeId ? { ...s, storeRatio: newRatio, allocatedAmount: newAmount } : s);
-            });
+        if (totalAppRatio > 0) {
+            newMinMaxAmount = (store.applicationRatios.minMax.ratio / totalAppRatio) * store.allocatedAmount;
+            newSaleAmount = (store.applicationRatios.sale.ratio / totalAppRatio) * store.allocatedAmount;
+            newWebAmount = store.allocatedAmount - newMinMaxAmount - newSaleAmount;
         }
+        return {
+            minMax: { ...store.applicationRatios.minMax, amount: newMinMaxAmount },
+            sale: { ...store.applicationRatios.sale, amount: newSaleAmount },
+            web: { ...store.applicationRatios.web, amount: newWebAmount },
+        };
+    };
+
+    const handleStoreRatioChange = (storeId: string, newRatio: number) => {
+        setStoreAllocations(prev => prev.map(s => s.id === storeId ? { ...s, storeRatio: newRatio } : s));
+    };
+
+    const handleStoreAmountChange = (storeId: string, newAmount: number) => {
+        setStoreAllocations(prev => prev.map(s => s.id === storeId ? { ...s, allocatedAmount: newAmount } : s));
+        if (storeAllocationMode === 'amount') {
+            // No need to recalculate ratios on every keystroke, do it on blur or after calculation
+        }
+    };
+
+    const handleApplicationRatioChange = (storeId: string, appKey: keyof ApplicationRatios, newRatio: number) => {
+        setStoreAllocations(prev => prev.map(s => {
+            if (s.id !== storeId) return s;
+            const newAppRatios = { ...s.applicationRatios, [appKey]: { ...s.applicationRatios[appKey], ratio: newRatio } };
+            return { ...s, applicationRatios: calculateApplicationAmounts({ ...s, applicationRatios: newAppRatios }) };
+        }));
+    };
+
+    const handleApplicationAmountChange = (storeId: string, appKey: keyof ApplicationRatios, newAmount: number) => {
+        setStoreAllocations(prev => prev.map(s => {
+            if (s.id !== storeId) return s;
+            const newAppRatios = { ...s.applicationRatios, [appKey]: { ...s.applicationRatios[appKey], amount: newAmount } };
+            
+            if (s.applicationAllocationMode === 'amount') {
+                 const totalAppRatio = newAppRatios.minMax.ratio + newAppRatios.sale.ratio + newAppRatios.web.ratio;
+                 if (s.allocatedAmount > 0) {
+                     const newRatioForField = (newAmount / s.allocatedAmount) * totalAppRatio;
+                     newAppRatios[appKey].ratio = newRatioForField;
+                 }
+            }
+            return { ...s, applicationRatios: newAppRatios };
+        }));
     };
 
     const toggleStoreExpansion = (storeId: string) => {
         setStoreAllocations(prev => 
             prev.map(s => s.id === storeId ? { ...s, isExpanded: !s.isExpanded } : s)
         );
+    };
+    
+    const setApplicationAllocationMode = (storeId: string, mode: AllocationMode) => {
+        setStoreAllocations(prev => prev.map(s => s.id === storeId ? { ...s, applicationAllocationMode: mode } : s));
     };
 
     const handleViewDetails = (payment: typeof paymentsData[0]) => {
@@ -246,177 +265,191 @@ export default function PaymentsPage() {
         document.body.removeChild(link);
     };
 
-
-    const isProceedDisabled = totalAmount <= 0 || !selectedPaymentMethod;
+    const isProceedDisabled = totalAmount <= 0 || !selectedPaymentMethod || !isStoreAllocationValid || Object.keys(applicationAllocationErrors).length > 0;
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div>
-          <h1 className="font-headline text-3xl font-bold">Payments</h1>
-          <p className="text-muted-foreground">
-            View payment history and submit new payments.
-          </p>
-        </div>
-        <Dialog open={isCreatePaymentOpen} onOpenChange={setIsCreatePaymentOpen}>
-            <DialogTrigger asChild>
-                <Button>
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    Create Payment
-                </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-2xl">
-                <DialogHeader>
-                    <DialogTitle>Create New Payment</DialogTitle>
-                    <DialogDescription>
-                        A guided process to submit and allocate your payments.
-                    </DialogDescription>
-                </DialogHeader>
+    <TooltipProvider>
+        <div className="space-y-6">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div>
+            <h1 className="font-headline text-3xl font-bold">Payments</h1>
+            <p className="text-muted-foreground">
+                View payment history and submit new payments.
+            </p>
+            </div>
+            <Dialog open={isCreatePaymentOpen} onOpenChange={setIsCreatePaymentOpen}>
+                <DialogTrigger asChild>
+                    <Button>
+                        <PlusCircle className="mr-2 h-4 w-4" />
+                        Create Payment
+                    </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-3xl">
+                    <DialogHeader>
+                        <DialogTitle>Create New Payment</DialogTitle>
+                        <DialogDescription>
+                            A guided process to submit and allocate your payments.
+                        </DialogDescription>
+                    </DialogHeader>
 
-                <div className="grid gap-6 py-4 max-h-[80vh] overflow-y-auto pr-4">
-                    {/* Step 1: Payment Details */}
-                    <div className="space-y-4">
-                        <h3 className="font-semibold text-lg flex items-center gap-2"><span className="flex items-center justify-center h-6 w-6 rounded-full bg-primary text-primary-foreground text-sm">1</span>Payment Details</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 rounded-lg border p-4">
-                            <div><Label>Customer ID:</Label><p className="text-sm font-medium">{accountProfile.licenseDetails.storeId}</p></div>
-                            <div><Label>Customer Name:</Label><p className="text-sm font-medium">{accountProfile.personalDetails.businessName}</p></div>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid gap-6 py-4 max-h-[80vh] overflow-y-auto pr-4">
+                        {/* Step 1: Payment Details */}
+                        <div className="space-y-4">
+                            <h3 className="font-semibold text-lg flex items-center gap-2"><span className="flex items-center justify-center h-6 w-6 rounded-full bg-primary text-primary-foreground text-sm">1</span>Payment Details</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 rounded-lg border p-4">
+                                <div><Label>Customer ID:</Label><p className="text-sm font-medium">{accountProfile.licenseDetails.storeId}</p></div>
+                                <div><Label>Customer Name:</Label><p className="text-sm font-medium">{accountProfile.personalDetails.businessName}</p></div>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="amount">Total Amount (INR)</Label>
+                                    <Input id="amount" type="number" placeholder="e.g., 60000" onChange={(e) => setTotalAmount(parseFloat(e.target.value) || 0)} />
+                                </div>
+                            </div>
                             <div className="space-y-2">
-                                <Label htmlFor="amount">Total Amount (INR)</Label>
-                                <Input id="amount" type="number" placeholder="e.g., 60000" onChange={(e) => setTotalAmount(parseFloat(e.target.value) || 0)} />
+                                <Label htmlFor="remarks">Remarks</Label>
+                                <Textarea id="remarks" placeholder="Add any relevant notes here..."/>
                             </div>
                         </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="remarks">Remarks</Label>
-                            <Textarea id="remarks" placeholder="Add any relevant notes here..."/>
-                        </div>
-                    </div>
-                    <Separator />
+                        <Separator />
 
-                    {/* Step 2: Payment Allocation */}
-                     <div className="space-y-4">
-                        <h3 className="font-semibold text-lg flex items-center gap-2"><span className="flex items-center justify-center h-6 w-6 rounded-full bg-primary text-primary-foreground text-sm">2</span>Payment Allocation</h3>
-                        
-                        {mockStores.length > 1 ? (
-                            <div className="space-y-3">
-                                <h4 className="font-medium">Store Ratio Configuration</h4>
-                                <div className="space-y-2 rounded-lg border p-4">
-                                    {storeAllocations.map(store => (
-                                        <Collapsible key={store.id} open={store.isExpanded} onOpenChange={() => toggleStoreExpansion(store.id)}>
-                                            <div className="flex items-center justify-between gap-2">
-                                                <CollapsibleTrigger asChild>
-                                                    <Button variant="ghost" size="sm" className="flex items-center gap-2 flex-1 justify-start p-2">
-                                                        <ChevronDown className={cn("h-4 w-4 transition-transform", store.isExpanded && "rotate-180")} />
-                                                        <Label htmlFor={`ratio-${store.id}`} className="cursor-pointer">{store.name}</Label>
-                                                    </Button>
-                                                </CollapsibleTrigger>
+                        {/* Step 2: Payment Allocation */}
+                        <div className="space-y-4">
+                            <h3 className="font-semibold text-lg flex items-center gap-2"><span className="flex items-center justify-center h-6 w-6 rounded-full bg-primary text-primary-foreground text-sm">2</span>Payment Allocation</h3>
+                            
+                            {mockStores.length > 1 && (
+                                <div className="space-y-3">
+                                    <div className="flex justify-between items-center">
+                                        <h4 className="font-medium">Store Allocation Mode</h4>
+                                        <RadioGroup value={storeAllocationMode} onValueChange={(v) => setStoreAllocationMode(v as AllocationMode)} className="flex items-center space-x-4">
+                                            <div className="flex items-center space-x-2">
+                                                <RadioGroupItem value="ratio" id="store-ratio" />
+                                                <Label htmlFor="store-ratio">By Ratio</Label>
+                                            </div>
+                                            <div className="flex items-center space-x-2">
+                                                <RadioGroupItem value="amount" id="store-amount" />
+                                                <Label htmlFor="store-amount">By Amount</Label>
+                                            </div>
+                                        </RadioGroup>
+                                    </div>
+                                    <div className="space-y-2 rounded-lg border p-4">
+                                        {storeAllocations.map(store => (
+                                            <div key={store.id} className="flex items-center justify-between gap-2 p-2">
+                                                <Label htmlFor={`ratio-${store.id}`} className="flex-1">{store.name}</Label>
                                                 <Input
-                                                    id={`ratio-${store.id}`}
                                                     type="number"
                                                     min="0"
                                                     placeholder="Ratio"
                                                     className="w-20 text-center h-8"
-                                                    value={inputValues[`ratio-${store.id}`] || ''}
-                                                    onChange={(e) => handleInputChange(`ratio-${store.id}`, e.target.value)}
-                                                    onBlur={() => handleRatioBlur(`ratio-${store.id}`, store.id)}
+                                                    value={store.storeRatio}
+                                                    onChange={(e) => handleStoreRatioChange(store.id, parseFloat(e.target.value) || 0)}
+                                                    readOnly={storeAllocationMode !== 'ratio'}
+                                                    disabled={storeAllocationMode !== 'ratio'}
                                                 />
                                                 <Input
                                                     type="number"
                                                     min="0"
                                                     placeholder="Amount"
                                                     className="w-28 text-right h-8 font-semibold"
-                                                    value={inputValues[`amount-${store.id}`] || ''}
-                                                    onChange={(e) => handleInputChange(`amount-${store.id}`, e.target.value)}
-                                                    onBlur={() => handleAmountBlur(`amount-${store.id}`, store.id)}
+                                                    value={store.allocatedAmount.toFixed(2)}
+                                                    onChange={(e) => handleStoreAmountChange(store.id, parseFloat(e.target.value) || 0)}
+                                                    onBlur={recalculateStoreRatios}
+                                                    readOnly={storeAllocationMode !== 'amount'}
+                                                    disabled={storeAllocationMode !== 'amount'}
                                                 />
                                             </div>
-                                            <CollapsibleContent className="p-4 bg-muted/50 rounded-md mt-2">
-                                                 <div className="space-y-3">
-                                                     <h4 className="font-medium">Application Ratio Configuration</h4>
-                                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                                         {Object.keys(store.applicationRatios).map(key => {
-                                                            const appKey = key as keyof ApplicationRatios;
-                                                            const ratioId = `app-ratio-${store.id}-${appKey}`;
-                                                            const amountId = `app-amount-${store.id}-${appKey}`;
-                                                            return (
-                                                             <div key={key} className="space-y-2">
-                                                                 <Label htmlFor={ratioId} className="capitalize text-xs">{key.replace(/([A-Z])/g, ' $1')} Orders</Label>
-                                                                 <div className="flex items-center gap-2">
-                                                                    <Input
-                                                                        id={ratioId}
-                                                                        type="number"
-                                                                        min="0"
-                                                                        placeholder="Ratio"
-                                                                        className="w-16 h-8 text-sm"
-                                                                        value={inputValues[ratioId] || ''}
-                                                                        onChange={(e) => handleInputChange(ratioId, e.target.value)}
-                                                                        onBlur={() => handleRatioBlur(ratioId, store.id, appKey)}
-                                                                    />
-                                                                    <Input
-                                                                        type="number"
-                                                                        min="0"
-                                                                        placeholder="Amount"
-                                                                        className="flex-1 h-8 text-right text-sm font-medium"
-                                                                        value={inputValues[amountId] || ''}
-                                                                        onChange={(e) => handleInputChange(amountId, e.target.value)}
-                                                                        onBlur={() => handleAmountBlur(amountId, store.id, appKey)}
-                                                                    />
-                                                                 </div>
-                                                             </div>
-                                                         )})}
-                                                     </div>
-                                                 </div>
-                                            </CollapsibleContent>
-                                        </Collapsible>
-                                    ))}
+                                        ))}
+                                         {storeAllocationMode === 'amount' && (
+                                            <div className={cn("text-right text-sm font-medium mt-2", remaining < 0 ? 'text-destructive' : 'text-green-600')}>
+                                                {remaining < -0.01 && `Over-allocated by: ₹${Math.abs(remaining).toFixed(2)}`}
+                                                {remaining > 0.01 && `Remaining: ₹${remaining.toFixed(2)}`}
+                                                {Math.abs(remaining) < 0.01 && `✓ Allocated`}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
-                        ) : storeAllocations.length > 0 && (
-                             <div className="space-y-3">
-                                <h4 className="font-medium">Application Ratio Configuration</h4>
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 rounded-lg border p-4">
-                                    {Object.keys(storeAllocations[0].applicationRatios).map(key => {
-                                        const appKey = key as keyof ApplicationRatios;
-                                        const store = storeAllocations[0];
-                                        const ratioId = `app-ratio-${store.id}-${appKey}`;
-                                        const amountId = `app-amount-${store.id}-${appKey}`;
-                                        return (
-                                        <div key={key} className="space-y-2">
-                                            <Label htmlFor={ratioId} className="capitalize text-xs">{key.replace(/([A-Z])/g, ' $1')} Orders</Label>
-                                            <div className="flex items-center gap-2">
-                                                <Input
-                                                    id={ratioId}
-                                                    type="number"
-                                                    min="0"
-                                                    placeholder="Ratio"
-                                                    className="w-16 h-8 text-sm"
-                                                    value={inputValues[ratioId] || ''}
-                                                    onChange={(e) => handleInputChange(ratioId, e.target.value)}
-                                                    onBlur={() => handleRatioBlur(ratioId, store.id, appKey)}
-                                                />
-                                                <Input
-                                                    type="number"
-                                                    min="0"
-                                                    placeholder="Amount"
-                                                    className="flex-1 h-8 text-right text-sm font-medium"
-                                                    value={inputValues[amountId] || ''}
-                                                    onChange={(e) => handleInputChange(amountId, e.target.value)}
-                                                    onBlur={() => handleAmountBlur(amountId, store.id, appKey)}
-                                                />
-                                            </div>
+                            )}
+
+                            {storeAllocations.map(store => (
+                                <Collapsible key={store.id} open={store.isExpanded} onOpenChange={() => toggleStoreExpansion(store.id)} className="space-y-2">
+                                    <CollapsibleTrigger asChild>
+                                        <Button variant="ghost" className="w-full flex items-center justify-between p-2">
+                                            <span className="font-semibold">Application Ratios for {store.name}</span>
+                                            <ChevronDown className={cn("h-4 w-4 transition-transform", store.isExpanded && "rotate-180")} />
+                                        </Button>
+                                    </CollapsibleTrigger>
+                                    <CollapsibleContent className="p-4 bg-muted/50 rounded-md mt-2 space-y-4">
+                                        <div className="flex justify-between items-center">
+                                            <h4 className="font-medium">Configuration Mode</h4>
+                                            <RadioGroup value={store.applicationAllocationMode} onValueChange={(v) => setApplicationAllocationMode(store.id, v as AllocationMode)} className="flex items-center space-x-4">
+                                                <div className="flex items-center space-x-2">
+                                                    <RadioGroupItem value="ratio" id={`app-ratio-${store.id}`} />
+                                                    <Label htmlFor={`app-ratio-${store.id}`}>By Ratio</Label>
+                                                </div>
+                                                <div className="flex items-center space-x-2">
+                                                    <RadioGroupItem value="amount" id={`app-amount-${store.id}`} />
+                                                    <Label htmlFor={`app-amount-${store.id}`}>By Amount</Label>
+                                                </div>
+                                            </RadioGroup>
                                         </div>
-                                    )})}
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                     <Separator />
-                    {/* Step 3: Payment Method */}
-                     <div className="space-y-4">
-                         <h3 className="font-semibold text-lg flex items-center gap-2"><span className="flex items-center justify-center h-6 w-6 rounded-full bg-primary text-primary-foreground text-sm">3</span>Select Payment Method</h3>
-                         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                             {['UPI', 'Credit Card', 'Debit Card', 'Net Banking'].map(method => (
+
+                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                            {Object.keys(store.applicationRatios).map(key => {
+                                                const appKey = key as keyof ApplicationRatios;
+                                                const maxCap = store.inventoryValue * 0.02;
+                                                return (
+                                                    <div key={key} className="space-y-2">
+                                                        <Label htmlFor={`app-ratio-input-${store.id}-${appKey}`} className="capitalize text-sm flex items-center">
+                                                            {key.replace(/([A-Z])/g, ' $1')} Orders
+                                                            {(appKey === 'sale' || appKey === 'web') && (
+                                                                <Tooltip>
+                                                                    <TooltipTrigger asChild>
+                                                                        <Info className="h-3 w-3 ml-1.5 text-muted-foreground cursor-help" />
+                                                                    </TooltipTrigger>
+                                                                    <TooltipContent>
+                                                                        <p>Max allocation capped at ₹{maxCap.toFixed(2)}</p>
+                                                                    </TooltipContent>
+                                                                </Tooltip>
+                                                            )}
+                                                        </Label>
+                                                        <div className="flex items-center gap-2">
+                                                            <Input
+                                                                id={`app-ratio-input-${store.id}-${appKey}`}
+                                                                type="number" min="0" placeholder="Ratio" className="w-16 h-8 text-sm"
+                                                                value={store.applicationRatios[appKey].ratio}
+                                                                onChange={(e) => handleApplicationRatioChange(store.id, appKey, parseFloat(e.target.value) || 0)}
+                                                                readOnly={store.applicationAllocationMode !== 'ratio'}
+                                                                disabled={store.applicationAllocationMode !== 'ratio'}
+                                                            />
+                                                            <Input
+                                                                type="number" min="0" placeholder="Amount" className="flex-1 h-8 text-right text-sm font-medium"
+                                                                value={store.applicationRatios[appKey].amount.toFixed(2)}
+                                                                onChange={(e) => handleApplicationAmountChange(store.id, appKey, parseFloat(e.target.value) || 0)}
+                                                                readOnly={store.applicationAllocationMode !== 'amount'}
+                                                                disabled={store.applicationAllocationMode !== 'amount'}
+                                                            />
+                                                        </div>
+                                                        {applicationAllocationErrors[`${store.id}-${appKey}`] && <p className="text-xs text-destructive">{applicationAllocationErrors[`${store.id}-${appKey}`]}</p>}
+                                                    </div>
+                                                )
+                                            })}
+                                        </div>
+                                        {applicationAllocationErrors[store.id] && (
+                                             <p className="text-sm text-destructive font-medium text-center">{applicationAllocationErrors[store.id]}</p>
+                                        )}
+                                        <p className="text-xs text-muted-foreground text-center italic">
+                                            Inventory value last updated at {new Date().toLocaleTimeString()}. Allocation cap is based on this data.
+                                        </p>
+                                    </CollapsibleContent>
+                                </Collapsible>
+                            ))}
+                        </div>
+                        <Separator />
+                        {/* Step 3: Payment Method */}
+                        <div className="space-y-4">
+                            <h3 className="font-semibold text-lg flex items-center gap-2"><span className="flex items-center justify-center h-6 w-6 rounded-full bg-primary text-primary-foreground text-sm">3</span>Select Payment Method</h3>
+                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                                {['UPI', 'Credit Card', 'Debit Card', 'Net Banking'].map(method => (
                                 <Button key={method} variant={selectedPaymentMethod === method ? "default" : "outline"} className="h-20 flex-col gap-2" onClick={() => setSelectedPaymentMethod(method)}>
                                     {method === 'UPI' && <Signal />}
                                     {method === 'Credit Card' && <CreditCard />}
@@ -424,20 +457,20 @@ export default function PaymentsPage() {
                                     {method === 'Net Banking' && <BotMessageSquare />}
                                     {method}
                                 </Button>
-                             ))}
-                         </div>
-                    </div>
+                                ))}
+                            </div>
+                        </div>
 
-                </div>
-                <DialogFooter>
-                    <Button variant="outline" onClick={() => setIsCreatePaymentOpen(false)}>Cancel</Button>
-                    <Button disabled={isProceedDisabled} onClick={() => setIsCreatePaymentOpen(false)}>
-                        Proceed to Pay (₹{totalAmount.toLocaleString('en-IN')})
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
-      </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setIsCreatePaymentOpen(false)}>Cancel</Button>
+                        <Button disabled={isProceedDisabled} onClick={() => setIsCreatePaymentOpen(false)}>
+                            Proceed to Pay (₹{totalAmount.toLocaleString('en-IN')})
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+        </div>
 
        <Card>
             <CardHeader>
@@ -541,6 +574,7 @@ export default function PaymentsPage() {
             </DialogContent>
         </Dialog>
     </div>
+  </TooltipProvider>
   );
 }
 
