@@ -553,6 +553,7 @@ export const navLinks = {
     { href: "/dashboard/complaints", label: "Complaints", icon: ShieldQuestion },
     { href: "/dashboard/stationery-orders", label: "Stationery Orders", icon: PenSquare },
     { href: "/dashboard/field-visit-reports", label: "Field Visit Reports", icon: ClipboardList },
+    { href: "/dashboard/account", label: "Account Profile", icon: User },
   ],
   footer: {
     company: [
@@ -971,6 +972,7 @@ export const monthlyReports: MonthlyReport[] = [
 
 
   
+
 
 
 
