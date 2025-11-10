@@ -1,6 +1,7 @@
 
 "use client";
 
+import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -9,7 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { kpiData, cashDepositReportData } from "@/lib/data";
-import { CreditCard, Wallet, IndianRupee, TrendingUp, TrendingDown } from "lucide-react";
+import { CreditCard, Wallet, IndianRupee, TrendingUp, TrendingDown, RefreshCw } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -27,9 +28,16 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 
 export default function DashboardPage() {
   const storeKpis = kpiData["store-01"];
+  const [lastUpdated, setLastUpdated] = useState(new Date());
+
+  const handleRefresh = () => {
+    setLastUpdated(new Date());
+    // In a real app, you'd also trigger a data re-fetch here.
+  };
   
   const totalPendingDeposit = cashDepositReportData.reduce(
     (sum, row) => sum + row.cashToBeDeposited,
@@ -49,9 +57,19 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-headline text-3xl font-bold">Welcome Back, Anand!</h1>
-        <p className="text-muted-foreground">Here's a snapshot of your business today.</p>
+      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+        <div>
+            <h1 className="font-headline text-3xl font-bold">Welcome Back, Anand!</h1>
+            <p className="text-muted-foreground">Here's a snapshot of your business today.</p>
+        </div>
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <RefreshCw className="h-4 w-4" />
+            <span>Last updated: {format(lastUpdated, "MMM d, yyyy, h:mm a")}</span>
+            <Button variant="ghost" size="icon" onClick={handleRefresh} className="h-8 w-8">
+              <RefreshCw className="h-4 w-4" />
+              <span className="sr-only">Refresh data</span>
+            </Button>
+        </div>
       </div>
       
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -100,7 +118,7 @@ export default function DashboardPage() {
       <div className="grid gap-6 md:grid-cols-1">
         <Card>
           <CardHeader>
-            <CardTitle className="font-headline">Sales vs Cash deposit (Tentative)</CardTitle>
+            <CardTitle className="font-headline">Gross Sales vs Cash deposit (Tentative)</CardTitle>
              <div className="flex items-center gap-4 pt-4">
                 <Select defaultValue="oct-2025">
                     <SelectTrigger className="w-[180px]">
