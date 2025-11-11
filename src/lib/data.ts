@@ -901,11 +901,21 @@ export const returnsData: Return[] = [
   },
 ];
 
+export type MembershipInvoice = {
+    invoiceId: string;
+    period: string;
+    date: string;
+    status: "Pending Signature" | "Generated" | "Paid" | "Rejected";
+    amount: number;
+    rejectionReason?: string;
+};
+
 export const invoicesData = {
     membership: [
         { invoiceId: "M-FEE-001", period: "Oct 2024", date: "2024-11-05", status: "Paid", amount: 584.10 },
-        { invoiceId: "M-FEE-002", period: "Sep 2024", date: "2024-10-05", status: "Paid", amount: 584.10 },
-        { invoiceId: "M-FEE-003", period: "Nov 2024", date: "2024-12-05", status: "Generated", amount: 584.10 },
+        { invoiceId: "M-FEE-002", period: "Sep 2024", date: "2024-10-05", status: "Generated", amount: 584.10 },
+        { invoiceId: "M-FEE-003", period: "Nov 2024", date: "2024-12-05", status: "Pending Signature", amount: 584.10 },
+        { invoiceId: "M-FEE-004", period: "Aug 2024", date: "2024-09-05", status: "Rejected", amount: 584.10, rejectionReason: "The signature image is blurry and unreadable. Please upload a clear signature." },
     ]
 };
   
@@ -934,7 +944,7 @@ const generateReportsForMonth = (month: string, year: number, financialYear: str
   return reportNames.map((name, index) => {
     const id = `${financialYear}-${month.slice(0, 3)}-${index + 1}`;
     let fileType: "Excel" | "PDF" = "Excel";
-    if (name === "Rental Invoices" || name === "Royalty Fee Invoice") {
+    if (name === "Rental Invoices" || name === "Royalty Fee Invoice" || name === "Credit Note") {
       fileType = "PDF";
     }
 
@@ -945,7 +955,7 @@ const generateReportsForMonth = (month: string, year: number, financialYear: str
       month: month,
       financialYear: financialYear,
       fileType: fileType,
-      status: Math.random() > 0.3 ? "Updated" : "Not Updated", // Randomize status
+      status: Math.random() > 0.3 ? "Updated" : "Not Updated",
     };
   });
 };
@@ -981,3 +991,6 @@ export const monthlyReports: MonthlyReport[] = [
 
 
 
+
+
+    
