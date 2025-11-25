@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { accountProfile } from "@/lib/data";
 import { Pencil } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function AccountPage() {
   const [isProfileEditing, setIsProfileEditing] = useState(false);
@@ -73,6 +74,10 @@ export default function AccountPage() {
                   <Label htmlFor="phone">Phone Number</Label>
                   <Input id="phone" type="tel" defaultValue={accountProfile.personalDetails.phone} readOnly={!isProfileEditing} />
                 </div>
+              </div>
+               <div className="space-y-2">
+                <Label htmlFor="address">Store Full Address</Label>
+                <Textarea id="address" defaultValue={accountProfile.personalDetails.address} readOnly={!isProfileEditing} rows={3} />
               </div>
             </CardContent>
             {isProfileEditing && (

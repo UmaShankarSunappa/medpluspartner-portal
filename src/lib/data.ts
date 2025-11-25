@@ -222,6 +222,7 @@ export const accountProfile = {
     email: "anand.sharma@example.com",
     phone: "+91 98765 43210",
     businessName: "Sharma Health Solutions Pvt. Ltd.",
+    address: "#123, 4th Main, 5th Cross, Koramangala 1st Block, Bangalore, Karnataka - 560034"
   },
   licenseDetails: {
     storeId: "MP-BLR-KOR-01",
@@ -993,3 +994,4 @@ export const monthlyReports: MonthlyReport[] = [
 
 
     
+
