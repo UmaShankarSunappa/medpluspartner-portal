@@ -49,9 +49,8 @@ const statusVariant: { [key: string]: "success" | "destructive" | "secondary" } 
 };
 
 type ApplicationRatios = {
-    minMax: { ratio: number; amount: number };
-    sale: { ratio: number; amount: number };
-    web: { ratio: number; amount: number };
+    accountBalance: { ratio: number; amount: number };
+    emergencyBalance: { ratio: number; amount: number };
 };
 
 type AllocationMode = "ratio" | "amount";
@@ -64,14 +63,11 @@ type StoreAllocationState = {
     applicationRatios: ApplicationRatios;
     isExpanded: boolean;
     applicationAllocationMode: AllocationMode;
-    // Assuming a mock inventory value for each store for the cap calculation
-    inventoryValue: number;
 };
 
 const initialApplicationRatios = (): ApplicationRatios => ({
-    minMax: { ratio: 1, amount: 0 },
-    sale: { ratio: 1, amount: 0 },
-    web: { ratio: 1, amount: 0 },
+    accountBalance: { ratio: 1, amount: 0 },
+    emergencyBalance: { ratio: 1, amount: 0 },
 });
 
 export default function PaymentsPage() {
@@ -95,17 +91,9 @@ export default function PaymentsPage() {
         const errors: Record<string, string> = {};
         storeAllocations.forEach(store => {
             if (store.applicationAllocationMode === 'amount') {
-                const appTotal = store.applicationRatios.minMax.amount + store.applicationRatios.sale.amount + store.applicationRatios.web.amount;
+                const appTotal = store.applicationRatios.accountBalance.amount + store.applicationRatios.emergencyBalance.amount;
                 if (Math.abs(appTotal - store.allocatedAmount) > 0.01) {
                     errors[store.id] = `The allocated amounts (₹${appTotal.toFixed(2)}) do not add up to the total for this store (₹${store.allocatedAmount.toFixed(2)}).`;
-                }
-
-                const maxCap = store.inventoryValue * 0.02;
-                if (store.applicationRatios.sale.amount > maxCap) {
-                    errors[`${store.id}-sale`] = `Sale Orders amount cannot exceed ₹${maxCap.toFixed(2)} (2% of inventory).`;
-                }
-                if (store.applicationRatios.web.amount > maxCap) {
-                    errors[`${store.id}-web`] = `Web Orders amount cannot exceed ₹${maxCap.toFixed(2)} (2% of inventory).`;
                 }
             }
         });
@@ -123,7 +111,6 @@ export default function PaymentsPage() {
                 applicationRatios: initialApplicationRatios(),
                 isExpanded: true,
                 applicationAllocationMode: "ratio" as AllocationMode,
-                inventoryValue: (kpiData[store.id as keyof typeof kpiData]?.availableCredit || 0) * 5, // Mock inventory
             }));
             setStoreAllocations(initialAllocations);
             setTotalAmount(0);
@@ -173,18 +160,16 @@ export default function PaymentsPage() {
     };
     
     const calculateApplicationAmounts = (store: StoreAllocationState): ApplicationRatios => {
-        const totalAppRatio = store.applicationRatios.minMax.ratio + store.applicationRatios.sale.ratio + store.applicationRatios.web.ratio;
-        let newMinMaxAmount = 0, newSaleAmount = 0, newWebAmount = 0;
+        const totalAppRatio = store.applicationRatios.accountBalance.ratio + store.applicationRatios.emergencyBalance.ratio;
+        let newAccountBalanceAmount = 0, newEmergencyBalanceAmount = 0;
 
         if (totalAppRatio > 0) {
-            newMinMaxAmount = (store.applicationRatios.minMax.ratio / totalAppRatio) * store.allocatedAmount;
-            newSaleAmount = (store.applicationRatios.sale.ratio / totalAppRatio) * store.allocatedAmount;
-            newWebAmount = store.allocatedAmount - newMinMaxAmount - newSaleAmount;
+            newAccountBalanceAmount = (store.applicationRatios.accountBalance.ratio / totalAppRatio) * store.allocatedAmount;
+            newEmergencyBalanceAmount = store.allocatedAmount - newAccountBalanceAmount;
         }
         return {
-            minMax: { ...store.applicationRatios.minMax, amount: newMinMaxAmount },
-            sale: { ...store.applicationRatios.sale, amount: newSaleAmount },
-            web: { ...store.applicationRatios.web, amount: newWebAmount },
+            accountBalance: { ...store.applicationRatios.accountBalance, amount: newAccountBalanceAmount },
+            emergencyBalance: { ...store.applicationRatios.emergencyBalance, amount: newEmergencyBalanceAmount },
         };
     };
 
@@ -213,7 +198,7 @@ export default function PaymentsPage() {
             const newAppRatios = { ...s.applicationRatios, [appKey]: { ...s.applicationRatios[appKey], amount: newAmount } };
             
             if (s.applicationAllocationMode === 'amount') {
-                 const totalAppRatio = newAppRatios.minMax.ratio + newAppRatios.sale.ratio + newAppRatios.web.ratio;
+                 const totalAppRatio = newAppRatios.accountBalance.ratio + newAppRatios.emergencyBalance.ratio;
                  if (s.allocatedAmount > 0) {
                      const newRatioForField = (newAmount / s.allocatedAmount) * totalAppRatio;
                      newAppRatios[appKey].ratio = newRatioForField;
@@ -393,53 +378,35 @@ export default function PaymentsPage() {
                                             </RadioGroup>
                                         </div>
 
-                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                            {Object.keys(store.applicationRatios).map(key => {
-                                                const appKey = key as keyof ApplicationRatios;
-                                                const maxCap = store.inventoryValue * 0.02;
-                                                return (
-                                                    <div key={key} className="space-y-2">
-                                                        <Label htmlFor={`app-ratio-input-${store.id}-${appKey}`} className="capitalize text-sm flex items-center">
-                                                            {key.replace(/([A-Z])/g, ' $1')} Orders
-                                                            {(appKey === 'sale' || appKey === 'web') && (
-                                                                <Tooltip>
-                                                                    <TooltipTrigger asChild>
-                                                                        <Info className="h-3 w-3 ml-1.5 text-muted-foreground cursor-help" />
-                                                                    </TooltipTrigger>
-                                                                    <TooltipContent>
-                                                                        <p>Max allocation capped at ₹{maxCap.toFixed(2)}</p>
-                                                                    </TooltipContent>
-                                                                </Tooltip>
-                                                            )}
-                                                        </Label>
-                                                        <div className="flex items-center gap-2">
-                                                            <Input
-                                                                id={`app-ratio-input-${store.id}-${appKey}`}
-                                                                type="number" min="0" placeholder="Ratio" className="w-16 h-8 text-sm"
-                                                                value={store.applicationRatios[appKey].ratio}
-                                                                onChange={(e) => handleApplicationRatioChange(store.id, appKey, parseFloat(e.target.value) || 0)}
-                                                                readOnly={store.applicationAllocationMode !== 'ratio'}
-                                                                disabled={store.applicationAllocationMode !== 'ratio'}
-                                                            />
-                                                            <Input
-                                                                type="number" min="0" placeholder="Amount" className="flex-1 h-8 text-right text-sm font-medium"
-                                                                value={store.applicationRatios[appKey].amount.toFixed(2)}
-                                                                onChange={(e) => handleApplicationAmountChange(store.id, appKey, parseFloat(e.target.value) || 0)}
-                                                                readOnly={store.applicationAllocationMode !== 'amount'}
-                                                                disabled={store.applicationAllocationMode !== 'amount'}
-                                                            />
-                                                        </div>
-                                                        {applicationAllocationErrors[`${store.id}-${appKey}`] && <p className="text-xs text-destructive">{applicationAllocationErrors[`${store.id}-${appKey}`]}</p>}
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            {(Object.keys(store.applicationRatios) as Array<keyof ApplicationRatios>).map(appKey => (
+                                                <div key={appKey} className="space-y-2">
+                                                    <Label htmlFor={`app-ratio-input-${store.id}-${appKey}`} className="capitalize text-sm flex items-center">
+                                                        {appKey.replace(/([A-Z])/g, ' $1')}
+                                                    </Label>
+                                                    <div className="flex items-center gap-2">
+                                                        <Input
+                                                            id={`app-ratio-input-${store.id}-${appKey}`}
+                                                            type="number" min="0" placeholder="Ratio" className="w-20 h-8 text-sm text-center"
+                                                            value={store.applicationRatios[appKey].ratio}
+                                                            onChange={(e) => handleApplicationRatioChange(store.id, appKey, parseFloat(e.target.value) || 0)}
+                                                            readOnly={store.applicationAllocationMode !== 'ratio'}
+                                                            disabled={store.applicationAllocationMode !== 'ratio'}
+                                                        />
+                                                        <Input
+                                                            type="number" min="0" placeholder="Amount" className="flex-1 h-8 text-right text-sm font-medium"
+                                                            value={store.applicationRatios[appKey].amount.toFixed(2)}
+                                                            onChange={(e) => handleApplicationAmountChange(store.id, appKey, parseFloat(e.target.value) || 0)}
+                                                            readOnly={store.applicationAllocationMode !== 'amount'}
+                                                            disabled={store.applicationAllocationMode !== 'amount'}
+                                                        />
                                                     </div>
-                                                )
-                                            })}
+                                                </div>
+                                            ))}
                                         </div>
                                         {applicationAllocationErrors[store.id] && (
                                              <p className="text-sm text-destructive font-medium text-center">{applicationAllocationErrors[store.id]}</p>
                                         )}
-                                        <p className="text-xs text-muted-foreground text-center italic">
-                                            Inventory value last updated at {new Date().toLocaleTimeString()}. Allocation cap is based on this data.
-                                        </p>
                                     </CollapsibleContent>
                                 </Collapsible>
                             ))}
@@ -557,16 +524,12 @@ export default function PaymentsPage() {
                         <Label>Application Ratio Used</Label>
                         <div className="grid grid-cols-3 gap-4 p-3 border rounded-md mt-1">
                            <div>
-                                <p className="text-xs text-muted-foreground">Min Max Orders</p>
-                                <p className="font-medium">{selectedPayment?.applicationRatios.minMax}</p>
+                                <p className="text-xs text-muted-foreground">Account Balance</p>
+                                <p className="font-medium">{selectedPayment?.applicationRatios.accountBalance}</p>
                            </div>
                              <div>
-                                <p className="text-xs text-muted-foreground">Sale Orders</p>
-                                <p className="font-medium">{selectedPayment?.applicationRatios.sale}</p>
-                           </div>
-                            <div>
-                                <p className="text-xs text-muted-foreground">Web Orders</p>
-                                <p className="font-medium">{selectedPayment?.applicationRatios.web}</p>
+                                <p className="text-xs text-muted-foreground">Emergency Balance</p>
+                                <p className="font-medium">{selectedPayment?.applicationRatios.emergencyBalance}</p>
                            </div>
                         </div>
                     </div>
@@ -577,7 +540,3 @@ export default function PaymentsPage() {
   </TooltipProvider>
   );
 }
-
-    
-
-    

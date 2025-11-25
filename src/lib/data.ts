@@ -352,7 +352,7 @@ export const paymentsData = [
     storeId: "store-01",
     gatewayTxId: "gat_EviY1b6g3VqD9z",
     remarks: "Monthly payment for October.",
-    applicationRatios: { minMax: 1, sale: 1, web: 0 }
+    applicationRatios: { accountBalance: 1, emergencyBalance: 0.5 }
   },
   { 
     id: "alloc-002a",
@@ -366,7 +366,7 @@ export const paymentsData = [
     storeId: "store-01",
     gatewayTxId: "gat_FviY2c7g4WrE1a",
     remarks: "Advance for Q4.",
-    applicationRatios: { minMax: 1, sale: 0, web: 0 }
+    applicationRatios: { accountBalance: 1, emergencyBalance: 0 }
   },
   { 
     id: "alloc-001b",
@@ -380,7 +380,7 @@ export const paymentsData = [
     storeId: "store-02",
     gatewayTxId: "gat_EviY1b6g3VqD9z",
     remarks: "Monthly payment for October.",
-    applicationRatios: { minMax: 1, sale: 1, web: 0 }
+    applicationRatios: { accountBalance: 1, emergencyBalance: 1 }
   },
 ];
 
@@ -578,7 +578,6 @@ export const navLinks = {
   public: [
     { href: "/about-us", label: "About Us" },
     { href: "/faq", label: "FAQs" },
-    { href: "#", label: "News & Updates" },
     { href: "#", label: "Resources & Training" },
     { href: "/contact-us", label: "Contact Us" },
   ],
@@ -1020,13 +1019,17 @@ export const monthlyReports: MonthlyReport[] = [
 
     
 
+    
 
+    
 
+    
 
+    
 
+    
 
-
-
+    
   
 
 
@@ -1040,6 +1043,7 @@ export const monthlyReports: MonthlyReport[] = [
 
 
     
+
 
 
 
