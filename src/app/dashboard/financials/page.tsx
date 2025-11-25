@@ -18,7 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { financialSummary, transactions, emergencyBalance } from "@/lib/data";
+import { financialSummary, transactions, emergencyBalance, emergencyTransactions } from "@/lib/data";
 import { Download, Landmark, Wallet, CalendarDays, TrendingUp, TrendingDown, IndianRupee } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
@@ -169,7 +169,7 @@ export default function FinancialsPage() {
             </Card>
         </TabsContent>
         
-        <TabsContent value="emergency-balance">
+        <TabsContent value="emergency-balance" className="space-y-6">
             <Card className="shadow-md mt-4">
                 <CardContent className="p-4">
                     <div className="flex flex-col lg:flex-row lg:flex-nowrap items-center justify-between gap-y-4">
@@ -192,6 +192,51 @@ export default function FinancialsPage() {
                             </React.Fragment>
                         ))}
                     </div>
+                </CardContent>
+            </Card>
+             <Card>
+                <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                    <CardTitle>Emergency Transaction History</CardTitle>
+                    <CardDescription>
+                    Statement for Sale Orders and Web Orders.
+                    </CardDescription>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-2">
+                    <DateRangePicker />
+                </div>
+                </CardHeader>
+                <CardContent className="overflow-x-auto">
+                <Table>
+                    <TableHeader>
+                    <TableRow>
+                        <TableHead>Date & Time</TableHead>
+                        <TableHead>Bill ID</TableHead>
+                        <TableHead>Bill Type</TableHead>
+                        <TableHead>Description</TableHead>
+                        <TableHead>Dr/Cr</TableHead>
+                        <TableHead className="text-right">Amount</TableHead>
+                    </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                    {emergencyTransactions.map((tx) => (
+                        <TableRow key={tx.billId}>
+                        <TableCell>{tx.dateTime}</TableCell>
+                        <TableCell className="font-medium">{tx.billId}</TableCell>
+                        <TableCell>
+                            <Badge variant={tx.billType === 'Web Order' ? 'info' : 'secondary'}>{tx.billType}</Badge>
+                        </TableCell>
+                        <TableCell>{tx.description}</TableCell>
+                        <TableCell>
+                            <span className={tx.transactionType === 'Cr' ? 'text-green-600' : 'text-red-600'}>
+                                {tx.transactionType}
+                            </span>
+                        </TableCell>
+                        <TableCell className="text-right">₹{tx.amount.toLocaleString('en-IN')}</TableCell>
+                        </TableRow>
+                    ))}
+                    </TableBody>
+                </Table>
                 </CardContent>
             </Card>
         </TabsContent>

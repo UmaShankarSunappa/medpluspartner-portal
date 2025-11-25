@@ -299,6 +299,45 @@ export const transactions = [
   },
 ];
 
+export const emergencyTransactions = [
+  {
+    dateTime: "2023-10-27 09:15",
+    billId: "WEB-001",
+    billType: "Web Order",
+    description: "Emergency stock for web order",
+    amount: 1500.0,
+    billingPlace: "Bangalore",
+    transactionType: "Dr",
+  },
+  {
+    dateTime: "2023-10-26 16:45",
+    billId: "SO-001",
+    billType: "Sale Order",
+    description: "Emergency sale order fulfillment",
+    amount: 3200.0,
+    billingPlace: "Bangalore",
+    transactionType: "Dr",
+  },
+  {
+    dateTime: "2023-10-25 10:00",
+    billId: "WEB-002",
+    billType: "Web Order",
+    description: "Emergency stock for web order",
+    amount: 850.0,
+    billingPlace: "Bangalore",
+    transactionType: "Dr",
+  },
+  {
+    dateTime: "2023-10-24 14:20",
+    billId: "SO-002",
+    billType: "Sale Order",
+    description: "Emergency sale order fulfillment",
+    amount: 4100.0,
+    billingPlace: "Bangalore",
+    transactionType: "Dr",
+  },
+];
+
 
 export const paymentsData = [
   { 
@@ -539,6 +578,7 @@ export const navLinks = {
   public: [
     { href: "/about-us", label: "About Us" },
     { href: "/faq", label: "FAQs" },
+    { href: "#", label: "News & Updates" },
     { href: "#", label: "Resources & Training" },
     { href: "/contact-us", label: "Contact Us" },
   ],
@@ -1000,5 +1040,6 @@ export const monthlyReports: MonthlyReport[] = [
 
 
     
+
 
 
