@@ -245,6 +245,12 @@ export const financialSummary = {
   creditPeriod: 365,
 };
 
+export const emergencyBalance = {
+  storeName: "Koramangala, BTM",
+  depositLimit: 100000,
+  advanceAmount: 25000,
+};
+
 export const transactions = [
   {
     dateTime: "2023-10-28 10:00",
@@ -540,7 +546,7 @@ export const navLinks = {
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/dashboard/sales-summary", label: "Sales Summary", icon: Receipt },
     { href: "/dashboard/orders", label: "Orders", icon: History },
-    { href: "/dashboard/financials", label: "Account Balance", icon: Landmark },
+    { href: "/dashboard/financials", label: "Financials", icon: Landmark },
     { href: "/dashboard/payments", label: "Payments", icon: Banknote },
     { href: "/dashboard/returns", label: "Purchase Returns", icon: Undo2 },
     { href: "/dashboard/provisional-indent", label: "Provisional Indent", icon: ClipboardList },
@@ -994,4 +1000,5 @@ export const monthlyReports: MonthlyReport[] = [
 
 
     
+
 
