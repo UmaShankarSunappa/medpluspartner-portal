@@ -531,7 +531,6 @@ export const fieldVisitReportsData: FieldVisitReport[] = [
 export const navLinks = {
   public: [
     { href: "/about-us", label: "About Us" },
-    { href: "#", label: "News & Updates" },
     { href: "/faq", label: "FAQs" },
     { href: "#", label: "Resources & Training" },
     { href: "/contact-us", label: "Contact Us" },
