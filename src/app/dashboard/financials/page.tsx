@@ -171,10 +171,6 @@ export default function FinancialsPage() {
         
         <TabsContent value="emergency-balance">
             <Card className="shadow-md mt-4">
-                <CardHeader>
-                    <CardTitle>Emergency Balance Summary</CardTitle>
-                    <CardDescription>Your balance for emergency provisional indents.</CardDescription>
-                </CardHeader>
                 <CardContent className="p-4">
                     <div className="flex flex-col lg:flex-row lg:flex-nowrap items-center justify-between gap-y-4">
                         {emergencySummaryItems.map((item, index) => (
