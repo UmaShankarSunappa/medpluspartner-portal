@@ -55,7 +55,7 @@ const statusVariant: { [key: string]: "default" | "secondary" | "destructive" | 
     "Cancelled": "destructive",
 };
 
-const ALL_TYPES = ["Auto", "Emergency Indent", "Web Order", "Sale Order"];
+const ALL_TYPES = ["Auto(Min-Max)", "Emergency Indent", "Web Order", "Sale Order"];
 const ALL_STATUSES = ["Order Created", "Order Picked", "Order Dispatched", "Order Delivered", "Order Replenished", "Cancelled"];
 
 export default function OrdersPage() {
@@ -433,6 +433,8 @@ export default function OrdersPage() {
     </TooltipProvider>
   );
 }
+
+    
 
     
 

@@ -114,7 +114,7 @@ export type Order = {
   date: string;
   total: number;
   status: "Order Created" | "Order Picked" | "Order Dispatched" | "Order Delivered" | "Order Replenished" | "Cancelled";
-  type: "Auto" | "Emergency Indent" | "Web Order" | "Sale Order";
+  type: "Auto(Min-Max)" | "Emergency Indent" | "Web Order" | "Sale Order";
   products?: { sku: string; name: string; quantity: number; price: number }[];
   trackingHistory?: { status: string; date: string; location: string }[];
 };
@@ -126,7 +126,7 @@ export const ordersData: Order[] = [
     date: "2024-10-15", 
     total: 45000.0, 
     status: "Order Replenished", 
-    type: "Auto",
+    type: "Auto(Min-Max)",
     products: [
       { sku: 'PARA500', name: 'Paracetamol 500mg', quantity: 100, price: 1500 },
       { sku: 'VICKS-AC', name: 'Vicks Action 500', quantity: 50, price: 2000 },
@@ -161,7 +161,7 @@ export const ordersData: Order[] = [
     date: "2024-10-10", 
     total: 58000.0, 
     status: "Order Created", 
-    type: "Auto",
+    type: "Auto(Min-Max)",
     products: [
       { sku: 'CETZINE', name: 'Cetirizine 10mg', quantity: 300, price: 3000 },
       { sku: 'ELECTRAL', name: 'Electral Powder', quantity: 500, price: 10000 },
@@ -1064,5 +1064,7 @@ export const frequentOrderListsData: FrequentOrderList[] = [
 
 
 
+
+    
 
     
