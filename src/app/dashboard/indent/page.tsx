@@ -127,16 +127,6 @@ export default function IndentPage() {
                           >
                               <span className="flex-1 font-medium">{product.name}</span>
                               <div className="flex items-center gap-2">
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <Button variant="ghost" size="icon" onClick={(e) => e.stopPropagation()}>
-                                        <Heart className="h-5 w-5 text-destructive" />
-                                      </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                      <p>Add to Frequent Order List</p>
-                                    </TooltipContent>
-                                  </Tooltip>
                                   <Input
                                       type="number"
                                       min="1"
@@ -156,6 +146,16 @@ export default function IndentPage() {
                                   >
                                       Add
                                   </Button>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Button variant="ghost" size="icon" onClick={(e) => e.stopPropagation()}>
+                                        <Heart className="h-5 w-5 text-destructive" />
+                                      </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      <p>Add to Frequent Order List</p>
+                                    </TooltipContent>
+                                  </Tooltip>
                               </div>
                           </CommandItem>
                         ))}
@@ -277,5 +277,3 @@ export default function IndentPage() {
     </TooltipProvider>
   );
 }
-
-    
