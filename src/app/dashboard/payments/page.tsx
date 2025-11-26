@@ -70,6 +70,12 @@ const initialApplicationRatios = (): ApplicationRatios => ({
     emergencyBalance: { ratio: 1, amount: 0 },
 });
 
+const applicationRatioLabels: { [key in keyof ApplicationRatios]: string } = {
+  accountBalance: "Store Level",
+  emergencyBalance: "Account Level",
+};
+
+
 export default function PaymentsPage() {
     const [isCreatePaymentOpen, setIsCreatePaymentOpen] = useState(false);
     const [isViewDetailsOpen, setIsViewDetailsOpen] = useState(false);
@@ -382,7 +388,7 @@ export default function PaymentsPage() {
                                             {(Object.keys(store.applicationRatios) as Array<keyof ApplicationRatios>).map(appKey => (
                                                 <div key={appKey} className="space-y-2">
                                                     <Label htmlFor={`app-ratio-input-${store.id}-${appKey}`} className="capitalize text-sm flex items-center">
-                                                        {appKey.replace(/([A-Z])/g, ' $1')}
+                                                        {applicationRatioLabels[appKey]}
                                                     </Label>
                                                     <div className="flex items-center gap-2">
                                                         <Input
@@ -540,3 +546,5 @@ export default function PaymentsPage() {
   </TooltipProvider>
   );
 }
+
+    
