@@ -46,6 +46,7 @@ import {
   BookMarked,
   Receipt,
   Calculator,
+  Heart,
 } from "lucide-react";
 
 export const user = {
@@ -590,6 +591,7 @@ export const navLinks = {
     { href: "/dashboard/returns", label: "Purchase Returns", icon: Undo2 },
     { href: "/dashboard/provisional-indent", label: "Provisional Indent", icon: ClipboardList },
     { href: "/dashboard/indent", label: "Manual Indent", icon: BookMarked },
+    { href: "/dashboard/frequent-order-lists", label: "Frequent Order Lists", icon: Heart },
     { href: "/dashboard/roi-analysis", label: "ROI Analysis", icon: Activity },
     { href: "/dashboard/performance", label: "Performance", icon: BarChart },
     { href: "/dashboard/reports", label: "Monthly Reports", icon: FileSliders },
@@ -1009,6 +1011,19 @@ export const monthlyReports: MonthlyReport[] = [
   ...generateReportsForMonth("October", 2024, "FY 2024-25"),
   ...generateReportsForMonth("November", 2024, "FY 2024-25"),
 ];
+
+export type FrequentOrderList = {
+  id: string;
+  name: string;
+  productCount: number;
+  dateCreated: string;
+};
+    
+export const frequentOrderListsData: FrequentOrderList[] = [
+    { id: "fol-1", name: "Monthly Essentials", productCount: 15, dateCreated: "2024-10-01" },
+    { id: "fol-2", name: "Seasonal Flu Stock", productCount: 8, dateCreated: "2024-09-15" },
+    { id: "fol-3", name: "First Aid Basics", productCount: 22, dateCreated: "2024-08-20" },
+];
     
 
   
@@ -1043,6 +1058,7 @@ export const monthlyReports: MonthlyReport[] = [
 
 
     
+
 
 
 
