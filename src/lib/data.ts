@@ -114,7 +114,7 @@ export type Order = {
   date: string;
   total: number;
   status: "Order Created" | "Order Picked" | "Order Dispatched" | "Order Delivered" | "Order Replenished" | "Cancelled";
-  type: "Auto" | "Indent" | "Web Order" | "Sale Order";
+  type: "Auto" | "Emergency Indent" | "Web Order" | "Sale Order";
   products?: { sku: string; name: string; quantity: number; price: number }[];
   trackingHistory?: { status: string; date: string; location: string }[];
 };
@@ -145,7 +145,7 @@ export const ordersData: Order[] = [
     date: "2024-10-12", 
     total: 32000.0, 
     status: "Order Dispatched", 
-    type: "Indent",
+    type: "Emergency Indent",
     products: [
       { sku: 'MOOV', name: 'Moov Ointment', quantity: 40, price: 4800 },
       { sku: 'VOLINI', name: 'Volini Spray', quantity: 30, price: 4500 },
@@ -207,7 +207,7 @@ export const ordersData: Order[] = [
     date: "2024-10-02", 
     total: 5400.0, 
     status: "Cancelled", 
-    type: "Indent",
+    type: "Emergency Indent",
     products: [],
     trackingHistory: [
        { status: 'Cancelled', date: '2024-10-02 13:00', location: 'Franchisee Portal' },
@@ -1063,3 +1063,6 @@ export const frequentOrderListsData: FrequentOrderList[] = [
 
 
 
+
+
+    
