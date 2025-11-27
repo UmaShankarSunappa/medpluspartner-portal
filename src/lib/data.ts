@@ -579,7 +579,6 @@ export const navLinks = {
   public: [
     { href: "/about-us", label: "About Us" },
     { href: "/faq", label: "FAQs" },
-    { href: "#", label: "Resources & Training" },
     { href: "/contact-us", label: "Contact Us" },
   ],
   dashboard: [
