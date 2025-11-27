@@ -86,8 +86,8 @@ export default function FinancialsPage() {
       
       <Tabs defaultValue="account-balance">
         <TabsList className="grid w-full grid-cols-2 max-w-sm">
-          <TabsTrigger value="account-balance">Account Balance</TabsTrigger>
-          <TabsTrigger value="emergency-balance">Emergency Balance</TabsTrigger>
+          <TabsTrigger value="account-balance">Store level Balance</TabsTrigger>
+          <TabsTrigger value="emergency-balance">Account level Balance</TabsTrigger>
         </TabsList>
         
         <TabsContent value="account-balance" className="space-y-6">
