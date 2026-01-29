@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from "next/image";
@@ -8,7 +9,8 @@ import { Button } from "@/components/ui/button";
 import { LandingHeader } from "@/components/landing/header";
 import { LandingFooter } from "@/components/landing/footer";
 import { placeholderImages } from "@/lib/placeholder-images.json";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { successStories } from "@/lib/data";
 import { FranchiseQueryForm } from "@/components/landing/franchise-query-form";
@@ -36,6 +38,19 @@ const features = [
     title: "Ongoing Support",
     description: "Comprehensive training, marketing support, and dedicated assistance.",
   },
+];
+
+const comparisonData = [
+    { parameter: "Brand Trust", franchise: "High – recognized, reliable, repeat customers", independent: "Low – trust built slowly", unorganized: "Very Low" },
+    { parameter: "Supply Chain Efficiency", franchise: "Centralized procurement, better availability", independent: "Dependent on local distributors", unorganized: "Inconsistent supply" },
+    { parameter: "Purchase Pricing Power", franchise: "Bulk buying advantages", independent: "Limited negotiation power", unorganized: "High procurement cost" },
+    { parameter: "Gross Margins", franchise: "Stable & optimized through mix strategy", independent: "Unpredictable", unorganized: "Low" },
+    { parameter: "Technology Enablement", franchise: "Advanced POS, inventory & sales analytics", independent: "Manual or basic software", unorganized: "Mostly manual" },
+    { parameter: "Marketing & Growth Support", franchise: "National + local campaigns, data-driven", independent: "Self-managed", unorganized: "None" },
+    { parameter: "Private Label Products", franchise: "Yes – higher margin SKUs", independent: "No", unorganized: "No" },
+    { parameter: "Operational SOPs", franchise: "Structured & proven", independent: "Trial-and-error", unorganized: "Informal" },
+    { parameter: "Scalability", franchise: "Easy to expand to multiple stores", independent: "Difficult", unorganized: "Not scalable" },
+    { parameter: "Business Risk", franchise: "Lower", independent: "Medium", unorganized: "High" },
 ];
 
 const requirements = [
@@ -187,6 +202,39 @@ export default function Home() {
                                 </div>
                             ))}
                         </div>
+                    </CardContent>
+                </Card>
+            </div>
+        </section>
+
+        <section id="comparison" className="py-4">
+            <div className="container mx-auto px-4">
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="text-2xl font-bold">Medplus Franchise vs Independent Pharmacy</CardTitle>
+                        <CardDescription>A clear comparison of the business models</CardDescription>
+                    </CardHeader>
+                    <CardContent className="overflow-x-auto">
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead className="font-semibold">Parameter</TableHead>
+                                    <TableHead className="font-semibold bg-primary/10 text-primary">Our Pharmacy Franchise</TableHead>
+                                    <TableHead className="font-semibold">Independent Pharmacy</TableHead>
+                                    <TableHead className="font-semibold">Local / Unorganized Store</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {comparisonData.map((row) => (
+                                    <TableRow key={row.parameter}>
+                                        <TableCell className="font-medium">{row.parameter}</TableCell>
+                                        <TableCell className="bg-primary/5">{row.franchise}</TableCell>
+                                        <TableCell>{row.independent}</TableCell>
+                                        <TableCell>{row.unorganized}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
                     </CardContent>
                 </Card>
             </div>
